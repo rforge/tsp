@@ -1,10 +1,13 @@
-tsp_concorde <- function(x, options = "", exe = Sys.getenv("R_CONCORDE"),  wd = "/tmp/") {
+tsp_concorde <- function(x, options = "", exe = Sys.getenv("R_CONCORDE")) {
 
     if(!inherits(x, "dist")) stop(paste(sQuote("x"), "is not of class dist"))
     
+    wd <- tempdir()
+    temp_file <- tempfile(tmpdir = wd) 
+    
     # file name needs to be unique
-    tmp_file_in <- paste(wd, "/tsp.dat", sep = "")
-    tmp_file_out <- paste(wd, "/tsp.sol", sep = "")
+    tmp_file_in <- paste(temp_file, ".dat", sep = "")
+    tmp_file_out <- paste(temp_file, ".sol", sep = "")
     
     # prepare data
     TSPLIB_write(x, tmp_file_in)

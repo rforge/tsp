@@ -7,7 +7,7 @@
   Calls Concorde to solve a TSP given by a \code{dist} object.
 }
 \usage{
-tsp_concorde(x, options = "", exe = Sys.getenv("R_CONCORDE"), wd = "/tmp/")
+tsp_concorde(x, options = "", exe = Sys.getenv("R_CONCORDE"))
 tsp_concorde_help(exe = Sys.getenv("R_CONCORDE"))
 }
 %- maybe also 'usage' for other objects documented here.
@@ -15,7 +15,6 @@ tsp_concorde_help(exe = Sys.getenv("R_CONCORDE"))
   \item{x}{ the TSP given as a \code{dist} object.}
   \item{options}{ options for Concorde (see details).}
   \item{exe}{ the path to the Concorde executable (see details).}
-  \item{wd}{ working directory for Concorde.}
 }
 \details{
   The executable program Concorde is not included in this package and has to
