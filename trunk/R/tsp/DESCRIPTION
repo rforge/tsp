@@ -1,0 +1,11 @@
+Package: tsp
+Type: Package
+Title: Traveling Salesman Problem (TSP) Solver
+Version: 0.1-1
+Date: 2006-xx-xx
+Author: Michael Hahsler
+Maintainer: Michael Hahsler <hahsler@ai.wu-wien.ac.at>
+Description: Provides a very simple interface to Concorde, the currently
+    fastest TSP solver. The solver itself is not included in the package
+    and has to be obtained separately. 
+License: GNU GENERAL PUBLIC LICENSE Version 2
