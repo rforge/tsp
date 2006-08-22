@@ -1,0 +1,47 @@
+\name{insert_dummy}
+\alias{insert_dummy}
+\alias{insert_dummy.matrix}
+\alias{insert_dummy.dist}
+\title{Insert a dummy city into a dissimilarity matrix}
+\description{
+  Provides methods for 
+  inserting dummy cities into a dissimilarity matrix.
+  Dummy cities can be used together with TSP solvers to
+  find an optimal linear order or to perform
+  rearrangement clustering (Climer and Zhang 2006).
+  }
+\usage{
+insert_dummy(x, n = 1, c = 1)
+}
+\arguments{
+  \item{x}{an object of class \code{matrix} or \code{dist}.}
+  \item{n}{number of dummy cities.}
+  \item{c}{dissimilarity of the dummy cities to all other cities.}
+}
+%\details{
+%}
+%\seealso{}
+\references{
+Sharlee Climer, Weixiong Zhang (2006): Rearrangement Clustering: Pitfalls,
+Remedies, and Applications, Journal of Machine Learning Research 7, pp.
+919-943.
+}
+\examples{
+data("iris")
+d <- dist(iris[1:4])
+
+# insert dummy city as 1. object
+d <- insert_dummy(d, n = 1, c = 1)
+
+# get a solution for the TSP
+o <- tsp_insertion(d, nearest = FALSE)
+
+# plot the distance matrix
+p <- attr(d, "Size")
+image(1:p, 1:p ,as.matrix(d) [o,o])
+
+# draw lines where the dummy ciy is located
+abline(h=which(o == 1))
+abline(v=which(o == 1))
+}
+\keyword{manip}

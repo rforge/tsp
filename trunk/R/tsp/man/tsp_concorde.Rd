@@ -1,18 +1,18 @@
-\name{tsp_solve}
-\alias{tsp_solve}
-\alias{tsp_help}
+\name{tsp_concorde}
+\alias{tsp_concorde}
+\alias{tsp_concorde_help}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Call Concorde to solve a TSP}
 \description{
   Calls Concorde to solve a TSP given by a \code{dist} object.
 }
 \usage{
-tsp_solve(dist, options = "", exe = Sys.getenv("R_CONCORDE"), wd = "/tmp/")
-tsp_help(exe = Sys.getenv("R_CONCORDE"))
+tsp_concorde(x, options = "", exe = Sys.getenv("R_CONCORDE"), wd = "/tmp/")
+tsp_concorde_help(exe = Sys.getenv("R_CONCORDE"))
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{dist}{ the TSP given as a \code{dist} object.}
+  \item{x}{ the TSP given as a \code{dist} object.}
   \item{options}{ options for Concorde (see details).}
   \item{exe}{ the path to the Concorde executable (see details).}
   \item{wd}{ working directory for Concorde.}
@@ -32,7 +32,7 @@ environment variable \code{R\_CONCORDE}.
   not available via this package.
 }
 \value{
-  A integer vector containing the order of the objects in \code{dist}.
+  A integer vector containing the order of the objects in \code{x}.
   The returned order can be optimal -- read the output of Concorde.
 }
 \references{
@@ -43,13 +43,17 @@ TSP cuts which do not conform to the template paradigm,
 Computational Combinatorial Optimization, M. Junger and D. Naddef (editors),
 Springer.
 }
-\author{Michael Hahsler}
+%\author{Michael Hahsler}
 \seealso{\code{\link{Sys.putenv}}}
 \examples{
 data("iris")
 d <- dist(iris[1:4])
 
-order <- tsp_solve(d)
-image(as.matrix(d)[order, order])
+# use Concorde to get a very good solution
+order <- tsp_concorde(d)
+
+# plot the reprdered distance matrix
+p <- attr(d, "Size")
+image(1:p, 1:p, as.matrix(d)[order, order])
 }
 \keyword{optimize}% at least one, from doc/KEYWORDS
