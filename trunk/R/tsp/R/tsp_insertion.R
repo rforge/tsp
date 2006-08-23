@@ -3,7 +3,11 @@
 
 tsp_insertion <- function(x, nearest = TRUE, start = 0){
    
-    if(!inherits(x, "dist")) stop(paste(sQuote("x"), "is not of class dist"))
+    # check parameters
+    if(!inherits(x, "dist") || (is.matrix(x) && isSymmetric(x)))
+    stop(paste(sQuote("x"), "is not of class", sQuote("dist"),
+            "or a symmetric matrix."))
+    
     x <- as.matrix(x)    
 
     n <- nrow(x)
@@ -53,6 +57,8 @@ tsp_insertion <- function(x, nearest = TRUE, start = 0){
         }
     }
 
+
+    #names(order) <- labels(x)[[1]][order]
     order
 }
 

@@ -1,7 +1,9 @@
 export(
     tsp_concorde, 
     tsp_concorde_help, 
+    tsp_greedy,
     tsp_insertion,
+    tour_length,
     insert_dummy
     )
 

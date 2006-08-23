@@ -1,7 +1,12 @@
-tsp_concorde <- function(x, options = "", exe = Sys.getenv("R_CONCORDE")) {
+tsp_concorde <- function(x, options = "", precision = 6, 
+    exe = Sys.getenv("R_CONCORDE")) {
 
-    if(!inherits(x, "dist")) stop(paste(sQuote("x"), "is not of class dist"))
+    # check parameters
+    if(!inherits(x, "dist") || (is.matrix(x) && isSymmetric(x))) 
+    stop(paste(sQuote("x"), "is not of class", sQuote("dist"), 
+            "or a symmetric matrix."))
     
+    # get temp files
     wd <- tempdir()
     temp_file <- tempfile(tmpdir = wd) 
     
@@ -10,7 +15,7 @@ tsp_concorde <- function(x, options = "", exe = Sys.getenv("R_CONCORDE")) {
     tmp_file_out <- paste(temp_file, ".sol", sep = "")
     
     # prepare data
-    TSPLIB_write(x, tmp_file_in)
+    TSPLIB_write(x, file = tmp_file_in, precision = precision)
 
     dir <- getwd()
     setwd(wd)

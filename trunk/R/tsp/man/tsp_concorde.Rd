@@ -7,13 +7,15 @@
   Calls Concorde to solve a TSP given by a \code{dist} object.
 }
 \usage{
-tsp_concorde(x, options = "", exe = Sys.getenv("R_CONCORDE"))
+tsp_concorde(x, options = "", precision = 6, exe = Sys.getenv("R_CONCORDE"))
 tsp_concorde_help(exe = Sys.getenv("R_CONCORDE"))
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{ the TSP given as a \code{dist} object.}
   \item{options}{ options for Concorde (see details).}
+  \item{precision}{ how many decimal places are used for the dissimilarities 
+      (see details).}
   \item{exe}{ the path to the Concorde executable (see details).}
 }
 \details{
@@ -22,13 +24,24 @@ be obtained separately from the Concorde web site
 (\url{http://www.tsp.gatech.edu/concorde/downloads/downloads.htm}).  Unpack the
 program, place it in a convenient directory and make sure it is executable.
 The whole path to the executable (including the executable's name) can be given
-as \code{exe} to \code{tsp\_solve}. A more convenient way is to set the
+as \code{exe}. A more convenient way is to permanently set the
 environment variable \code{R\_CONCORDE}.
 
-  Options for Concorde can be passed to \code{tsp\_solve} as a string in
-  \code{options}, e.g., \code{options = "-B -v"} .  To get a list of what
-  options are available try \code{tsp\_help}. Several options (-x, -o, -N) are
-  not available via this package.
+Options for Concorde can be passed to \code{tsp\_concorde} as a string in
+\code{options}, e.g., \code{options = "-B -v"} .  To get a list of what options
+are available try \code{tsp\_concorde\_help}. Several options (-x, -o, -N) are
+not available via this package.
+
+Precision controls the number of decimal places used for the
+internal representation of dissimilarities in Concorde. Since Concorde uses
+\code{integer} for representing dissimilarities, the values given in \code{x}
+are multiplied by \eqn{10^{precision}} before being passed on to Concorde. Note
+that therefore all the output produced by Concorde (especially lower and upper
+bounds) need to be divided by \eqn{10^{precision}} (i.e., the decimal point has
+to be shifted \code{precision} placed to the left).
+
+Note also, that Concorde cannot handle \code{Inf} which is therefore replaced
+by 2 times the maximum value in \code{x} (ignoring the infinity entries).
 }
 \value{
   A integer vector containing the order of the objects in \code{x}.
@@ -53,6 +66,6 @@ order <- tsp_concorde(d)
 
 # plot the reprdered distance matrix
 p <- attr(d, "Size")
-image(1:p, 1:p, as.matrix(d)[order, order])
+image(1:p, 1:p, as.matrix(d)[order, order], col = gray.colors(64))
 }
 \keyword{optimize}% at least one, from doc/KEYWORDS

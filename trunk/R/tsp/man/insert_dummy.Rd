@@ -11,15 +11,17 @@
   rearrangement clustering (Climer and Zhang 2006).
   }
 \usage{
-insert_dummy(x, n = 1, c = 1)
+insert_dummy(x, n = 1, const = max(x), inf = Inf)
 }
 \arguments{
   \item{x}{an object of class \code{matrix} or \code{dist}.}
   \item{n}{number of dummy cities.}
-  \item{c}{dissimilarity of the dummy cities to all other cities.}
+  \item{const}{dissimilarity of the dummy cities to all other cities.}
+  \item{inf}{dissimilarity between dummy cities.}
 }
-%\details{
-%}
+\details{
+The dummy cities are insert before the other cities. 
+}
 %\seealso{}
 \references{
 Sharlee Climer, Weixiong Zhang (2006): Rearrangement Clustering: Pitfalls,
@@ -30,18 +32,18 @@ Remedies, and Applications, Journal of Machine Learning Research 7, pp.
 data("iris")
 d <- dist(iris[1:4])
 
-# insert dummy city as 1. object
-d <- insert_dummy(d, n = 1, c = 1)
+# insert 2 dummy cities (as object 1 and 2)
+d <- insert_dummy(d, n = 2)
 
 # get a solution for the TSP
-o <- tsp_insertion(d, nearest = FALSE)
+o <- tsp_insertion(d, nearest = TRUE)
 
 # plot the distance matrix
 p <- attr(d, "Size")
-image(1:p, 1:p ,as.matrix(d) [o,o])
+image(1:p, 1:p ,as.matrix(d) [o,o], col = gray.colors(64))
 
-# draw lines where the dummy ciy is located
-abline(h=which(o == 1))
-abline(v=which(o == 1))
+# draw lines where the dummy cities are located
+abline(h=sapply(1:2, FUN = function(i) which(o == i)))
+abline(v=sapply(1:2, FUN = function(i) which(o == i)))
 }
 \keyword{manip}

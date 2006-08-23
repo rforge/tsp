@@ -52,6 +52,6 @@ data("iris")
 d <- dist(iris[1:4])
 
 order <- tsp_insertion(d)
-image(as.matrix(d)[order, order])
+image(as.matrix(d)[order, order], col = gray.colors(64))
 }
 \keyword{optimize}% at least one, from doc/KEYWORDS
