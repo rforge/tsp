@@ -3,8 +3,8 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Greedy/nearest neighbor algorithm}
 \description{
-  Greedy algorithm   for a symmetric TSP.  The algorithm is also called nearest
-  neighbor algorithm (Johnson and Papadimitriou 1985). 
+  Greedy algorithm for a symmetric TSP. The algorithm is often also called
+  nearest neighbor algorithm (Johnson and Papadimitriou 1985). 
 }
 \usage{
 tsp_greedy(x, start = 0)
@@ -16,12 +16,12 @@ tsp_greedy(x, start = 0)
       (default: random starting position).}
 }
 \details{
-The algorithm starts with a tour containing a random city.  Then the algorithm
+The algorithm starts with a tour containing a random city. Then the algorithm
 always adds to last city in the tour the nearest not yet visited city. The
 algorithm stops when all cities are on the tour.
 }
 \value{
-  A integer vector containing the order of the objects in \code{dist}.
+  A integer vector containing the order of the objects in \code{x}.
 }
 \references{
 D. S. Johnson, C. H. Papadimitriou (1985): Performance guarantees for
@@ -30,7 +30,7 @@ B. Shmoys (eds.) The traveling salesman problem - A guided tour of
 combinatorial optimization, Wiley \& Sons.
 }
 %\author{Michael Hahsler}
-\seealso{\code{\link{tsp_insertion}}}
+%\seealso{\code{\link{tsp_insertion}}}
 \examples{
 data("iris")
 d <- dist(iris[1:4])

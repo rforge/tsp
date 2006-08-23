@@ -22,12 +22,12 @@ tsp_insertion(x, nearest = TRUE, start = 0)
 The two algorithms are variants of the minimum spanning tree algorithm
 for obtaining solutions to the traveling salesman problem.
 The distances
-between cities are stored in a dissimilarity matrix \eqn{D} with elements
+between cities are stored in a distance matrix \eqn{D} with elements
 \eqn{d(i,j)}.
 
       The nearest insertion algorithm starts with a partial tour consisting of
-a single, arbitrarily chosen observation. As long as not all observations are
-in the tour, find the city \eqn{k} which is \emph{nearest} to a city on the
+a single, arbitrarily chosen city. As long as not all cities are
+on the tour, find the city \eqn{k} which is \emph{nearest} to a city on the
 tour. Next insert city \eqn{k} into the tour between two consecutive cities
 \eqn{i} and \eqn{j}, such that \eqn{d(i,k) + d(k,j) - d(i,j)} is minimized.
 Repeat till all cities are on the tour.
@@ -37,7 +37,7 @@ Repeat till all cities are on the tour.
 into the tour fist to establish an outline of the whole tour early.
 }
 \value{
-  A integer vector containing the order of the objects in \code{dist}.
+  A integer vector containing the order of the objects in \code{x}.
 }
 \references{
 D. S. Johnson, C. H. Papadimitriou (1985): Performance guarantees for
@@ -46,7 +46,7 @@ B. Shmoys (eds.) The traveling salesman problem - A guided tour of
 combinatorial optimization, Wiley \& Sons.
 }
 %\author{Michael Hahsler}
-\seealso{\code{\link{tsp_concorde}}}
+%\seealso{\code{\link{tsp_concorde}}}
 \examples{
 data("iris")
 d <- dist(iris[1:4])

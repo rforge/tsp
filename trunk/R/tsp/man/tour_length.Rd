@@ -2,7 +2,7 @@
 \alias{tour_length}
 \title{Calculate the length of a tour}
 \description{
- Calculate the length of a tour given a symmetric distance (dissimilarity)
+ Calculate the length of a tour given a symmetric distance
  matrix and an order.
   }
 \usage{
@@ -11,7 +11,7 @@ tour_length(dist, order)
 \arguments{
   \item{dist}{an object of class \code{dist}.}
   \item{order}{ optional order of the visited cities. If no order is given,
-      the cities are visited in the order given in \code{dist}. }
+      the cities are visited in the original order in \code{dist}. }
 }
 %\details{
 %}

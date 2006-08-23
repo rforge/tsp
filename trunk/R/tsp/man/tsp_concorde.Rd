@@ -14,7 +14,7 @@ tsp_concorde_help(exe = Sys.getenv("R_CONCORDE"))
 \arguments{
   \item{x}{ the TSP given as a \code{dist} object.}
   \item{options}{ options for Concorde (see details).}
-  \item{precision}{ how many decimal places are used for the dissimilarities 
+  \item{precision}{ how many decimal places are used for the distances 
       (see details).}
   \item{exe}{ the path to the Concorde executable (see details).}
 }
@@ -33,8 +33,8 @@ are available try \code{tsp\_concorde\_help}. Several options (-x, -o, -N) are
 not available via this package.
 
 Precision controls the number of decimal places used for the
-internal representation of dissimilarities in Concorde. Since Concorde uses
-\code{integer} for representing dissimilarities, the values given in \code{x}
+internal representation of distances in Concorde. Since Concorde uses
+\code{integer} for representing distances, the values given in \code{x}
 are multiplied by \eqn{10^{precision}} before being passed on to Concorde. Note
 that therefore all the output produced by Concorde (especially lower and upper
 bounds) need to be divided by \eqn{10^{precision}} (i.e., the decimal point has
