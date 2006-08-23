@@ -2,7 +2,7 @@ tsp_concorde <- function(x, options = "", precision = 6,
     exe = Sys.getenv("R_CONCORDE")) {
 
     # check parameters
-    if(!inherits(x, "dist") || (is.matrix(x) && isSymmetric(x))) 
+    if(!inherits(x, "dist") && (is.matrix(x) && !isSymmetric(x))) 
     stop(paste(sQuote("x"), "is not of class", sQuote("dist"), 
             "or a symmetric matrix."))
     

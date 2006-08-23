@@ -2,9 +2,9 @@
 # (Johnson and Papadimitrou in Lawler et al. 1985)
 
 tsp_insertion <- function(x, nearest = TRUE, start = 0){
-   
+  
     # check parameters
-    if(!inherits(x, "dist") || (is.matrix(x) && isSymmetric(x)))
+    if(!inherits(x, "dist") && (is.matrix(x) && !isSymmetric(x)))
     stop(paste(sQuote("x"), "is not of class", sQuote("dist"),
             "or a symmetric matrix."))
     
