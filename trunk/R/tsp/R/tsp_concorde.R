@@ -19,6 +19,8 @@ tsp_concorde <- function(x, options = "", precision = 6,
 
     dir <- getwd()
     setwd(wd)
+    on.exit(setwd(dir))
+    
     # do the call and read back result
     system(paste(exe, "-x", "-o", tmp_file_out , options, tmp_file_in))
     order <- scan(tmp_file_out, what = integer(0), quiet = TRUE)
@@ -27,7 +29,6 @@ tsp_concorde <- function(x, options = "", precision = 6,
 
     # tidy up
     unlink(c(tmp_file_in, tmp_file_out))
-    setwd(dir)
     
     order
 }
