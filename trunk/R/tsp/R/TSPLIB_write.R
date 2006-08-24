@@ -6,9 +6,15 @@ TSPLIB_write <- function(dist, file, precision = 6) {
     # NAs are not possible
     if(any(is.na(dist))) stop("NAs cannot be handled")
    
-    if(inherits(dist, "dist")) p <- attr(dist, "Size")
-    else p <- ncol(dist)
-
+    if(inherits(dist, "dist")){
+        p <- attr(dist, "Size")
+        # Concorde can handle UPPER_ROW and dist (lower triangle matrix) 
+        # is symmetric.
+        format <- "EDGE_WEIGHT_FORMAT: UPPER_ROW"
+    }else{ # matrix 
+        p <- ncol(dist)
+        format <- "EDGE_WEIGHT_FORMAT: FULL_MATRIX"
+    }
     
     zz <- file(file, "w")
 
@@ -17,21 +23,20 @@ TSPLIB_write <- function(dist, file, precision = 6) {
         "TYPE: TSP",
         paste("DIMENSION:", p),
         "EDGE_WEIGHT_TYPE: EXPLICIT",
-        "EDGE_WEIGHT_FORMAT: FULL_MATRIX",
+        format, 
         file = zz, sep = "\n")
     
-
-    # concorde cannot handle EDGE_WEIGHT_FORMAT: LOWER_COL yet!
-    # infinity is not available
+    # fixes for TSPLIB/Concorde
+    # infinity is not available so we use a relatively large number
     inf_index <- is.infinite(dist)
     if(any(inf_index)) {
         dist[inf_index] <- max(dist[!inf_index]) * 2
     }
-    # only integers can be used as weights in TSPLIB
-    dist <- as.integer(as.matrix(dist) * 10^precision)
+    
+    # only integers can be used as weights
+    dist <- as.integer(dist * 10^precision)
 
     cat("EDGE_WEIGHT_SECTION", dist, file = zz, sep = "\n")
-
     cat("EOF", file = zz, sep = "\n")
 
     close(zz)
