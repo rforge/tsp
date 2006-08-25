@@ -38,13 +38,13 @@ tsp <- TSP(dist(iris[1:4]))
 tsp <- insert_dummy(tsp, n = 2)
 
 # get a solution for the TSP
-order <- tsp_insertion(tsp, nearest = TRUE)
+order <- solve_TSP(tsp, method = "nearest")
 
 # plot the distance matrix
 image(tsp, order)
 
 # draw lines where the dummy cities are located
-abline(h=sapply(1:2, FUN = function(i) which(order == i)))
-abline(v=sapply(1:2, FUN = function(i) which(order == i)))
+abline(h=sapply(1:2, FUN = function(i) which(order == i)), col = "red")
+abline(v=sapply(1:2, FUN = function(i) which(order == i)), col = "red")
 }
 \keyword{manip}

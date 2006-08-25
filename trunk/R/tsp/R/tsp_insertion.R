@@ -1,7 +1,7 @@
 # Nearest/farthest insertion algorithm 
 # (Johnson and Papadimitrou in Lawler et al. 1985)
 
-tsp_insertion <- function(x, nearest = TRUE, start = 0){
+tsp_insertion <- function(x, nearest = TRUE, start = NULL){
   
     # check parameters
     if(!inherits(x, "TSP")) x <- TSP(x)
@@ -11,8 +11,9 @@ tsp_insertion <- function(x, nearest = TRUE, start = 0){
     if(!inherits(x, "matrix")) x <- TSP(as.matrix(x))
     
     n <- cities(x)
-    if (start == 0) start <- sample(1:n, 1)
-
+    if(is.null(start)) start <- sample(1:n, 1)
+    if(start < 0 || start > n) stop(paste("illegal value for", sQuote("start")))
+    
     placed <- logical(n)
     placed[start] <- TRUE
     order <- c(start)

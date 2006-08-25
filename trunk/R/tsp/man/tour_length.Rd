@@ -21,9 +21,9 @@ tour_length(x, order)
 data("iris")
 tsp <- TSP(dist(iris[1:4]))
 
-order1 <- tsp_insertion(tsp, nearest = FALSE)
-order2 <- tsp_insertion(tsp, nearest = TRUE)
-order3 <- tsp_concorde(tsp)
+order1 <- solve_TSP(tsp, method = "nearest_insertion")
+order2 <- solve_TSP(tsp, method = "farthest_insertion")
+order3 <- solve_TSP(tsp, method = "concorde")
 
 tour_length(tsp)
 tour_length(tsp, order1)

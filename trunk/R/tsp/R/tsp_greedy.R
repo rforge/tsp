@@ -1,6 +1,6 @@
 # Greedy tour also called nearest neighbor algorithm
 
-tsp_greedy <- function(x, start = 0) {
+tsp_greedy <- function(x, start = NULL) {
 
     # check parameters
     if(!inherits(x, "TSP")) x <- TSP(x)
@@ -9,7 +9,9 @@ tsp_greedy <- function(x, start = 0) {
     if(!inherits(x, "matrix")) x <- TSP(as.matrix(x))
     
     n <- cities(x)
-    if(start == 0) start <- sample(1:n, 1)
+
+    if(is.null(start)) start <- sample(1:n, 1)
+    if(start < 0 || start > n) stop(paste("illegal value for", sQuote("start")))
     
     # place first city
     placed <- logical(n)

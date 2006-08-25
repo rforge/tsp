@@ -1,13 +1,11 @@
 export(
     TSP,
     cities, 
+    insert_dummy,
     solve_TSP,
-    tsp_concorde, 
     tsp_concorde_help, 
-    tsp_greedy,
-    tsp_insertion,
     tour_length,
-    insert_dummy
+    write_TSPLIB
     )
 
 S3method(insert_dummy, dist)

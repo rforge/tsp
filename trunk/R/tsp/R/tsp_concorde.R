@@ -1,6 +1,11 @@
 tsp_concorde <- function(x, options = "", precision = 6, 
     exe = Sys.getenv("R_CONCORDE")) {
 
+    # we need this for calls from solve_TSP
+    if(is.null(options))    options     <- ""
+    if(is.null(precision))  precision   <- 6
+    if(is.null(exe))        exe         <- Sys.getenv("R_CONCORDE")
+    
     # check parameters
     if(!inherits(x, "TSP")) x <- TSP(x)
     
@@ -13,7 +18,7 @@ tsp_concorde <- function(x, options = "", precision = 6,
     tmp_file_out <- paste(temp_file, ".sol", sep = "")
     
     # prepare data
-    TSPLIB_write(x, file = tmp_file_in, precision = precision)
+    write_TSPLIB(x, file = tmp_file_in, precision = precision)
 
     dir <- getwd()
     setwd(wd)
