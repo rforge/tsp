@@ -1,6 +1,7 @@
 export(
     TSP,
     cities, 
+    solve_TSP,
     tsp_concorde, 
     tsp_concorde_help, 
     tsp_greedy,
