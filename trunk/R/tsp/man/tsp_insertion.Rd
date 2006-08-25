@@ -4,15 +4,14 @@
 \title{Nearest/farthest insertion algorithm}
 \description{
   Nearest and farthest insertion algorithms 
-  for a symmetric TSP (Johnson and Papadimitriou 1985) 
-  given by a \code{dist} object.
+  for a symmetric TSP (Johnson and Papadimitriou 1985). 
 }
 \usage{
 tsp_insertion(x, nearest = TRUE, start = 0)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{ the TSP given as a \code{dist} object.}
+  \item{x}{ the TSP given as an object of class \code{TSP}.}
   \item{nearest}{\code{logical}; should nearest insertion (default)
       or farthest insertion be used.}
   \item{start}{\code{integer}; the index of the first city to place
@@ -37,8 +36,9 @@ Repeat till all cities are on the tour.
 into the tour fist to establish an outline of the whole tour early.
 }
 \value{
-  A integer vector containing the order of the objects in \code{x}.
+  A integer vector containing the order of the cities in \code{x}.
 }
+\seealso{\code{\link{TSP}}}
 \references{
 D. S. Johnson, C. H. Papadimitriou (1985): Performance guarantees for
 heuristics (chapter 5). In: E. L. Lawler, J. K. Lenstra, A.H.G. Rinnooy Kan, D.
@@ -46,12 +46,16 @@ B. Shmoys (eds.) The traveling salesman problem - A guided tour of
 combinatorial optimization, Wiley \& Sons.
 }
 %\author{Michael Hahsler}
-%\seealso{\code{\link{tsp_concorde}}}
 \examples{
 data("iris")
-d <- dist(iris[1:4])
 
-order <- tsp_insertion(d)
-image(as.matrix(d)[order, order], col = gray.colors(64))
+# create TSP
+tsp <- TSP(dist(iris[1:4]))
+
+# reorder
+order <- tsp_insertion(tsp)
+
+# plot
+image(tsp, order)
 }
 \keyword{optimize}% at least one, from doc/KEYWORDS

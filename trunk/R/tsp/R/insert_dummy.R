@@ -4,13 +4,13 @@
 
 insert_dummy.dist <- function(x, n = 1, const = max(x), inf = Inf) {
 
+    # check parameters
+    if(!inherits(x, "TSP")) x <- TSP(x)
+    
     if(n < 1) stop(paste(sQuote("n"),"has to be >1"))
     
-    if(attr(x, "Diag") == TRUE || attr(x, "Upper") == TRUE)
-    x <- as.dist(x, diag = FALSE, upper = FALSE)
-    
     n <- as.integer(n)
-    p <- attr(x, "Size")
+    p <- cities(x)
 
     d <- c(rep(const, sum(p:(p+n-1))), x)
     p <- p + n
@@ -34,6 +34,9 @@ insert_dummy.dist <- function(x, n = 1, const = max(x), inf = Inf) {
 
 insert_dummy.matrix <- function(x, n = 1, const = max(x), inf = Inf) {
    
+    # check parameters
+    if(!inherits(x, "TSP")) x <- TSP(x)
+    
     n <- as.integer(n)
     x <- cbind(matrix(const, ncol = n, nrow = nrow(x), 
             dimnames = list(rows = NULL, 
@@ -53,7 +56,8 @@ insert_dummy.matrix <- function(x, n = 1, const = max(x), inf = Inf) {
         }
     }    
     
-    x
+    
+    TSP(x)
 }
 
 # generic

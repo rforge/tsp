@@ -11,7 +11,7 @@ tsp_greedy(x, start = 0)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{ the TSP given as a \code{dist} object.}
+  \item{x}{ the TSP given as an object of class \code{TSP}.}
   \item{start}{\code{integer}; the index of the first city to place
       (default: random starting position).}
 }
@@ -21,7 +21,7 @@ always adds to last city in the tour the nearest not yet visited city. The
 algorithm stops when all cities are on the tour.
 }
 \value{
-  A integer vector containing the order of the objects in \code{x}.
+  A integer vector containing the order of the cities in \code{x}.
 }
 \references{
 D. S. Johnson, C. H. Papadimitriou (1985): Performance guarantees for
@@ -33,9 +33,11 @@ combinatorial optimization, Wiley \& Sons.
 %\seealso{\code{\link{tsp_insertion}}}
 \examples{
 data("iris")
-d <- dist(iris[1:4])
 
-order <- tsp_greedy(d)
-image(as.matrix(d)[order, order], col = gray.colors(64))
+# create TSP
+tsp <- TSP(dist(iris[1:4]))
+
+# reorder and plot
+image(tsp, tsp_greedy(tsp))
 }
 \keyword{optimize}% at least one, from doc/KEYWORDS

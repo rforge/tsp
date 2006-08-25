@@ -4,7 +4,7 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Call Concorde to solve a TSP}
 \description{
-  Calls Concorde to solve a TSP given by a \code{dist} object.
+  Calls Concorde to solve a TSP.
 }
 \usage{
 tsp_concorde(x, options = "", precision = 6, exe = Sys.getenv("R_CONCORDE"))
@@ -12,7 +12,7 @@ tsp_concorde_help(exe = Sys.getenv("R_CONCORDE"))
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{ the TSP given as a \code{dist} object.}
+  \item{x}{ the TSP given as an object of class \code{TSP}.}
   \item{options}{ options for Concorde (see details).}
   \item{precision}{ how many decimal places are used for the distances 
       (see details).}
@@ -44,8 +44,11 @@ Note also, that Concorde cannot handle \code{Inf} which is therefore replaced
 by 2 times the maximum value in \code{x} (ignoring the infinity entries).
 }
 \value{
-  A integer vector containing the order of the objects in \code{x}.
+  A integer vector containing the order of the cities in \code{x}.
   The returned order can be optimal -- read the output of Concorde.
+}
+\seealso{
+    \code{\link{TSP}}
 }
 \references{
 Concorde home page \url{http://www.tsp.gatech.edu/concorde/}
@@ -56,16 +59,14 @@ Computational Combinatorial Optimization, M. Junger and D. Naddef (editors),
 Springer.
 }
 %\author{Michael Hahsler}
-\seealso{\code{\link{Sys.putenv}}}
 \examples{
 data("iris")
-d <- dist(iris[1:4])
+tsp <- TSP(dist(iris[1:4]))
 
 # use Concorde to get a very good solution
-order <- tsp_concorde(d)
+order <- tsp_concorde(tsp)
 
-# plot the reprdered distance matrix
-p <- attr(d, "Size")
-image(1:p, 1:p, as.matrix(d)[order, order], col = gray.colors(64))
+# plot the reordered distance matrix
+image(tsp, order)
 }
 \keyword{optimize}% at least one, from doc/KEYWORDS

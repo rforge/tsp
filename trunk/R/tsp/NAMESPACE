@@ -1,4 +1,6 @@
 export(
+    TSP,
+    cities, 
     tsp_concorde, 
     tsp_concorde_help, 
     tsp_greedy,
@@ -10,4 +12,8 @@ export(
 S3method(insert_dummy, dist)
 S3method(insert_dummy, matrix)
 
+S3method(print, TSP)
+S3method(cities, TSP)
+S3method(labels, TSP)
+S3method(image, TSP)
 

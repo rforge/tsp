@@ -3,12 +3,12 @@
 tsp_greedy <- function(x, start = 0) {
 
     # check parameters
-    if(!inherits(x, "dist") && (is.matrix(x) && !isSymmetric(x)))
-    stop(paste(sQuote("x"), "is not of class", sQuote("dist"),
-            "or a symmetric matrix."))
-
-    x <- as.matrix(x)
-    n <- nrow(x)
+    if(!inherits(x, "TSP")) x <- TSP(x)
+    
+    # we use a matrix for now
+    if(!inherits(x, "matrix")) x <- TSP(as.matrix(x))
+    
+    n <- cities(x)
     if(start == 0) start <- sample(1:n, 1)
     
     # place first city
@@ -30,7 +30,6 @@ tsp_greedy <- function(x, start = 0) {
         current <- nearest
         order <- c(order, nearest)
     }
-
 
    order 
 }
