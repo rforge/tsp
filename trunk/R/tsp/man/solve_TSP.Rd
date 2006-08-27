@@ -1,5 +1,6 @@
 \name{solve_TSP}
 \alias{solve_TSP}
+\alias{tsp_concorde_help}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{TSP solver interface}
 \description{
