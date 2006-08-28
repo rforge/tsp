@@ -33,7 +33,7 @@ write_TSPLIB <- function(x, file, precision = 6) {
     }
     
     # only integers can be used as weights
-    x <- as.integer(x * 10^precision)
+    if(storage.mode(x) != "integer") x <- as.integer(x * 10^precision)
 
     cat("EDGE_WEIGHT_SECTION", x, file = zz, sep = "\n")
     cat("EOF", file = zz, sep = "\n")

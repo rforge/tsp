@@ -24,11 +24,11 @@ tsp_insertion <- function(x, nearest = TRUE, options = NULL){
         js <- which(placed)
         ks <- which(!placed)
 
-        # which.min does not break ties by random!
+        # which.min does no random tie breaking!
         if(nearest == TRUE) mx <- which.min(x[js,ks, drop = FALSE])
         else mx <- which.max(x[js,ks, drop = FALSE])
         k <- ks[(mx-1) %/% length(js) + 1]
-        j <- js[(mx-1) %% length(js) + 1]
+        #j <- js[(mx-1) %% length(js) + 1]
 
         # now we do nearest insertion
         placed[k] <- TRUE

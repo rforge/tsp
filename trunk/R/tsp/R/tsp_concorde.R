@@ -1,17 +1,13 @@
+# interface to the Concorde algorithm
+
 tsp_concorde <- function(x, options = NULL){
 
     # get parameters
-    clo         <- options$clo
-    precision   <- options$precision
-    exe         <- options$exe
-    if(is.null(clo))    clo     <- ""
-    if(is.null(precision))  precision   <- 6
+    clo         <- if(!is.null(options$clo))        options$clo         else ""
+    precision   <- if(!is.null(options$precision))  options$precision   else 6
+    exe         <- .find_concorde(options$exe)
     
-    # see if the environment is set, otherwise we hope it can be found in PATH
-    if(is.null(exe))        exe         <- Sys.getenv("R_CONCORDE")
-    if(exe == "")           exe         <- "concorde"   
-    
-    # check parameters
+    # check x
     if(!inherits(x, "TSP")) x <- TSP(x)
     
     # get temp files
@@ -19,21 +15,24 @@ tsp_concorde <- function(x, options = NULL){
     temp_file <- tempfile(tmpdir = wd) 
     
     # file name needs to be unique
-    tmp_file_in <- paste(temp_file, ".dat", sep = "")
+    tmp_file_in  <- paste(temp_file, ".dat", sep = "")
     tmp_file_out <- paste(temp_file, ".sol", sep = "")
     
     # prepare data
     write_TSPLIB(x, file = tmp_file_in, precision = precision)
 
+    # change working directory
     dir <- getwd()
     setwd(wd)
     on.exit(setwd(dir))
     
     # do the call and read back result
+    # we do not check return values of concorde since they are not
+    # very consistent
     system(paste(exe, "-x", "-o", tmp_file_out , clo, tmp_file_in))
     order <- scan(tmp_file_out, what = integer(0), quiet = TRUE)
     # remove number of nodes and add one (result starts with 0)
-    order <- order[-1]+1 
+    order <- order[-1] + as.integer(1) 
 
     # tidy up
     unlink(c(tmp_file_in, tmp_file_out))
@@ -41,7 +40,17 @@ tsp_concorde <- function(x, options = NULL){
     order
 }
 
-tsp_concorde_help <- function(exe = Sys.getenv("R_CONCORDE")) {
-      system(paste(exe, "-h"))
+# get help page
+tsp_concorde_help <- function(exe = NULL) {
+      system(paste(.find_concorde(exe), ""))
 }
   
+# helper to find the concorde executable
+.find_concorde <- function(exe = NULL) {
+    # use environment variable?
+    if(is.null(exe))    exe <- Sys.getenv("R_CONCORDE")
+    # last resort (hopefully it is in the PATH)
+    if(exe == "")       exe <- "concorde"
+}
+
+

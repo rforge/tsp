@@ -18,7 +18,8 @@ tsp_greedy <- function(x, options = NULL) {
     placed <- logical(n)
     placed[start] <- TRUE
     current <- start
-    order <- c(start)
+    order <- integer(n)
+    order[1] <- start
 
     while(any(placed == FALSE)) {
         # find nearest city
@@ -29,10 +30,12 @@ tsp_greedy <- function(x, options = NULL) {
         x_sub <- x[current,rest]
         nearest <- rest[which(x_sub == min(x_sub))]
         if(length(nearest) > 1) nearest <- sample(nearest, 1)
+        
+        # place city
+        order[n + 1 - length(rest)] <- nearest
         placed[nearest] <- TRUE
         current <- nearest
-        order <- c(order, nearest)
     }
 
-   order 
+   order
 }

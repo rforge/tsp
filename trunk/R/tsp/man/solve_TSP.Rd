@@ -1,6 +1,5 @@
 \name{solve_TSP}
 \alias{solve_TSP}
-\alias{tsp_concorde_help}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{TSP solver interface}
 \description{
@@ -42,7 +41,8 @@ Currently the following methods are available:
         far away into the tour fist to establish an outline of the whole tour
         early.
         
-        Additional options: \code{start} first city (default: random city)
+        Additional options: \code{start} index of the first city 
+        (default: random city)
         }
     
     \item{\code{greedy}}{ Greedy algorithm for a symmetric TSP. The algorithm
@@ -53,47 +53,46 @@ Currently the following methods are available:
         algorithm always adds to last city in the tour the nearest not yet
         visited city. The algorithm stops when all cities are on the tour.
         
-        Additional options: \code{start} first city (default: random city)
+        Additional options: \code{start} index of the first city 
+        (default: random city)
         }
     
     \item{\code{concorde}}{Concorde algorithm (Applegate et al. 2001).
         
-          The executable program Concorde is not included in this package and
-          has to be obtained separately from the Concorde web site
-          (\url{http://www.tsp.gatech.edu/concorde/downloads/downloads.htm}).
-          Unpack the program, place it in a convenient directory and make sure
-          it is executable. 
+          Concorde is an advanced TSP solver. The program is not included in
+          this package and has to be obtained and installed separately (see
+          \code{\link{tsp_concorde_help}}).
 
-          The following additional options can be used:
+          Additional options: 
+          
+          \code{exe:} character string containing the path to the executable 
+          (see \code{tsp_concorde_help})
 
-          \code{exe:} the whole path to the executable (including the
-executable's name) can be given in this option. A more convenient way is to
-permanently set the environment variable \code{R\_CONCORDE}.
+          \code{clo:} character string containing command line options for
+Concorde, e.g., \code{options = list(clo = "-B -v"}. See
+\code{tsp_concorde_help} on how to obtain a complete list of available
+command line options. 
 
-          \code{clo:} command line options for Concorde can be given a string
-in this option, e.g., \code{options = list(clo = "-B -v"} . To get a list of
-all available command line options try \code{tsp\_concorde\_help()}.  Several
-options (-x, -o, -N) are not available via this package.
-
-          \code{precision:} controls the number of decimal places used for the
-internal representation of distances in Concorde. Since Concorde uses
-\code{integer} for representing distances, the values given in \code{x} are
-multiplied by \eqn{10^{precision}} before being passed on to Concorde. Note
-that therefore all the output produced by Concorde (especially lower and upper
-bounds) need to be divided by \eqn{10^{precision}} (i.e., the decimal point has
-to be shifted \code{precision} placed to the left).  Note also, that Concorde
-cannot handle \code{Inf} which is therefore replaced by 2 times the maximum
-value in \code{x} (ignoring the infinity entries). See \code{write_TSPLIB}
-for more information.
+          \code{precision:} an integer which controls the number of
+decimal places used for the internal representation of distances in Concorde.
+The values given in \code{x} are multiplied by \eqn{10^{precision}} before
+being passed on to Concorde. Note that therefore the results produced by
+Concorde (especially lower and upper bounds) need to be divided by
+\eqn{10^{precision}} (i.e., the decimal point has to be shifted
+\code{precision} placed to the left). Note also, that Concorde cannot handle
+\code{Inf} which is therefore replaced by 2 times the maximum value in \code{x}
+(ignoring the infinity entries). The interface to Concorde uses 
+\code{write_TSPLIB} (see there for more information).
         }
 }
 }
 \value{
-  A integer vector containing the order of the cities in \code{x}.
+  An integer vector containing the tour for the cities in \code{x}.
 }
 \seealso{
 \code{\link{TSP}},
-\code{\link{write_TSPLIB}}.
+\code{\link{write_TSPLIB}},
+\code{\link{tsp_concorde_help}}.
 }
 \references{
 Concorde home page \url{http://www.tsp.gatech.edu/concorde/}
@@ -116,13 +115,13 @@ data("iris")
 tsp <- TSP(dist(iris[1:4]))
 
 # reorder
-order1 <- solve_TSP(tsp)
-order1
+tour1 <- solve_TSP(tsp)
+tour1
 
-order2 <- solve_TSP(tsp, method = "greedy", options = list(start = 1)) 
-order2
+tour2 <- solve_TSP(tsp, method = "greedy", options = list(start = 1)) 
+tour2
 
-order3 <- solve_TSP(tsp, method = "concorde", options = list(clo = "-v"))
-order3
+tour3 <- solve_TSP(tsp, method = "concorde", options = list(clo = "-v"))
+tour3
 }
 \keyword{optimize}% at least one, from doc/KEYWORDS

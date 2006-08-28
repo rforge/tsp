@@ -27,7 +27,8 @@ solve_TSP <- function(x, method = NULL, options = NULL, ...) {
         order <- tsp_concorde(x, options = options)
     }
 
-    class(order) <- c("TSP_tour", class(order))
+    if(!is.integer(order)) order <- as.integer(order)
+    class(order) <- c("TOUR", class(order))
     attr(order, "method") <- methods[methodNr]
     return(order)
 }

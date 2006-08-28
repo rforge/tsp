@@ -9,8 +9,8 @@
 \title{Class TSP -- Symmetric traveling salesman problem}
 \description{
   Constructor to create an instance of a 
-  symmetric traveling salesman problem (TSP) 
-  and some auxiliary methods.
+  symmetric traveling salesman problem (TSP) plus 
+  some auxiliary methods.
 }
 \usage{
 # constructor
