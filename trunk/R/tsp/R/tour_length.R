@@ -3,10 +3,9 @@
 tour_length <- function(x, order) {
    
     # check parameters
-    if(!inherits(x, "TSP")) x <- TSP(x)
-            
     # we need a dist
     if(!inherits(x, "dist")) x <- TSP(as.dist(x))
+    else if(!inherits(x, "TSP")) x <- TSP(x)
     
     n <- cities(x)
     if(missing(order)) order <- 1:n
@@ -25,5 +24,6 @@ tour_length <- function(x, order) {
     ij <- order[c(1,n)]
     i <- min(ij)
     j <- max(ij)
+    
     sum(s) + x[n*(i-1) - i*(i-1)/2 + j-i]
 }

@@ -1,6 +1,6 @@
 # create a TSP problem
 TSP <- function(x) {
-    if(inherits(x, "tsp")) return(x)
+    if(inherits(x, "TSP")) return(x)
     
     # check x
     if(inherits(x, "dist")) {
