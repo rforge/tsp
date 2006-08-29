@@ -2,7 +2,7 @@
 
 # TODO: if n > 1 the distances between the cities have to be inf...
 
-insert_dummy.dist <- function(x, n = 1, const = max(x), inf = Inf) {
+insert_dummy <- function(x, n = 1, const = max(x), inf = Inf) {
 
     # check parameters
     if(!inherits(x, "TSP")) x <- TSP(x)
@@ -31,37 +31,4 @@ insert_dummy.dist <- function(x, n = 1, const = max(x), inf = Inf) {
     attr(d, "Labels") <- c(paste("dummy", 1:n, sep = ""), attr(x, "Labels"))
     d
 }
-
-insert_dummy.matrix <- function(x, n = 1, const = max(x), inf = Inf) {
-   
-    # check parameters
-    if(!inherits(x, "TSP")) x <- TSP(x)
-    
-    n <- as.integer(n)
-    x <- cbind(matrix(const, ncol = n, nrow = nrow(x), 
-            dimnames = list(rows = NULL, 
-                cols = paste("dummy", 1:n, sep=""))), x)
-    x <- rbind(matrix(const, ncol = ncol(x), nrow = n,
-            dimnames = list(rows = paste("dummy", 1:n, sep=""), 
-                cols = NULL)), x)
-    
-    x[1:n,1:n] <- 0
-
-    if(n>1) {
-        for(i in 1:(n-1)) {
-            for(j in (i+1):n) {
-                x[i,j] <- Inf
-                x[j,i] <- Inf
-            }
-        }
-    }    
-    
-    
-    TSP(x)
-}
-
-# generic
-insert_dummy <- function(x, n = 1, const = max(x), inf = Inf) 
-UseMethod("insert_dummy")
-insert_dummy.default <- insert_dummy.matrix
 

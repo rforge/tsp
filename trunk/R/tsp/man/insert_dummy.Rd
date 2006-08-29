@@ -1,11 +1,9 @@
 \name{insert_dummy}
 \alias{insert_dummy}
-\alias{insert_dummy.matrix}
-\alias{insert_dummy.dist}
 \title{Insert dummy cities into a distance matrix}
 \description{
-  Provides methods for 
-  inserting dummy cities into an object of class \code{TSP}.
+   
+  Inserts dummy cities into an object of class \code{TSP}.
   A dummy city has constant distance to all other cities and
   is infinitely far from other dummy cities.
   Dummy cities can be used together with TSP solvers to

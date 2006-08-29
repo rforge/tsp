@@ -51,6 +51,8 @@ tsp_concorde_help <- function(exe = NULL) {
     if(is.null(exe))    exe <- Sys.getenv("R_CONCORDE")
     # last resort (hopefully it is in the PATH)
     if(exe == "")       exe <- "concorde"
+    
+    exe
 }
 
 

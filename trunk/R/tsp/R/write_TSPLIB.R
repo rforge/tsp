@@ -4,16 +4,10 @@
 write_TSPLIB <- function(x, file, precision = 6, inf = NULL) {
     
     if(!inherits(x, "TSP")) x <- TSP(x)
-    # NAs are not possible
-    if(any(is.na(x))) stop("NAs cannot be handled")
   
-    if(inherits(x, "dist")){
-        # Concorde can handle UPPER_ROW and dist (lower triangle matrix) 
-        # is symmetric.
-        format <- "EDGE_WEIGHT_FORMAT: UPPER_ROW"
-    }else if(inherits(x, "matrix")){
-        format <- "EDGE_WEIGHT_FORMAT: FULL_MATRIX"
-    }else stop("unknown storage format")
+    # Concorde can handle UPPER_ROW and dist (lower triangle matrix) 
+    # is symmetric.
+    format <- "EDGE_WEIGHT_FORMAT: UPPER_ROW"
     
     zz <- file(file, "w")
 

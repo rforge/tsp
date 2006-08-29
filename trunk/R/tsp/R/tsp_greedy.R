@@ -5,10 +5,10 @@ tsp_greedy <- function(x, options = NULL) {
     # check parameters
     if(!inherits(x, "TSP")) x <- TSP(x)
     
-    # we use a matrix for now
-    if(!inherits(x, "matrix")) x <- TSP(as.matrix(x))
-    
     n <- cities(x)
+
+    # we use a matrix for now
+    x <- as.matrix(x)
 
     start <- options$start
     if(is.null(start)) start <- sample(1:n, 1)

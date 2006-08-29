@@ -25,15 +25,16 @@ TSP(x)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x, object}{ an object (currently \code{dist} or a symmetric
-      \code{matrix}) to be converted into a \code{TSP} or an
-      object of class \code{TSP}.}
+      \code{matrix}) to be converted into a \code{TSP} or, for the methods, 
+      an object of class \code{TSP}.}
   \item{col}{ color scheme for image. }
   \item{order}{ order of cities for the image as
       an integer vector or an object of class \code{TOUR}.}
   \item{\ldots}{ further arguments are passed on.}
       }
-%\details{
-%}
+\details{
+Objects of class \code{TSP} are internally represented as \code{dist} objects.
+}
 \value{
 \code{TSP()} returns \code{x} as an object of class \code{TSP}.
 
@@ -52,20 +53,16 @@ TSP(x)
 \examples{
 data("iris")
 d <- dist(iris[1:4])
-m <- as.matrix(d)
 
 # create a TSP
-tsp1 <- TSP(d)
-tsp2 <- TSP(m)
+tsp <- TSP(d)
+tsp
 
-tsp1
-tsp2
+# use some methods for tsp
+cities(tsp)
 
-# some methods for tsp1
-cities(tsp1)
+labels(tsp)
 
-labels(tsp1)
-
-image(tsp1)
+image(tsp)
 }
 \keyword{classes}% at least one, from doc/KEYWORDS

@@ -7,10 +7,13 @@ TSP <- function(x) {
         # make sure we have a upper triangle matrix w/o diagonal
         if(attr(x, "Diag") == TRUE || attr(x, "Upper") == TRUE)
         x <- as.dist(x, diag = FALSE, upper = FALSE)
-    }else if(is.matrix(x)) {
-        if(!isSymmetric(x)) stop(paste(sQuote("x"), "is not symmetric"))
-    }else stop("the symmetric TSP requires a object of class", 
+    }else if(is.matrix(x) && isSymmetric(x)) {
+        x <- as.dist(x, diag = FALSE, upper = FALSE)
+    }else stop("TSP requires an object of class", 
         sQuote("dist"), "or a symmetric matrix")
+
+    # check for NAs
+    if(any(is.nan(x))) stop(paste(sQuote("NAs"), "not supported"))
     
     class(x) <- c("TSP", class(x))
     x
@@ -19,27 +22,20 @@ TSP <- function(x) {
 # print
 print.TSP <- function(x, ...) {
     cat("object of class", sQuote(class(x)[1]), "\n")
-    cat("problem stored as object of class", sQuote(class(x)[2]),
-        "with", cities(x), "cities","\n")
+    cat(cities(x), "cities", 
+        paste("(distance ", sQuote(attr(x, "method")),")", sep=""), "\n")
 }
 
 
 # number of cities
-cities.TSP <- function(x) {
-    if(inherits(x, "dist")) return(attr(x, "Size"))
-    if(inherits(x, "matrix")) return(nrow(x))
-    stop("unknown storage format")
-}
+cities.TSP <- function(x) attr(x, "Size")
 
 # generic for cities
 cities <- function(x) UseMethod("cities")
 cities.default <- cities.TSP
 
 # labels
-labels.TSP <- function(object, ...) {
-    if(inherits(object, "dist")) return(attr(object, "Labels"))
-    if(inherits(object, "matrix")) return(dimnames(object)[[1]])
-}
+labels.TSP <- function(object, ...) attr(object, "Labels")
 
 # image
 image.TSP <- function(x, order, col = gray.colors(64), ...) {

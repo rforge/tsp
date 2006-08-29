@@ -6,11 +6,11 @@ tsp_insertion <- function(x, nearest = TRUE, options = NULL){
     # check parameters
     if(!inherits(x, "TSP")) x <- TSP(x)
     
+    n <- cities(x)
     
     # we use a matrix for now
-    if(!inherits(x, "matrix")) x <- TSP(as.matrix(x))
+    x <- as.matrix(x)
     
-    n <- cities(x)
     start <- options$start
     if(is.null(start)) start <- sample(1:n, 1)
     if(start < 0 || start > n) stop(paste("illegal value for", sQuote("start")))
@@ -57,8 +57,6 @@ tsp_insertion <- function(x, nearest = TRUE, options = NULL){
         }
     }
 
-
-    #names(order) <- labels(x)[[1]][order]
     order
 }
 
