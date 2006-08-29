@@ -30,5 +30,6 @@ solve_TSP <- function(x, method = NULL, options = NULL, ...) {
     if(!is.integer(order)) order <- as.integer(order)
     class(order) <- c("TOUR", class(order))
     attr(order, "method") <- methods[methodNr]
+    attr(order, "tour_length") <- tour_length(x, order)
     return(order)
 }

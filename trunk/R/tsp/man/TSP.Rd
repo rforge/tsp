@@ -28,8 +28,8 @@ TSP(x)
       \code{matrix}) to be converted into a \code{TSP} or an
       object of class \code{TSP}.}
   \item{col}{ color scheme for image. }
-  \item{order}{ order of cities for the image, e.g., a tour computed by 
-      a TSP solver. }
+  \item{order}{ order of cities for the image as
+      an integer vector or an object of class \code{TOUR}.}
   \item{\ldots}{ further arguments are passed on.}
       }
 %\details{
@@ -43,7 +43,12 @@ TSP(x)
 }
 %\references{}
 %\author{}
-%\seealso{}
+\seealso{
+\code{\link{TOUR}},
+\code{\link{insert_dummy}},
+\code{\link{tour_length}},
+\code{\link{solve_TSP}}.
+}
 \examples{
 data("iris")
 d <- dist(iris[1:4])

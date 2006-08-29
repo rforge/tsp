@@ -1,7 +1,7 @@
 # write a simple TSPLIB format file from an object of class TSP
 # (contains a dist object or a symmetric matrix) 
 
-write_TSPLIB <- function(x, file, precision = 6) {
+write_TSPLIB <- function(x, file, precision = 6, inf = NULL) {
     
     if(!inherits(x, "TSP")) x <- TSP(x)
     # NAs are not possible
@@ -28,8 +28,9 @@ write_TSPLIB <- function(x, file, precision = 6) {
     # fixes for TSPLIB/Concorde
     # infinity is not available so we use a relatively large number
     inf_index <- is.infinite(x)
+    if(is.null(inf)) inf <- max(x[!inf_index]) * 2
     if(any(inf_index)) {
-        x[inf_index] <- max(x[!inf_index]) * 2
+        x[inf_index] <- inf
     }
     
     # only integers can be used as weights

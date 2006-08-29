@@ -1,4 +1,4 @@
-\name{write_TSPLIB}
+\name{TSPLIB}
 \alias{write_TSPLIB}
 \alias{read_TSPLIB}
 %- Also NEED an '\alias' for EACH other topic documented here.
@@ -9,7 +9,7 @@ TSP solvers. Sample instances for the TSP in TSPLIB format are available
 on the TSPLIB homepage (see references).
 }
 \usage{
-write_TSPLIB(x, file, precision = 6)
+write_TSPLIB(x, file, precision = 6, inf = NULL)
 read_TSPLIB(file, precision = 0)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -20,6 +20,9 @@ read_TSPLIB(file, precision = 0)
       distances (see details). If the \code{storage.mode} of \code{x} is
       already \code{integer} this argument is ignored and \code{x} is used as
       is.}
+  \item{inf}{ replacement value for \code{Inf} (TSPLIB format cannot handle
+      \code{Inf}). If \code{inf} is \code{NULL}, the default value of 2 times
+      the maximum value in \code{x} (ignoring the infinity entries) is used.}
 }
 \details{
 In the TSPLIB format distances are represented by integer values. Therefore, if
@@ -28,10 +31,6 @@ R) the values given in \code{x} are multiplied by \eqn{10^{precision}}.  Note
 that therefore all results produced by programs using the TSPLIB file as
 input need to be divided by \eqn{10^{precision}} (i.e., the decimal
 point has to be shifted \code{precision} placed to the left).
-
-Note also that the TSPLIB format cannot handle \code{Inf} which is therefore
-replaced by 2 times the maximum value in \code{x} (ignoring the infinity
-entries).
 }
 \value{
 \code{read_TSPLIB} returns an object of class \code{TSP}.

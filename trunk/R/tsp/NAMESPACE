@@ -16,3 +16,4 @@ S3method(cities, TSP)
 S3method(labels, TSP)
 S3method(image, TSP)
 
+S3method(print, TOUR)

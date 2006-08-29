@@ -1,6 +1,5 @@
-\name{tsp_concorde_help}
+\name{Concorde}
 \alias{tsp_concorde_help}
-\alias{concorde}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Concorde TSP solver}
 \description{

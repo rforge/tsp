@@ -87,9 +87,10 @@ Concorde (especially lower and upper bounds) need to be divided by
 }
 }
 \value{
-  An integer vector containing the tour for the cities in \code{x}.
+An object of class \code{TOUR}.
 }
 \seealso{
+\code{\link{TOUR}},
 \code{\link{TSP}},
 \code{\link{write_TSPLIB}},
 \code{\link{tsp_concorde_help}}.
@@ -116,12 +117,13 @@ tsp <- TSP(dist(iris[1:4]))
 
 # reorder
 tour1 <- solve_TSP(tsp)
+tour2 <- solve_TSP(tsp, method = "nearest_insertion")
+tour3 <- solve_TSP(tsp, method = "greedy", options = list(start = 1)) 
+tour4 <- solve_TSP(tsp, method = "concorde")
+
 tour1
-
-tour2 <- solve_TSP(tsp, method = "greedy", options = list(start = 1)) 
 tour2
-
-tour3 <- solve_TSP(tsp, method = "concorde", options = list(clo = "-v"))
 tour3
+tour4
 }
 \keyword{optimize}% at least one, from doc/KEYWORDS
