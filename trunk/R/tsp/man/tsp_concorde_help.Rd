@@ -4,13 +4,12 @@
 \title{Concorde TSP solver}
 \description{
   The Concorde TSP solver (Applegate et al. 2001) is currently one of the most
-  advanced and fastest TSP solvers. 
-  
-  The Concorde solver is freely available for academic research and 
-  has to be obtained separately from the Concorde web site (see details).
+  advanced and fastest TSP solvers. This solver is freely available for
+  academic research and has to be obtained separately from the Concorde web
+  site (see details).
 }
 \usage{
-# obtain a list of command line options for Concorde
+## obtain a list of command line options for Concorde
 tsp_concorde_help(exe = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -18,21 +17,21 @@ tsp_concorde_help(exe = NULL)
   \item{exe}{ an optional character string containing the whole path to the
       executable (including the executable's name). If this option is not used,
       the Concorde executable is expected to be either installed
-      somewhere in the search \code{PATH} or that the environment variable
-      \code{R\_CONCORDE} contains the path to the executable (including the
+      somewhere in the search path or that the environment variable
+      \code{"R\_CONCORDE"} contains the path to the executable (including the
       executable's name).}
 }
 \details{
 The executable program Concorde is not included in this package and has to be
 obtained separately from the Concorde web site (see references).  Unpack the
 program, place it in a convenient directory (either a directory which is in the
-search \code{PATH} or set the environment variable \code{R\_CONCORDE}). Make
+search path or set the environment variable \code{"R\_CONCORDE"}). Make
 sure the program is executable. 
 
-To get a list of all available command line options which can be used
-via the \code{clo} option for \code{solve_TSP} use
-\code{tsp\_concorde\_help()}.  Several options (-x, -o, -N) are not available
-via \code{solve_TSP} since they are used by the interface.
+To get a list of all available command line options which can be used via the
+\code{clo} option for \code{solve_TSP} use \code{tsp\_concorde\_help()}.
+Several options (-x, -o, -N) are not available via \code{solve_TSP} since they
+are used by the interface.
 }
 %\value{
 %}

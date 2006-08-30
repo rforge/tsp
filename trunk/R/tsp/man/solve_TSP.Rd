@@ -20,7 +20,7 @@ solve_TSP(x, method, options, \ldots)
 \details{
 Currently the following methods are available:
 \describe{
-    \item{\code{nearest_insertion, farthest_insertion}}{
+    \item{\code{"nearest_insertion", "farthest_insertion"}}{
         Nearest and farthest insertion algorithms for a symmetric TSP (Johnson
         and Papadimitriou 1985).  
         
@@ -45,7 +45,7 @@ Currently the following methods are available:
         (default: random city)
         }
     
-    \item{\code{greedy}}{ Greedy algorithm for a symmetric TSP. The algorithm
+    \item{\code{"greedy"}}{ Greedy algorithm for a symmetric TSP. The algorithm
         is often also called nearest neighbor algorithm (Johnson and
         Papadimitriou 1985).
 
@@ -57,7 +57,7 @@ Currently the following methods are available:
         (default: random city)
         }
     
-    \item{\code{concorde}}{Concorde algorithm (Applegate et al. 2001).
+    \item{\code{"concorde"}}{Concorde algorithm (Applegate et al. 2001).
         
           Concorde is an advanced TSP solver. The program is not included in
           this package and has to be obtained and installed separately (see
@@ -65,15 +65,15 @@ Currently the following methods are available:
 
           Additional options: 
           
-          \code{exe:} character string containing the path to the executable 
+          \code{exe} character string containing the path to the executable 
           (see \code{tsp_concorde_help})
 
-          \code{clo:} character string containing command line options for
+          \code{clo} character string containing command line options for
 Concorde, e.g., \code{options = list(clo = "-B -v"}. See
 \code{tsp_concorde_help} on how to obtain a complete list of available
 command line options. 
 
-          \code{precision:} an integer which controls the number of
+          \code{precision} an integer which controls the number of
 decimal places used for the internal representation of distances in Concorde.
 The values given in \code{x} are multiplied by \eqn{10^{precision}} before
 being passed on to Concorde. Note that therefore the results produced by
@@ -112,10 +112,10 @@ combinatorial optimization, Wiley \& Sons.
 \examples{
 data("iris")
 
-# create TSP
+## create TSP
 tsp <- TSP(dist(iris[1:4]))
 
-# reorder
+## reorder
 tour1 <- solve_TSP(tsp)
 tour2 <- solve_TSP(tsp, method = "nearest_insertion")
 tour3 <- solve_TSP(tsp, method = "greedy", options = list(start = 1)) 

@@ -25,10 +25,10 @@ tour_length(x, order)
 data("iris")
 tsp <- TSP(dist(iris[1:4]))
 
-# original order
+## original order
 tour_length(tsp)
 
-# random tour
+## random tour
 tour_length(tsp, sample(1:cities(tsp)))
 }
 \keyword{optimize}

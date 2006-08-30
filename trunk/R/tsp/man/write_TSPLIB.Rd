@@ -17,20 +17,19 @@ read_TSPLIB(file, precision = 0)
   \item{x}{ an object of class \code{TSP}.}
   \item{file}{ file name. }
   \item{precision}{ controls the number of decimal places used to represent
-      distances (see details). If the \code{storage.mode} of \code{x} is
-      already \code{integer} this argument is ignored and \code{x} is used as
-      is.}
+      distances (see details). This argument is ignored and \code{x} is used as
+      is if \code{x} already is \code{integer}.}
   \item{inf}{ replacement value for \code{Inf} (TSPLIB format cannot handle
       \code{Inf}). If \code{inf} is \code{NULL}, the default value of 2 times
       the maximum value in \code{x} (ignoring the infinity entries) is used.}
 }
 \details{
 In the TSPLIB format distances are represented by integer values. Therefore, if
-\code{x} contains data in \code{storage.mode} \code{double} (which is normal in
-R) the values given in \code{x} are multiplied by \eqn{10^{precision}}.  Note
-that therefore all results produced by programs using the TSPLIB file as
-input need to be divided by \eqn{10^{precision}} (i.e., the decimal
-point has to be shifted \code{precision} placed to the left).
+\code{x} contains \code{double} values (which is normal in R) the values given
+in \code{x} are multiplied by \eqn{10^{precision}} before coercion to
+\code{integer}. Note that therefore all results produced by programs using the
+TSPLIB file as input need to be divided by \eqn{10^{precision}} (i.e., the
+decimal point has to be shifted \code{precision} placed to the left).
 }
 \value{
 \code{read_TSPLIB} returns an object of class \code{TSP}.

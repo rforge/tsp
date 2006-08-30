@@ -5,7 +5,7 @@
 \title{Class TOUR -- Solution to a traveling salesman problem}
 \description{
   Class to store the solution of a TSP.
-  Essentially an object of class \code{TOUR} is an integer vector
+  Essentially, an object of class \code{TOUR} is an integer vector
   containing the order of cities to visit.
 }
 \usage{
@@ -20,9 +20,9 @@
 Since an object of class \code{TOUR} is an integer vector, it can be 
 subsetted as an ordinary vector or coerced to vector using \code{as.vector}.
 Additionally, \code{TOUR} has the following attributes: 
-\code{method}, \code{tour_length}.
+\code{"method"}, \code{"tour_length"}.
 
-For most functions, e.g. \code{tour_length} or \code{image}, the \code{TSP}
+For most functions, e.g., \code{tour_length} or \code{image}, the \code{TSP}
 object used to find the tour is still needed, since the tour does not contain
 the distance information.
 }
@@ -39,6 +39,7 @@ the distance information.
 data("iris")
 tsp <- TSP(dist(iris[1:4]))
 
+## calculate a tour
 tour <- solve_TSP(tsp)
 tour
 

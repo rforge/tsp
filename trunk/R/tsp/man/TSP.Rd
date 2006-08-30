@@ -9,14 +9,14 @@
 \title{Class TSP -- Symmetric traveling salesman problem}
 \description{
   Constructor to create an instance of a 
-  symmetric traveling salesman problem (TSP) plus 
+  symmetric traveling salesman problem (TSP) and 
   some auxiliary methods.
 }
 \usage{
-# constructor
+## constructor
 TSP(x)
 
-# methods
+## methods
 \method{cities}{TSP}(x)
 \method{image}{TSP}(x, order, col = gray.colors(64), \ldots)
 \method{labels}{TSP}(object, \ldots)
@@ -54,15 +54,13 @@ Objects of class \code{TSP} are internally represented as \code{dist} objects.
 data("iris")
 d <- dist(iris[1:4])
 
-# create a TSP
+## create a TSP
 tsp <- TSP(d)
 tsp
 
-# use some methods for tsp
+## use some methods for tsp
 cities(tsp)
-
 labels(tsp)
-
 image(tsp)
 }
 \keyword{classes}% at least one, from doc/KEYWORDS

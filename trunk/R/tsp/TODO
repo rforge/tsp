@@ -1,4 +1,0 @@
-
-* at least for unix user we could provide a Makefile
-  that fetches, compiles, and installs concorde in
-  the default location (cf. cross-compiling R). (C)
