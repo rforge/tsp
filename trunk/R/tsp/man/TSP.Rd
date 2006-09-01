@@ -5,11 +5,10 @@
 \alias{print.TSP}
 \alias{labels.TSP}
 \alias{image.TSP}
-%- Also NEED an '\alias' for EACH other topic documented here.
-\title{Class TSP -- Symmetric traveling salesman problem}
+\title{Class TSP -- Symmetric traveling salesperson problem}
 \description{
   Constructor to create an instance of a 
-  symmetric traveling salesman problem (TSP) and 
+  symmetric traveling salesperson problem (TSP) and 
   some auxiliary methods.
 }
 \usage{

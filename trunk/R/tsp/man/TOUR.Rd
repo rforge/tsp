@@ -2,7 +2,7 @@
 \alias{TOUR}
 \alias{print.TOUR}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{Class TOUR -- Solution to a traveling salesman problem}
+\title{Class TOUR -- Solution to a traveling salesperson problem}
 \description{
   Class to store the solution of a TSP.
   Essentially, an object of class \code{TOUR} is an integer vector

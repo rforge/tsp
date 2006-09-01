@@ -26,8 +26,8 @@ Currently the following methods are available:
         
         The two algorithms are variants of the
         minimum spanning tree algorithm for obtaining solutions to the
-        traveling salesman problem.  The distances between cities are stored in
-        a distance matrix \eqn{D} with elements \eqn{d(i,j)}.
+        traveling salesperson problem.  The distances between cities are stored
+        in a distance matrix \eqn{D} with elements \eqn{d(i,j)}.
 
         The nearest insertion algorithm starts with a partial tour consisting
         of a single, arbitrarily chosen city. As long as not all cities are on
