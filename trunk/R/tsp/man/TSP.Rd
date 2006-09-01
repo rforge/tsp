@@ -1,7 +1,7 @@
 \name{TSP}
 \alias{TSP}
-\alias{cities}
-\alias{cities.TSP}
+\alias{n_of_cities}
+\alias{n_of_cities.TSP}
 \alias{print.TSP}
 \alias{labels.TSP}
 \alias{image.TSP}
@@ -17,7 +17,7 @@
 TSP(x)
 
 ## methods
-\method{cities}{TSP}(x)
+\method{n_of_cities}{TSP}(x)
 \method{image}{TSP}(x, order, col = gray.colors(64), \ldots)
 \method{labels}{TSP}(object, \ldots)
 \method{print}{TSP}(x, \ldots)
@@ -38,7 +38,7 @@ Objects of class \code{TSP} are internally represented as \code{dist} objects.
 \value{
 \code{TSP()} returns \code{x} as an object of class \code{TSP}.
 
-\code{cities()} returns an the number of cities in \code{x}.
+\code{n_of_cities()} returns an the number of cities in \code{x}.
 
 \code{labels()} returns a vector of the names of the cities in \code{x}.
 }
@@ -59,7 +59,7 @@ tsp <- TSP(d)
 tsp
 
 ## use some methods for tsp
-cities(tsp)
+n_of_cities(tsp)
 labels(tsp)
 image(tsp)
 }

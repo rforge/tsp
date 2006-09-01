@@ -1,6 +1,6 @@
 export(
     TSP,
-    cities, 
+    n_of_cities, 
     insert_dummy,
     solve_TSP,
     tsp_concorde_help, 
@@ -10,7 +10,7 @@ export(
     )
 
 S3method(print, TSP)
-S3method(cities, TSP)
+S3method(n_of_cities, TSP)
 S3method(labels, TSP)
 S3method(image, TSP)
 

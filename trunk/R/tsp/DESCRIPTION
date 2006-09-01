@@ -3,7 +3,7 @@ Type: Package
 Title: Traveling Salesman Problem (TSP)
 Version: 0.1-1
 Date: 2006-08-30
-Author: Michael Hahsler
+Author: Michael Hahsler and Kurt Hornik
 Maintainer: Michael Hahsler <hahsler@ai.wu-wien.ac.at>
 SystemRequirements: Concorde (http://www.tsp.gatech.edu/concorde/)
 Description: Basic infrastructure and some algorithms for the traveling

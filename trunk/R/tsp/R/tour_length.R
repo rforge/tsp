@@ -5,7 +5,7 @@ tour_length <- function(x, order) {
     # check parameters
     if(!inherits(x, "TSP")) x <- TSP(x)
     
-    n <- cities(x)
+    n <- n_of_cities(x)
     if(missing(order)) order <- 1:n
 
     # calculate the tour length

@@ -5,7 +5,7 @@ tsp_greedy <- function(x, options = NULL) {
     # check parameters
     if(!inherits(x, "TSP")) x <- TSP(x)
     
-    n <- cities(x)
+    n <- n_of_cities(x)
 
     # we use a matrix for now
     x <- as.matrix(x)

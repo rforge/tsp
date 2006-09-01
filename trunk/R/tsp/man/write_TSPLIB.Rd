@@ -15,7 +15,7 @@ read_TSPLIB(file, precision = 0)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{ an object of class \code{TSP}.}
-  \item{file}{ file name. }
+  \item{file}{ file name or a \code{connection}.  }
   \item{precision}{ controls the number of decimal places used to represent
       distances (see details). This argument is ignored and \code{x} is used as
       is if \code{x} already is \code{integer}.}

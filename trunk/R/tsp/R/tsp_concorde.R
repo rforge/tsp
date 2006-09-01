@@ -30,6 +30,10 @@ tsp_concorde <- function(x, options = NULL){
     # we do not check return values of concorde since they are not
     # very consistent
     system(paste(exe, "-x", "-o", tmp_file_out , clo, tmp_file_in))
+    
+    if(!file.access(tmp_file_out) == 0) 
+    stop("Problems with reading Concorde's output. Is Concorde properly installed?")
+    
     order <- scan(tmp_file_out, what = integer(0), quiet = TRUE)
     # remove number of nodes and add one (result starts with 0)
     order <- order[-1] + as.integer(1) 

@@ -10,7 +10,7 @@ insert_dummy <- function(x, n = 1, const = max(x), inf = Inf) {
     if(n < 1) stop(paste(sQuote("n"),"has to be >1"))
     
     n <- as.integer(n)
-    p <- cities(x)
+    p <- n_of_cities(x)
 
     d <- c(rep(const, sum(p:(p+n-1))), x)
     p <- p + n
