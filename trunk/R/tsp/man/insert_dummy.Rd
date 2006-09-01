@@ -20,7 +20,7 @@ insert_dummy(x, n = 1, const = max(x), inf = Inf)
   \item{inf}{distance between dummy cities.}
 }
 \details{
-The dummy cities are insert before the other cities in \code{x}. 
+  The dummy cities are inserted before the other cities in \code{x}. 
 }
 \seealso{\code{\link{TSP}}}
 \references{

@@ -28,11 +28,11 @@ program, place it in a convenient directory (either a directory which is in the
 search path or set the environment variable \code{"R\_CONCORDE"}). Make
 sure the program is executable. 
 
-To get a list of all available command line options which can be used via the
-\code{clo} option for \code{solve_TSP} use \code{tsp\_concorde\_help()}.
-Several options (-x, -o, -N) are not available via \code{solve_TSP} since they
-are used by the interface.
-}
+To get a list of all available command line options which can be used
+via the \code{clo} option for \code{solve_TSP} use
+\code{tsp\_concorde\_help()}.  Several options (\option{-x},
+\option{-o}, \option{-N}) are not available via \code{solve_TSP} since
+they are used by the interface.  }
 %\value{
 %}
 \seealso{

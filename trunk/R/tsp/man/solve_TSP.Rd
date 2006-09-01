@@ -69,7 +69,7 @@ Currently the following methods are available:
           (see \code{tsp_concorde_help})
 
           \code{clo} character string containing command line options for
-Concorde, e.g., \code{options = list(clo = "-B -v"}. See
+Concorde, e.g., \code{options = list(clo = "-B -v")}. See
 \code{tsp_concorde_help} on how to obtain a complete list of available
 command line options. 
 
