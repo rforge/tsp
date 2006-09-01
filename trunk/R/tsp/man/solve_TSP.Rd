@@ -119,11 +119,15 @@ tsp <- TSP(dist(iris[1:4]))
 tour1 <- solve_TSP(tsp)
 tour2 <- solve_TSP(tsp, method = "nearest_insertion")
 tour3 <- solve_TSP(tsp, method = "greedy", options = list(start = 1)) 
-tour4 <- solve_TSP(tsp, method = "concorde")
 
 tour1
 tour2
 tour3
+
+## use the external solver which has to be installed separately
+\dontrun{
+tour4 <- solve_TSP(tsp, method = "concorde")
 tour4
+}
 }
 \keyword{optimize}% at least one, from doc/KEYWORDS

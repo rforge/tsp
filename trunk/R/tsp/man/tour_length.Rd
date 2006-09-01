@@ -29,6 +29,6 @@ tsp <- TSP(dist(iris[1:4]))
 tour_length(tsp)
 
 ## random tour
-tour_length(tsp, sample(1:cities(tsp)))
+tour_length(tsp, sample(1:n_of_cities(tsp)))
 }
 \keyword{optimize}
