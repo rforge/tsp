@@ -1,4 +1,4 @@
-Package: tsp
+Package: TSP
 Type: Package
 Title: Traveling Salesperson Problem (TSP)
 Version: 0.1-2
