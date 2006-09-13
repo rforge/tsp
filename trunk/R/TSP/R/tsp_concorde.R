@@ -1,11 +1,11 @@
 # interface to the Concorde algorithm
 
-tsp_concorde <- function(x, options = NULL){
+tsp_concorde <- function(x, control = NULL){
 
     # get parameters
-    clo         <- if(!is.null(options$clo))        options$clo         else ""
-    precision   <- if(!is.null(options$precision))  options$precision   else 6
-    exe         <- .find_concorde(options$exe)
+    clo         <- if(!is.null(control$clo))        control$clo         else ""
+    precision   <- if(!is.null(control$precision))  control$precision   else 6
+    exe         <- .find_concorde(control$exe)
    
     
     # check x
