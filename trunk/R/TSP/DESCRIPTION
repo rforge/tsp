@@ -1,8 +1,8 @@
 Package: TSP
 Type: Package
 Title: Traveling Salesperson Problem (TSP)
-Version: 0.1-2
-Date: 2006-09-18
+Version: 0.1-3
+Date: 2006-xx-xx
 Author: Michael Hahsler and Kurt Hornik
 Maintainer: Michael Hahsler <hahsler@ai.wu-wien.ac.at>
 SystemRequirements: Concorde (http://www.tsp.gatech.edu/concorde/)

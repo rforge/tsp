@@ -1,4 +1,4 @@
-solve_TSP <- function(x, method = NULL, control = NULL, ...) {
+solve_TSP <- function(x, method = NULL, control = NULL) {
 
     # check parameters
     if(!inherits(x, "TSP")) x <- TSP(x)

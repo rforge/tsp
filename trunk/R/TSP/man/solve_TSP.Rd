@@ -6,7 +6,7 @@
   Common interface to all symmetric TSP solvers in this package.
 }
 \usage{
-solve_TSP(x, method, control, \ldots)
+solve_TSP(x, method, control)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -15,7 +15,6 @@ solve_TSP(x, method, control, \ldots)
       algorithm; see details). }
   \item{control}{ a list of arguments passed on to the TSP solver
       selected by \code{method}.}
-  \item{\ldots}{ further arguments (currently unused).}
 }
 \details{
 Currently the following methods are available:
