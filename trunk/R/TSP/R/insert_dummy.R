@@ -2,7 +2,7 @@
 
 # TODO: if n > 1 the distances between the cities have to be inf...
 
-insert_dummy <- function(x, n = 1, const = max(x), inf = Inf) {
+insert_dummy <- function(x, n = 1, const = 0, inf = Inf) {
 
     # check parameters
     if(!inherits(x, "TSP")) x <- TSP(x)
@@ -28,7 +28,7 @@ insert_dummy <- function(x, n = 1, const = max(x), inf = Inf) {
     
     attributes(d) <- attributes(x)
     attr(d, "Size") <- p
-    attr(d, "Labels") <- c(paste("dummy", 1:n, sep = ""), attr(x, "Labels"))
+    attr(d, "Labels") <- c(rep("dummy", n), attr(x, "Labels"))
     d
 }
 

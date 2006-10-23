@@ -2,7 +2,7 @@
 # (contains a dist object or a symmetric matrix) 
 
 write_TSPLIB <- function(x, file, precision = 6, inf = NULL) {
-    
+  
     if(!inherits(x, "TSP")) x <- TSP(x)
   
     # Concorde can handle UPPER_ROW and dist (lower triangle matrix) 
@@ -24,6 +24,8 @@ write_TSPLIB <- function(x, file, precision = 6, inf = NULL) {
     inf_index <- is.infinite(x)
     if(is.null(inf)) inf <- max(x[!inf_index]) * 2
     if(any(inf_index)) {
+        warning(paste("Infinity values are replaced by",
+                inf), immediate. = TRUE)
         x[inf_index] <- inf
     }
     

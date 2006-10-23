@@ -37,7 +37,7 @@ the distance information.
 }
 \examples{
 data("iris")
-tsp <- TSP(dist(iris[1:4]))
+tsp <- TSP(dist(iris[-5]))
 
 ## calculate a tour
 tour <- solve_TSP(tsp)

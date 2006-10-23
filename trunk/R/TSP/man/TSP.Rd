@@ -51,7 +51,7 @@ Objects of class \code{TSP} are internally represented as \code{dist} objects.
 }
 \examples{
 data("iris")
-d <- dist(iris[1:4])
+d <- dist(iris[-5])
 
 ## create a TSP
 tsp <- TSP(d)

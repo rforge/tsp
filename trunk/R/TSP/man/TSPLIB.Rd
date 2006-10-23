@@ -1,4 +1,5 @@
 \name{TSPLIB}
+\alias{TSPLIB}
 \alias{write_TSPLIB}
 \alias{read_TSPLIB}
 %- Also NEED an '\alias' for EACH other topic documented here.

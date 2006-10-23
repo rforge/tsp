@@ -14,8 +14,11 @@ tsp_concorde <- function(x, control = NULL){
     cat("\nrunning Concorde:\n")
     
 
-    # check for possible integer overflows
-    max_x <- max(x)
+    # get max (excluding inf) to check for possible integer overflows
+    max_x <- x
+    max_x[is.infinite(x)] <- NA
+    max_x <- max(max_x, na.rm = TRUE)
+    
     if(n_of_cities(x) < 10){
         # <10 cities: concorde can only handle max 2^15
         MAX <- 2^15
@@ -29,7 +32,7 @@ tsp_concorde <- function(x, control = NULL){
                     precision), immediate. = TRUE)
         }
     }else{
-        # regular constraints on integer is 2^31 - 1    
+        # regular constraint on integer is 2^31 - 1    
         MAX <- 2^31 - 1
 
         prec <- floor(log10(MAX / max_x / n_of_cities(x)))

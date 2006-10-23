@@ -112,7 +112,7 @@ combinatorial optimization, Wiley \& Sons.
 data("iris")
 
 ## create TSP
-tsp <- TSP(dist(iris[1:4]))
+tsp <- TSP(dist(iris[-5]))
 
 ## reorder
 tour1 <- solve_TSP(tsp)
