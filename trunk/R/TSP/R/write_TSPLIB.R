@@ -1,12 +1,10 @@
-# write a simple TSPLIB format file from an object of class TSP
-# (contains a dist object or a symmetric matrix) 
+## write a simple TSPLIB format file from an object of class TSP
+## (contains a dist object or a symmetric matrix) 
 
-write_TSPLIB <- function(x, file, precision = 6, inf = NULL) {
+write_TSPLIB.TSP <- function(x, file, precision = 6, inf = NULL) {
   
-    if(!inherits(x, "TSP")) x <- TSP(x)
-  
-    # Concorde can handle UPPER_ROW and dist (lower triangle matrix) 
-    # is symmetric.
+    ## Concorde can handle UPPER_ROW and dist (lower triangle matrix) 
+    ## is symmetric.
     format <- "EDGE_WEIGHT_FORMAT: UPPER_ROW"
     
     zz <- file(file, "w")
@@ -19,8 +17,8 @@ write_TSPLIB <- function(x, file, precision = 6, inf = NULL) {
         format, 
         file = zz, sep = "\n")
     
-    # fixes for TSPLIB/Concorde
-    # infinity is not available so we use a relatively large number
+    ## fixes for TSPLIB/Concorde
+    ## infinity is not available so we use a relatively large number
     inf_index <- is.infinite(x)
     if(is.null(inf)) inf <- max(x[!inf_index]) * 2
     if(any(inf_index)) {
@@ -29,7 +27,7 @@ write_TSPLIB <- function(x, file, precision = 6, inf = NULL) {
         x[inf_index] <- inf
     }
     
-    # only integers can be used as weights
+    ## only integers can be used as weights
     if(storage.mode(x) != "integer") x <- as.integer(x * 10^precision)
 
     cat("EDGE_WEIGHT_SECTION", x, file = zz, sep = "\n")
@@ -37,4 +35,11 @@ write_TSPLIB <- function(x, file, precision = 6, inf = NULL) {
 
     close(zz)
 }
+
+write_TSPLIB.ATSP <- function(x, file, precision = 6, inf = NULL) {
+    stop("Not implemented yet.")
+}
+
+## generic
+write_TSPLIB <- function(x, file, precision, inf) UseMethod("write_TSPLIB")
 

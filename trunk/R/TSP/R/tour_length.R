@@ -1,16 +1,11 @@
-
-
-tour_length <- function(x, order) {
+tour_length.TSP <- function(x, order) {
    
-    # check parameters
-    if(!inherits(x, "TSP")) x <- TSP(x)
-    
     n <- n_of_cities(x)
     if(missing(order)) order <- 1:n
 
-    # calculate the tour length
-    # access a dist object for i < j <= n is
-    # x[n*(i-1) - i*(i-1)/2 + j-i]
+    ## calculate the tour length
+    ## access a dist object for i < j <= n is
+    ## x[n*(i-1) - i*(i-1)/2 + j-i]
     s <- sapply(1:(n-1), FUN = function(k) {
             ij <- order[k:(k+1)]
             i <- min(ij)
@@ -18,10 +13,28 @@ tour_length <- function(x, order) {
             x[n*(i-1) - i*(i-1)/2 + j-i]
         })
 
-    # now we close the tour
+    ## now we close the tour
     ij <- order[c(1,n)]
     i <- min(ij)
     j <- max(ij)
     
     sum(s) + x[n*(i-1) - i*(i-1)/2 + j-i]
 }
+
+tour_length.ATSP <- function(x, order) {
+    
+    n <- n_of_cities(x)
+    if(missing(order)) order <- 1:n
+
+    ## calculate the tour length
+    s <- sapply(1:(n-1), FUN = function(k) {
+            x[order[k], order[k+1]]
+        })
+
+     
+    ## close the circle
+    sum(s) + x[order[n],order[1]]
+}
+
+## generic
+tour_length <- function(x, order) UseMethod("tour_length")

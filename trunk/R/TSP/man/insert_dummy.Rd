@@ -23,6 +23,10 @@ insert_dummy(x, n = 1, const = 0, inf = Inf)
 }
 \details{
   The dummy cities are inserted before the other cities in \code{x}. 
+
+  A \code{const} of 0 works if the TSP finds the optimal solution. For
+  heuristics returning suboptimal solutions, a \code{const} of \code{2 *
+  max\{x\}} seems to work well.
 }
 \seealso{\code{\link{TSP}}}
 \references{
@@ -40,7 +44,7 @@ data("iris")
 tsp <- TSP(dist(iris[-5]))
 
 ## insert 2 dummy cities (as object 1 and 2)
-tsp <- insert_dummy(tsp, n = 2)
+tsp <- insert_dummy(tsp, n = 2, const = 2 * max(tsp))
 
 ## get a solution for the TSP
 tour <- solve_TSP(tsp, method = "nearest")

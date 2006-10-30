@@ -1,11 +1,24 @@
+## TSP
 solve_TSP <- function(x, method = NULL, control = NULL) {
-
-    # check parameters
+    
     if(!inherits(x, "TSP")) x <- TSP(x)
+    .solve_TSP(x, method, control)
+}
+
+## ATSP
+solve_ATSP <- function(x, method = NULL, control = NULL) {
+
+    if(!inherits(x, "ATSP")) x <- ATSP(x)
+    .solve_TSP(x, method, control)
+
+}
+
+## workhorse
+.solve_TSP <- function(x, method = NULL, control = NULL) {
        
-    # methods
+    ## methods
     methods <- c(
-        "farthest_insertion",      # standard
+        "farthest_insertion",      ## standard
         "nearest_insertion",
         "greedy",
         "concorde"
@@ -16,7 +29,7 @@ solve_TSP <- function(x, method = NULL, control = NULL) {
     if(is.na(methodNr)) stop (paste("Unknown method:",sQuote(method)))
 
 
-    # work horses
+    ## work horses
     if(methodNr == 1) {
         order <- tsp_insertion(x, nearest = FALSE, control = control)
     }else if(methodNr == 2) {
