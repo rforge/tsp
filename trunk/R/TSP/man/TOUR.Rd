@@ -32,6 +32,7 @@ the distance information.
 %\author{}
 \seealso{
 \code{\link{TSP}},
+\code{\link{ATSP}},
 \code{\link{tour_length}},
 \code{\link{image}}.
 }

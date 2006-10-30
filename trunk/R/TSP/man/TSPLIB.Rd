@@ -1,6 +1,8 @@
 \name{TSPLIB}
 \alias{TSPLIB}
 \alias{write_TSPLIB}
+\alias{write_TSPLIB.TSP}
+\alias{write_TSPLIB.ATSP}
 \alias{read_TSPLIB}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Read and write TSPLIB files}
@@ -15,7 +17,7 @@ read_TSPLIB(file, precision = 0)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{ an object of class \code{TSP}.}
+  \item{x}{ an object of class \code{TSP} or \code{ATSP}.}
   \item{file}{ file name or a \code{connection}.  }
   \item{precision}{ controls the number of decimal places used to represent
       distances (see details). This argument is ignored and \code{x} is used as

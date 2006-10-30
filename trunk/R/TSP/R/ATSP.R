@@ -29,7 +29,7 @@ print.ATSP <- function(x, ...) {
 n_of_cities.ATSP <- function(x) nrow(x)
 
 ## labels
-labels.ATSP <- function(object, ...) dimnames(r)[[1]]
+labels.ATSP <- function(object, ...) dimnames(object)[[1]]
 
 ## image
 image.ATSP <- function(x, order, col = gray.colors(64), ...) {

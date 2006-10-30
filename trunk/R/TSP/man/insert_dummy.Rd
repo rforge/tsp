@@ -2,11 +2,11 @@
 \alias{insert_dummy}
 \title{Insert dummy cities into a distance matrix}
 \description{
-  Inserts dummy cities into an object of class \code{TSP}.  A dummy city has
-  constant distance (0) to all other cities and is infinitely far from other
-  dummy cities. A dummy city can be used to transform a shortest Hamiltonian
-  path problem (i.e., finding an optimal linear order) into a shortest
-  Hamiltonian cycle problem which can be solved by a TSP solvers 
+  Inserts dummy cities into an object of class \code{TSP} or \code{ATSP}.  A
+  dummy city has constant distance (0) to all other cities and is infinitely
+  far from other dummy cities. A dummy city can be used to transform a shortest
+  Hamiltonian path problem (i.e., finding an optimal linear order) into a
+  shortest Hamiltonian cycle problem which can be solved by a TSP solvers
   (Garfinkel 1985).
   
   Several dummy cities can be used together with a TSP solvers to perform
@@ -16,7 +16,7 @@
 insert_dummy(x, n = 1, const = 0, inf = Inf)
 }
 \arguments{
-  \item{x}{an object of class \code{TSP}.}
+  \item{x}{an object of class \code{TSP} or \code{ATSP}.}
   \item{n}{number of dummy cities.}
   \item{const}{distance of the dummy cities to all other cities.}
   \item{inf}{distance between dummy cities.}
@@ -28,7 +28,10 @@ insert_dummy(x, n = 1, const = 0, inf = Inf)
   heuristics returning suboptimal solutions, a \code{const} of \code{2 *
   max\{x\}} seems to work well.
 }
-\seealso{\code{\link{TSP}}}
+\seealso{
+\code{\link{TSP}},
+\code{\link{ATSP}}
+}
 \references{
 Sharlee Climer, Weixiong Zhang (2006): Rearrangement Clustering: Pitfalls,
 Remedies, and Applications, \emph{Journal of Machine Learning Research}
@@ -44,7 +47,7 @@ data("iris")
 tsp <- TSP(dist(iris[-5]))
 
 ## insert 2 dummy cities (as object 1 and 2)
-tsp <- insert_dummy(tsp, n = 2, const = 2 * max(tsp))
+tsp <- insert_dummy(tsp, n = 2, const = 0)
 
 ## get a solution for the TSP
 tour <- solve_TSP(tsp, method = "nearest")

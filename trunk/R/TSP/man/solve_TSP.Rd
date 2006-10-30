@@ -1,16 +1,18 @@
 \name{solve_TSP}
 \alias{solve_TSP}
+\alias{solve_ATSP}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{TSP solver interface}
 \description{
-  Common interface to all symmetric TSP solvers in this package.
+  Common interface to all TSP solvers in this package.
 }
 \usage{
 solve_TSP(x, method, control)
+solve_ATSP(x, method, control)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{ the TSP given as an object of class \code{TSP}.}
+  \item{x}{ the TSP given as an object of class \code{TSP} or \code{ATSP}.}
   \item{method}{ method to solve the TSP (default: farthest insertion 
       algorithm; see details). }
   \item{control}{ a list of arguments passed on to the TSP solver
@@ -20,8 +22,8 @@ solve_TSP(x, method, control)
 Currently the following methods are available:
 \describe{
     \item{\code{"nearest_insertion", "farthest_insertion"}}{
-        Nearest and farthest insertion algorithms for a symmetric TSP (Johnson
-        and Papadimitriou 1985).  
+        Nearest and farthest insertion algorithms for a symmetric and
+        asymmetric TSP (Johnson and Papadimitriou 1985).  
         
         The two algorithms are variants of the
         minimum spanning tree algorithm for obtaining solutions to the
@@ -44,9 +46,9 @@ Currently the following methods are available:
         (default: random city)
         }
     
-    \item{\code{"greedy"}}{ Greedy algorithm for a symmetric TSP. The algorithm
-        is often also called nearest neighbor algorithm (Johnson and
-        Papadimitriou 1985).
+    \item{\code{"greedy"}}{ Greedy algorithm for a symmetric and asymmetric
+        TSP. The algorithm is often also called nearest neighbor algorithm
+        (Johnson and Papadimitriou 1985).
 
         The algorithm starts with a tour containing a random city. Then the
         algorithm always adds to last city in the tour the nearest not yet
@@ -58,9 +60,9 @@ Currently the following methods are available:
     
     \item{\code{"concorde"}}{Concorde algorithm (Applegate et al. 2001).
         
-          Concorde is an advanced TSP solver. The program is not included in
-          this package and has to be obtained and installed separately (see
-          \code{\link{tsp_concorde_help}}).
+        Concorde is an advanced TSP solver for \emph{only symmetric} TSPs. The
+          program is not included in this package and has to be obtained and
+          installed separately (see \code{\link{tsp_concorde_help}}).
 
           Additional control options: 
           
@@ -91,6 +93,7 @@ An object of class \code{TOUR}.
 \seealso{
 \code{\link{TOUR}},
 \code{\link{TSP}},
+\code{\link{ATSP}},
 \code{\link{write_TSPLIB}},
 \code{\link{tsp_concorde_help}}.
 }
