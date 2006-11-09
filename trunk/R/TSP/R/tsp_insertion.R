@@ -2,10 +2,8 @@
 ## (Johnson and Papadimitrou in Lawler et al. 1985)
 
 tsp_insertion <- function(x, nearest = TRUE, control = NULL){
-
-    ## check parameters
-    ## if(!inherits(x, "TSP")) x <- TSP(x)
-
+    ## x comes checked form solve_TSP/solve_ATSP
+    
     n <- n_of_cities(x)
 
     ## we use a matrix for now (covers TSP and ATSP)

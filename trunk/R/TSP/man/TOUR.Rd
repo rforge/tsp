@@ -4,7 +4,8 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Class TOUR -- Solution to a traveling salesperson problem}
 \description{
-  Class to store the solution of a TSP.
+  Class to store the solution of a TSP. Objects of this class are 
+  returned by TSP solvers in this package.
   Essentially, an object of class \code{TOUR} is an integer vector
   containing the order of cities to visit.
 }
@@ -18,13 +19,14 @@
 }
 \details{
 Since an object of class \code{TOUR} is an integer vector, it can be 
-subsetted as an ordinary vector or coerced to vector using \code{as.vector}.
+subsetted as an ordinary vector or coerced to vector using \code{as.vector()}.
+It also contains as labels the names of the objects.
 Additionally, \code{TOUR} has the following attributes: 
 \code{"method"}, \code{"tour_length"}.
 
-For most functions, e.g., \code{tour_length} or \code{image}, the \code{TSP}
-object used to find the tour is still needed, since the tour does not contain
-the distance information.
+For most functions, e.g., \code{tour_length} or \code{image}, the
+\code{TSP/ATSP} object used to find the tour is still needed, since the tour
+does not contain the distance information.
 }
 %\value{
 %}

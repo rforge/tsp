@@ -35,7 +35,7 @@ TSPLIB file as input need to be divided by \eqn{10^{precision}} (i.e., the
 decimal point has to be shifted \code{precision} placed to the left).
 }
 \value{
-\code{read_TSPLIB} returns an object of class \code{TSP}.
+\code{read_TSPLIB} returns an object of class \code{TSP} ot \code{ATSP}.
 }
 \references{TSPLIB home page \url{http://www.iwr.uni-heidelberg.de/groups/comopt/software/TSPLIB95/}}
 %\author{ ~~who you are~~ }

@@ -2,6 +2,8 @@
 ATSP <- function(x) {
     if(inherits(x, "ATSP")) return(x)
     
+    method <- attr(x, "method")
+    
     ## check x
     if(inherits(x, "dist")) {
         x <- as.matrix(x)
@@ -13,15 +15,18 @@ ATSP <- function(x) {
     if(any(is.nan(x))) stop(paste(sQuote("NAs"), "not supported"))
     
     class(x) <- c("ATSP", class(x))
-    attr(x, "method") <- "unknown" 
+    attr(x, "method") <- method
     x
 }
 
 ## print
 print.ATSP <- function(x, ...) {
+    method <- attr(x, "method")
+    if(is.null(method)) method <- "unknown"
+    
     cat("object of class", sQuote(class(x)[1]), " (asymmetric TSP) \n")
     cat(n_of_cities(x), "cities", 
-        paste("(distance ", sQuote(attr(x, "method")),")", sep=""), "\n")
+        paste("(distance ", sQuote(method),")", sep=""), "\n")
 }
 
 

@@ -24,7 +24,7 @@ TSP(x)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x, object}{ an object (currently \code{dist} or a symmetric
-      \code{matrix}) to be converted into a \code{TSP} or, for the methods, 
+      matrix) to be converted into a \code{TSP} or, for the methods, 
       an object of class \code{TSP}.}
   \item{col}{ color scheme for image. }
   \item{order}{ order of cities for the image as
@@ -32,12 +32,13 @@ TSP(x)
   \item{\ldots}{ further arguments are passed on.}
       }
 \details{
-Objects of class \code{TSP} are internally represented as \code{dist} objects.
+Objects of class \code{TSP} are internally represented as \code{dist} objects
+(use \code{as.dist() to get the \code{dist} object}).
 }
 \value{
 \code{TSP()} returns \code{x} as an object of class \code{TSP}.
 
-\code{n_of_cities()} returns an the number of cities in \code{x}.
+\code{n_of_cities()} returns the number of cities in \code{x}.
 
 \code{labels()} returns a vector of the names of the cities in \code{x}.
 }
@@ -57,7 +58,7 @@ d <- dist(iris[-5])
 tsp <- TSP(d)
 tsp
 
-## use some methods for tsp
+## use some methods 
 n_of_cities(tsp)
 labels(tsp)
 image(tsp)

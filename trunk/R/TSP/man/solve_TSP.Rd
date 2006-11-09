@@ -1,6 +1,7 @@
 \name{solve_TSP}
 \alias{solve_TSP}
-\alias{solve_ATSP}
+\alias{solve_TSP.TSP}
+\alias{solve_TSP.ATSP}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{TSP solver interface}
 \description{
@@ -8,12 +9,11 @@
 }
 \usage{
 solve_TSP(x, method, control)
-solve_ATSP(x, method, control)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{ the TSP given as an object of class \code{TSP} or \code{ATSP}.}
-  \item{method}{ method to solve the TSP (default: farthest insertion 
+  \item{method}{ method to solve the TSP (default: nearest insertion 
       algorithm; see details). }
   \item{control}{ a list of arguments passed on to the TSP solver
       selected by \code{method}.}
@@ -25,25 +25,28 @@ Currently the following methods are available:
         Nearest and farthest insertion algorithms for a symmetric and
         asymmetric TSP (Johnson and Papadimitriou 1985).  
         
-        The two algorithms are variants of the
-        minimum spanning tree algorithm for obtaining solutions to the
-        traveling salesperson problem.  The distances between cities are stored
+        The distances between cities are stored
         in a distance matrix \eqn{D} with elements \eqn{d(i,j)}.
 
         The nearest insertion algorithm starts with a partial tour consisting
         of a single, arbitrarily chosen city. As long as not all cities are on
         the tour, find the city \eqn{k} which is \emph{nearest} to a city on
-        the tour. Next insert city \eqn{k} into the tour between two
+        the tour. Next, insert city \eqn{k} into the tour between two
         consecutive cities \eqn{i} and \eqn{j}, such that \eqn{d(i,k) + d(k,j)
         - d(i,j)} is minimized.  Repeat till all cities are on the tour.
+        The nearest insertion algorithms is a variant of the
+        minimum spanning tree algorithm for obtaining solutions to the
+        traveling salesperson problem. 
 
         The farthest insertion algorithm used the \emph{farthest} instead of
         the \emph{nearest} city. The idea behind this choice is to link cities
         far away into the tour fist to establish an outline of the whole tour
         early.
         
-        Additional control options: \code{start} index of the first city 
-        (default: random city)
+        Additional control options: 
+        \describe{\item{\code{start}}{index of the first city 
+        (default: random city).}
+        }
         }
     
     \item{\code{"greedy"}}{ Greedy algorithm for a symmetric and asymmetric
@@ -54,8 +57,9 @@ Currently the following methods are available:
         algorithm always adds to last city in the tour the nearest not yet
         visited city. The algorithm stops when all cities are on the tour.
         
-        Additional control options: \code{start} index of the first city 
-        (default: random city)
+        Additional control options: 
+        \describe{\item{\code{start}}{index of the first city 
+        (default: random city).}}
         }
     
     \item{\code{"concorde"}}{Concorde algorithm (Applegate et al. 2001).
@@ -65,16 +69,16 @@ Currently the following methods are available:
           installed separately (see \code{\link{tsp_concorde_help}}).
 
           Additional control options: 
-          
-          \code{exe} character string containing the path to the executable 
-          (see \code{tsp_concorde_help})
+      \describe{
+  \item{\code{exe}}{ a character string containing the path to the executable 
+      (see \code{tsp_concorde_help}).}
 
-          \code{clo} character string containing command line options for
+  \item{\code{clo}}{ a character string containing command line options for
 Concorde, e.g., \code{control = list(clo = "-B -v")}. See
 \code{tsp_concorde_help} on how to obtain a complete list of available
-command line options. 
+command line options.} 
 
-          \code{precision} an integer which controls the number of
+         \item{\code{precision}}{ an integer which controls the number of
 decimal places used for the internal representation of distances in Concorde.
 The values given in \code{x} are multiplied by \eqn{10^{precision}} before
 being passed on to Concorde. Note that therefore the results produced by
@@ -83,8 +87,10 @@ Concorde (especially lower and upper bounds) need to be divided by
 \code{precision} placed to the left). Note also, that Concorde cannot handle
 \code{Inf} which is therefore replaced by 2 times the maximum value in \code{x}
 (ignoring the infinity entries). The interface to Concorde uses 
-\code{write_TSPLIB} (see there for more information).
-        }
+\code{write_TSPLIB} (see there for more information).}
+        
+}
+}
 }
 }
 \value{

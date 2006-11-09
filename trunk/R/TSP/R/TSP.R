@@ -8,7 +8,9 @@ TSP <- function(x) {
         ## if(attr(x, "Diag") == TRUE || attr(x, "Upper") == TRUE)
         x <- as.dist(x, diag = FALSE, upper = FALSE)
     }else if(is.matrix(x) && isSymmetric(x)) {
+        method <- attr(x, "method")
         x <- as.dist(x, diag = FALSE, upper = FALSE)
+        attr(x, "method") <- method
     }else stop("TSP requires an object of class ", 
         sQuote("dist"), " or a symmetric matrix")
 
@@ -21,9 +23,12 @@ TSP <- function(x) {
 
 ## print
 print.TSP <- function(x, ...) {
+    method <- attr(x, "method")
+    if(is.null(method)) method <- "unknown"
+    
     cat("object of class", sQuote(class(x)[1]), "\n")
     cat(n_of_cities(x), "cities", 
-        paste("(distance ", sQuote(attr(x, "method")),")", sep=""), "\n")
+        paste("(distance ", sQuote(method),")", sep=""), "\n")
 }
 
 
@@ -44,4 +49,3 @@ image.TSP <- function(x, order, col = gray.colors(64), ...) {
     
     image.default(1:p, 1:p, as.matrix(x)[order, order], col = col, ...)
 }
-

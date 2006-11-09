@@ -68,6 +68,6 @@ write_TSPLIB.ATSP <- function(x, file, precision = 6, inf = NULL) {
 }
 
 ## generic
-write_TSPLIB <- function(x, file, precision = 6, inf = Inf) 
+write_TSPLIB <- function(x, file, precision = 6, inf = NULL) 
     UseMethod("write_TSPLIB")
 

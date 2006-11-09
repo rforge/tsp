@@ -9,7 +9,7 @@ tsp_concorde <- function(x, control = NULL){
    
     
     ## check x
-    if(!inherits(x, "TSP")) x <- TSP(x)
+    if(!inherits(x, "TSP")) stop("Concorde only solves symmetric TSPs.")
     
     cat("\nrunning Concorde:\n")
     

@@ -1,10 +1,7 @@
 ## Greedy tour also called nearest neighbor algorithm
 
 tsp_greedy <- function(x, control = NULL) {
-
-    ## check parameters
-    ## if(!inherits(x, "TSP")) x <- TSP(x)
-    ## parameter comes checked from solve_TSP/solve_ATSP
+    ## parameter x comes checked from solve_TSP/solve_ATSP
 
     n <- n_of_cities(x)
 
@@ -29,7 +26,7 @@ tsp_greedy <- function(x, control = NULL) {
         ## nearest <- rest[which.min(x[current,rest])]
         ## which.min has problems with Inf
         ## so we can break ties randomly now too
-        x_sub <- x[current,rest]
+        x_sub <- x[current, rest]
         nearest <- rest[which(x_sub == min(x_sub))]
         if(length(nearest) > 1) nearest <- sample(nearest, 1)
 
