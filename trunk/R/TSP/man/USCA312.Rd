@@ -1,12 +1,18 @@
 \name{USCA312}
 \alias{USCA312}
+\alias{USCA50}
 \docType{data}
-\title{TSP -- 312 cities in the US and Canada}
+\title{USCA312/USCA50 -- 312/50 cities in the US and Canada}
 \description{
-This data set contains the distances between 312 cities in the US and Canada
-as an object of class \code{TSP}.
+The \code{USCA312} dataset contains the distances between 312 cities in the US
+and Canada as an object of class \code{TSP}.
+\code{USCA50} is a subset of \code{USCA312} containing only the 
+first 50 cities.
 }
-\usage{data("USCA312")}
+\usage{
+data("USCA312")
+data("USCA50")
+}
 \format{
   An object of class \code{TSP}.  
 }

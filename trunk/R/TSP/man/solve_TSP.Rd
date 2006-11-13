@@ -21,27 +21,32 @@ solve_TSP(x, method, control)
 \details{
 Currently the following methods are available:
 \describe{
-    \item{\code{"nearest_insertion", "farthest_insertion"}}{
-        Nearest and farthest insertion algorithms for a symmetric and
-        asymmetric TSP (Johnson and Papadimitriou 1985).  
+    \item{\code{"nearest_insertion"}, \code{"farthest_insertion"},
+        \code{"cheapest_insertion"}, \code{"arbitrary_insertion"}}{
+        Nearest, farthest, cheapest and arbitrary insertion algorithms for a
+        symmetric and asymmetric TSP (Rosenkrantz et al. 1977).  
         
-        The distances between cities are stored
-        in a distance matrix \eqn{D} with elements \eqn{d(i,j)}.
+        The distances between cities are stored in a distance matrix \eqn{D}
+with elements \eqn{d(i,j)}.  All insertion algorithms start with a tour
+consisting of an arbitrary city and choose in each step a city \eqn{k} not yet
+on the tour. This city is inserted into the existing tour between two
+consecutive cities \eqn{i} and \eqn{j}, such that 
 
-        The nearest insertion algorithm starts with a partial tour consisting
-        of a single, arbitrarily chosen city. As long as not all cities are on
-        the tour, find the city \eqn{k} which is \emph{nearest} to a city on
-        the tour. Next, insert city \eqn{k} into the tour between two
-        consecutive cities \eqn{i} and \eqn{j}, such that \eqn{d(i,k) + d(k,j)
-        - d(i,j)} is minimized.  Repeat till all cities are on the tour.
-        The nearest insertion algorithms is a variant of the
-        minimum spanning tree algorithm for obtaining solutions to the
-        traveling salesperson problem. 
+\deqn{d(i,k) + d(k,j) - d(i,j)}
 
-        The farthest insertion algorithm used the \emph{farthest} instead of
-        the \emph{nearest} city. The idea behind this choice is to link cities
-        far away into the tour fist to establish an outline of the whole tour
-        early.
+is minimized. The algorithms stops when all cities are on the tour.
+
+The nearest insertion algorithm chooses city k in each step as the city which is
+\emph{nearest} to a city on the tour.  For farthest insertion, the city k is
+chosen in each step as the city which is \emph{farthest} to any city on the
+tour.  Cheapest insertion chooses the city k such that the cost of inserting
+the new city (i.e., the increase in the tour's length) is minimal.  Arbitrary
+insertion chooses the city k is randomly from all cities not yet on the tour.
+ 
+Nearest and cheapest insertion tries to build the tour using cities which fit
+well into the partial tour constructed so far.  The idea behind behind farthest
+insertion is to to link cities far away into the tour fist to establish an
+outline of the whole tour early.
         
         Additional control options: 
         \describe{\item{\code{start}}{index of the first city 
@@ -49,17 +54,22 @@ Currently the following methods are available:
         }
         }
     
-    \item{\code{"greedy"}}{ Greedy algorithm for a symmetric and asymmetric
-        TSP. The algorithm is often also called nearest neighbor algorithm
-        (Johnson and Papadimitriou 1985).
+    \item{\code{"nn", "repetitive_nn"}}{ 
+        Nearest neighbor and repetitive nearest neighbor
+        algorithms for symmetric and asymmetric
+        TSPs (Rosenkrantz et al. 1977).
 
         The algorithm starts with a tour containing a random city. Then the
         algorithm always adds to last city in the tour the nearest not yet
-        visited city. The algorithm stops when all cities are on the tour.
-        
+        visited city. The algorithm stops when all cities are on the tour. 
+ 
+        Repetitive nearest neighbor constructs a nearest neighbor tour for each
+city as the starting point and returns the shortest tour found.
+
         Additional control options: 
         \describe{\item{\code{start}}{index of the first city 
         (default: random city).}}
+        
         }
     
     \item{\code{"concorde"}}{Concorde algorithm (Applegate et al. 2001).
@@ -111,31 +121,43 @@ TSP cuts which do not conform to the template paradigm,
 Computational Combinatorial Optimization, M. Junger and D. Naddef (editors),
 Springer.
 
-D. S. Johnson, C. H. Papadimitriou (1985): Performance guarantees for
-heuristics (chapter 5). In: E. L. Lawler, J. K. Lenstra, A.H.G. Rinnooy Kan, D.
-B. Shmoys (eds.) The traveling salesman problem - A guided tour of
-combinatorial optimization, Wiley \& Sons.
+D. J. Rosenkrantz, R. E. Stearns, and Philip M. Lewis II (1977): 
+An analysis of several heuristics for the traveling salesman problem. 
+\emph{SIAM Journal on Computing, 6(3):563-­581.}
+  
+
+
 }
 %\author{Michael Hahsler}
 \examples{
-data("iris")
+data("USCA50")
 
 ## create TSP
-tsp <- TSP(dist(iris[-5]))
+tsp <- USCA50
 
-## reorder
-tour1 <- solve_TSP(tsp)
-tour2 <- solve_TSP(tsp, method = "nearest_insertion")
-tour3 <- solve_TSP(tsp, method = "greedy", control = list(start = 1)) 
-
-tour1
-tour2
-tour3
+## calculate tours
+tours <- list()
+tours$nearest   <- solve_TSP(tsp)
+tours$farthest  <- solve_TSP(tsp, method = "farthest_insertion")
+tours$cheapest  <- solve_TSP(tsp, method = "cheapest_insertion")
+tours$random    <- solve_TSP(tsp, method = "arbitrary_insertion")
+tours$nn        <- solve_TSP(tsp, method = "nn")
+tours$repetitive_nn    <- solve_TSP(tsp, method = "repetitive_nn")
 
 ## use the external solver which has to be installed separately
 \dontrun{
-tour4 <- solve_TSP(tsp, method = "concorde")
-tour4
+tours$concorde  <- solve_TSP(tsp, method = "concorde")
 }
+
+tours
+
+## compare tour lengths
+barplot(sapply(tours, FUN = attr, "tour_length"), ylab = "tour length")
+
+opt <- 14497 # optimal tour length
+abline(h = opt, col = "red")
+mtext("optimum", at = opt, side = 4, col = "red")
+
+
 }
 \keyword{optimize}% at least one, from doc/KEYWORDS

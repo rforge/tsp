@@ -20,7 +20,10 @@ solve_TSP <- function(x, method = NULL, control = NULL)
     methods <- c(
         "nearest_insertion",    ## standard
         "farthest_insertion",     
-        "greedy",
+        "cheapest_insertion",     
+        "arbitrary_insertion",     
+        "nn",
+        "repetitive_nn",
         "concorde"
     )
 
@@ -31,12 +34,18 @@ solve_TSP <- function(x, method = NULL, control = NULL)
 
     ## work horses
     if(methodNr == 1) {
-        order <- tsp_insertion(x, nearest = TRUE, control = control)
+        order <- tsp_insertion(x, type = "nearest", control = control)
     }else if(methodNr == 2) {
-        order <- tsp_insertion(x, nearest = FALSE, control = control)
+        order <- tsp_insertion(x, type = "farthest", control = control)
     }else if(methodNr == 3) {
-        order <- tsp_greedy(x, control = control)
+        order <- tsp_insertion(x, type = "cheapest", control = control)
     }else if(methodNr == 4) {
+        order <- tsp_insertion(x, type = "arbitrary", control = control)
+    }else if(methodNr == 5) {
+        order <- tsp_nn(x, control = control)
+    }else if(methodNr == 6) {
+        order <- tsp_repetitive_nn(x, control = control)
+    }else if(methodNr == 7) {
         order <- tsp_concorde(x, control = control)
     }
 

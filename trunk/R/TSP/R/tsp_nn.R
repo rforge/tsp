@@ -1,6 +1,6 @@
-## Greedy tour also called nearest neighbor algorithm
+## nearest neighbor algorithm
 
-tsp_greedy <- function(x, control = NULL) {
+tsp_nn <- function(x, control = NULL) {
     ## parameter x comes checked from solve_TSP/solve_ATSP
 
     n <- n_of_cities(x)
@@ -37,4 +37,15 @@ tsp_greedy <- function(x, control = NULL) {
     }
 
     order
+}
+
+## repetitive NN
+
+tsp_repetitive_nn <- function(x, control){
+
+  n <- n_of_cities(x)
+  tours <- lapply(1:n, function(i) tsp_nn(x, control = list(start = i)))
+  lengths <- sapply(tours, FUN = function(i) tour_length(x, i))
+  
+  tours[[which.min(lengths)]]
 }

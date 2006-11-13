@@ -32,7 +32,7 @@ set.seed(1234)
 \maketitle
 \sloppy
 
-\abstract{The traveling salesperson or salpesman problem (TSP) is a well known
+\abstract{The traveling salesperson or salesman problem (TSP) is a well known
 and important combinatorial optimization problem. The goal is to find the
 shortest tour that visits each city in a given list exactly once.  Despite this
 simple problem statement, the TSP belongs to the class of NP-hard problems.
@@ -78,7 +78,7 @@ weight~\citep{Hoffman1985}.
 It can be distinguished between the symmetric TSP and the asymmetric TSP. 
 For the symmetric case, $d(i,j) = d(j,i)$ holds, i.e., it does not
 matter if we travel from $i$ to $j$ or the other way round, the distance is the
-same. In the asymmetic case the distances are not equal for all cities pairs. 
+same. In the asymmetric case the distances are not equal for all cities pairs. 
 Problems of this kind arise when we do not deal with geometric distances
 between cities but, e.g, with the cost associated with traveling between
 locations. Here the price for the plane ticket between two cities may be
@@ -104,8 +104,8 @@ of the infrastructure.
 \class{TSP} objects can be created from a dissimilarity matrix (a \class{dist}
 object) or a symmetric matrix using \func{TSP}. 
 \class{ATSP} objects are created from square matrices representing the
-dissimilarites.
-In this process, lables are
+dissimilarities.
+In this process, labels are
 taken and stored as city names in the object. Several methods are
 defined for the classes:
 \begin{itemize}
@@ -113,7 +113,7 @@ defined for the classes:
         cities and the used distance measure).
     \item \func{n\_of\_cities} returns the number of cities.
     \item \func{labels} returns the city names.
-    \item \func{image} produces a shaded matrix plot of the dissimilarites
+    \item \func{image} produces a shaded matrix plot of the dissimilarities
         between cities. The order of the cities can be specified as the
         argument \code{order}.
 \end{itemize}
@@ -122,7 +122,7 @@ Internally, an object of class \class{TSP} is a \class{dist} object and,
 therefore, if needed, can be coerced to \class{dist} or \class{matrix}.
 An \class{ATSP} object is represented as a matrix.
 
-A popular format to save TSP descriptions to disk wich is supported by most TSP
+A popular format to save TSP descriptions to disk which is supported by most TSP
 solvers is the format used by \emph{TSPLIB}, a library of sample instances of
 the TSP maintained by \cite{Reinelt2004}. \pkg{TSP} provides \func{TSPLIB\_read}
 and \func{TSPLIB\_write} for this format. 
@@ -133,7 +133,7 @@ addition, it stores an attribute indicating the length of the tour. Again, a
 suitable \func{print} method is provided.
 
 The length of a tour can always be calculated using \func{tour\_length} and
-specifing a tsp and a tour. Instead of the tour an integer permutation vector
+specifying a tsp and a tour. Instead of the tour an integer permutation vector
 calculated outside the \pkg{TSP} package can be used as long as it has the
 right length.
 
@@ -144,63 +144,86 @@ All TSP solvers in \pkg{TSP} use the simple common interface:
 \end{center}
 \code{x} is the TSP to solve, \code{method} is a character string indicating
 the method used to solve the TSP and \code{control} can contain additional
-information used by the solver. The currently available methods are
-\code{"greedy"} (nearest neighbor), \code{"nearest\_insertion"},
-\code{"farthest\_insertion"} and \code{"concorde"}.
-These methods are described in detail in
+information used by the solver. 
+The currently available methods are described in
 Section~\ref{sec:algo}.
 
 \section{Algorithms}\label{sec:algo}
 
-The NP-hardness of the TSP make it already for medium sized necessery to rely
+The NP-hardness of the TSP make it already for medium sized necessary to rely
 on heuristics. In \pkg{TSP} we implemented some simple heuristics described by
 \cite{Johnson1985}. These algorithms are: the \emph{nearest neighbor algorithm}
 and two variants of the minimum spanning tree algorithm called \emph{nearest
 and farthest insertion algorithm.}
 
 \subsection{Nearest neighbor algorithm}
-The nearest neighbor algorithm is somtimes also called \emph{greedy} since it
-follows a very simple greedy procedure: The algorithm starts with a tour
-containing a random city.  Then the algorithm always adds to last city in the
-tour the nearest not yet visited city. The algorithm stops when all cities are
-on the tour.
+The nearest neighbor algorithm~\citep{Rosenkrantz1977} follows a very simple
+greedy procedure: The algorithm starts with a tour containing a random city.
+Then the algorithm always adds to last city in the tour the nearest not yet
+visited city. The algorithm stops when all cities are on the tour.
+It is implemented as method \code{"nn"}.
 
-\subsection{Nearest and farthes insertion algorithm}
+An extension to this algorithm is to repeat it with each city as
+the starting point and then choose the best tour. 
+This algorithm is implemented as \code{"repeated\_nn"}.
 
-It was already noted in the introduction that the TSP can be understood as
-finding a Hamiltonian cycle in a connected, undirected graph with a minimal
-weight sum. A method for finding a good solution is to first generate a minimum
-spanning tree.  A spanning tree of a connected, undirected graph is a tree
-composed of all vertices in the graph and a subset of the edges. The minimum
-spanning tree is a graphs spanning tree with minimal weight. Such a minimum
-spanning tree can be found using a distance matrix as input in less than
-$O(n^2)$ (e.g. using the algorithms by \cite{Kruskal1956} or
-\cite{Prim1957}). From the minimum spanning tree a Hamiltonian cycle is
-built using depth first traversal of the tree~\citep{Johnson1985}.  For
-distances which obey the triangular inequality the upper bound for the length
-of the tour found by the minimum spanning tree algorithm is twice the optimal
-tour length.
+\subsection{Insertion algorithms}
+All insertion algorithms~\citep{Rosenkrantz1977} start with a tour consisting
+of an arbitrary city and choose in each step a city $k$ not yet on the tour.
+This city is inserted into the existing tour between two consecutive cities
+$i$ and $j$, such that 
+$$d(i,k) + d(k,j) - d(i,j)$$ 
+is minimized.  The algorithms stops when all cities are on the tour.
 
-A minimum spanning tree based algorithm is the nearest insertion algorithm.
-It starts with a partial tour consisting of a
-single, arbitrarily chosen city. As long as not all cities are on the tour, it
-finds the city $k$ which is \emph{nearest} to a city on the tour. Next city $k$
-is inserted into the tour between two consecutive cities $i$ and $j$, such that
-$d(i,k) + d(k,j) - d(i,j)$ is minimized. The procedure is repeated untill all
-cities are on the tour.  This corresponfds to the minimum spanning tree
-algorithm since adding a city to a partial tour corresponds to adding an edge
-to a partial spanning tree.
+The insertion algorithms differ in the way the the city to be inserted next is
+chosen. 
+The following insertion algorithms are:
 
-The farthest insertion algorithm only differs from the nearest insertion
-algorithm by using the \emph{farthest} instead of the nearest city. The idea
-behind this choice is to link cities far away into the tour fist to establish
-an outline of the whole tour early. With this change, the algorithm
-cannot be directly related to generating a minimum spanning tree
-and thus the upper bound stated above cannot be guaranteed. However,
-it can be shown that the algorithm generates tours which approach 3/2
-times the optimal tour lenght~\citep{Johnson1985}.
+\begin{description}
+\item[Nearest insertion] The city $k$ is chosen in each step as
+the city which is \emph{nearest} to a city on the tour.
+
+\item[Farthest insertion] The city $k$ is chosen in each step as
+the city which is \emph{farthest} to a city on the tour.
+
+\item[Cheapest insertion] The city $k$ is chosen in each step 
+such that the cost of inserting the new city (i.e., the increase
+in the tour's length) is minimal.
+
+\item[Arbitrary insertion] The city $k$ is chosen randomly from all cities
+not yet on the tour.
+
+\end{description}
 
 
+The nearest and cheapest insertion algorithms are variants of to the minimum
+spanning tree algorithm where adding a city to a partial tour corresponds to
+adding an edge to a partial spanning tree.  Here the TSP is solved by finding
+a Hamiltonian cycle in a connected, undirected graph with a minimal weight
+sum. A known method for finding a good solution is to first generate a
+minimum spanning tree.  A spanning tree of a connected, undirected graph is a
+tree composed of all vertices in the graph and a subset of the edges. The
+minimum spanning tree is a graphs spanning tree with minimal weight. Such a
+minimum spanning tree can be found using a distance matrix as input in less
+than $O(n^2)$ (e.g. using the algorithms by \cite{Kruskal1956} or
+\cite{Prim1957}). From the minimum spanning tree a Hamiltonian cycle is built
+using depth first traversal of the tree~\citep{Rosenkrantz1977}.  For distances
+which obey the triangular inequality the upper bound for the length of the
+tour found by the minimum spanning tree algorithm is twice the optimal tour
+length which also holds for the nearest and cheapest insertion algorithms.
+
+The idea behind the farthest insertion algorithm is to link cities far away
+into the tour fist to establish an outline of the whole tour early. With this
+change, the algorithm cannot be directly related to generating a minimum
+spanning tree and thus the upper bound stated above cannot be guaranteed.
+However, it can be shown that the algorithm generates tours which approach
+$1.5$ times the optimal tour length~\citep{Rosenkrantz1977}.
+
+The insertion algorithms are implemented as methods 
+\code{"neatest\_insertion"},
+\code{"farthest\_insertion"},
+\code{"cheapest\_insertion"} and
+\code{"arbitrary\_insertion"}.
 
 
 \subsection{Concorde}
@@ -212,50 +235,60 @@ visiting all 24,978 cities in Sweden. The computation was carried out on a
 cluster with 96 nodes an took in total almost 100 CPU years (assuming a single
 CPU Xeon 2.8 GHz processor).
 
-\pkg{TSP} provides a simple interface to Concorde. It saves the TSP using
+\pkg{TSP} provides a simple interface to Concorde
+which is used for method \code{"concorde"}.
+. It saves the TSP using
 \func{TSPLIB\_save}, then calls the Concorde executable and reads back the 
 resulting tour.
 
 \section{Examples}
 
-\subsection{Solving a TSP}
-
-
+\subsection{Comparing some heuristics}
 In the following example, we use several heuristics to 
-find a short path in the \code{USCA312} dataset
-which contains the distances between 312 cities in the USA and Canada
-coded as a symmetric TSP.
+find a short path in the \code{USCA50} dataset which contains the
+distances between the first 50 cities in the \code{USCA312}
+dataset. The \code{USCA312} dataset contains the distances between 
+312 cities in the USA and Canada coded as a symmetric TSP.
+The smaller dataset is used here, since some heuristics are rather slow.
 
 <<>>=
 library("TSP")
-data("USCA312")
-tsp <- USCA312
+data("USCA50")
+tsp <- USCA50
 tsp
 @
 
-The tours using different heuristics are stored in the list \code{tours}
-and the tour lenghts are compared using the bar plot in 
-Figure~\ref{fig:barplot}. The horizontal line in the plot represents the
-optimal solution with a tour length of 38508. The optimal solution can
-be found using Concorde (\code{method = "concorde"}).
-Note that Concorde has to be installed separately before it can be used.
+The tours using different heuristics are stored in the list \code{tours} and
+the tour lengths are compared using the bar plot in Figure~\ref{fig:barplot}.
+The horizontal line in the plot represents the optimal solution with a tour
+length of 14497. The optimal solution can be found using Concorde
+(\code{method = "concorde"}). It is omitted here, since Concorde has to be
+installed separately.
 
-<<fig=TRUE, include=FALSE, label=barplot_USCA312, width=6, height=4>>=
+<<fig=TRUE, include=FALSE, label=barplot_USCA50, width=7, height=4>>=
 tours <- list()
-tours$farthest  <- solve_TSP(tsp)
-tours$nearest   <- solve_TSP(tsp, method = "nearest_insertion")
-tours$greedy    <- solve_TSP(tsp, method = "greedy")
-#tours$concorde  <- solve_TSP(tsp, method = "concorde")
+tours$nearest   <- solve_TSP(tsp)
+tours$farthest  <- solve_TSP(tsp, method = "farthest_insertion")
+tours$cheapest  <- solve_TSP(tsp, method = "cheapest_insertion")
+tours$arbitrary <- solve_TSP(tsp, method = "arbitrary_insertion")
+tours$nn        <- solve_TSP(tsp, method = "nn")
+tours$repetitive_nn    <- solve_TSP(tsp, method = "repetitive_nn")
+# tours$concorde  <- solve_TSP(tsp, method = "concorde")
+
 tours
 
-barplot(sapply(tours, FUN = attr, "tour_length"))
-abline(h = 38508, col = "red") # optimal tour length
+barplot(sapply(tours, FUN = attr, "tour_length"), ylab = "tour length")
+
+## add optimum
+opt <- 14497
+abline(h = opt, col = "red")
+mtext("optimum", at = opt, side = 4, col = "red")
 @
 
 \begin{figure}
 \centering
-\includegraphics[width=10cm]{TSP-barplot_USCA312}
-\caption{Comparision of the tour lengths for the USCA312 data set.}
+\includegraphics[width=10cm]{TSP-barplot_USCA50}
+\caption{Comparison of the tour lengths for the USCA50 dataset.}
 \label{fig:barplot}
 \end{figure}
 
@@ -283,7 +316,7 @@ abline(h = 38508, col = "red") # optimal tour length
 %\begin{figure}
 %\centering
 %\includegraphics[width=10cm]{TSP-barplot_iris}
-%\caption{Comparision of the tour lengths for the iris data set.}
+%\caption{Comparision of the tour lengths for the iris dataset.}
 %\label{fig:barplot}
 %\end{figure}
 %
@@ -339,7 +372,7 @@ For the example, we choose the city New York to be the starting city.
 We transform the dataset into an asymmetric TSP and set the column 
 corresponding to New York to zero before solving the TSP. This means
 that the distance to return from the last city in the path
-to New York does not contribure to the path length.
+to New York does not contribute to the path length.
 We also tell the heuristic to first place the city New York which
 helps the heuristic find a better solution than when this city is placed later.
 
@@ -358,9 +391,9 @@ head(labels(tour))
 tail(labels(tour))
 @
 
-Finding the shortest Hamiltonian which ends in a given city can be achived
+Finding the shortest Hamiltonian which ends in a given city can be achieved
 likewise by setting the row corresponding to this city in the distance
-matrics to zero.
+matrix to zero.
 
 For finding the shortest Hamiltonian path we can also restrict both end points.
 This problem can be transformed to a TSP by replacing the two cities by a
@@ -399,7 +432,7 @@ tour
 \subsection{Rearrangement clustering}
 \cite{Climer2006} introduce rearrangement clustering by arranging all objects
 in a linear order using a TSP. The authors suggest to find the cluster
-boundarys of $k$ clusters by adding $k$ \emph{dummy cities} which has
+boundaries of $k$ clusters by adding $k$ \emph{dummy cities} which has
 constant distance $c$ to all other cities and are infinitely far from each
 other. \cite{Climer2006} show that in the optimal solution of the TSP, the
 dummy cities must separate the most distant cities and thus lie exactly on the
@@ -445,7 +478,7 @@ iris[tour, "Species"]
 \centering
 \includegraphics[width=10cm]{TSP-dummy}
 \caption{Result of rearrangement clustering using three dummy cities and the 
-nearest insertion algorithm on the iris data set.}
+nearest insertion algorithm on the iris dataset.}
 \label{fig:dummy}
 \end{figure}
 
