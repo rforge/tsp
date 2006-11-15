@@ -20,8 +20,8 @@ read_TSPLIB(file, precision = 0)
   \item{x}{ an object of class \code{TSP} or \code{ATSP}.}
   \item{file}{ file name or a \code{connection}.  }
   \item{precision}{ controls the number of decimal places used to represent
-      distances (see details). This argument is ignored and \code{x} is used as
-      is if \code{x} already is \code{integer}.}
+      distances (see details).  If \code{x} already is \code{integer}, this
+      argument is ignored and \code{x} is used as is.}
   \item{inf}{ replacement value for \code{Inf} (TSPLIB format cannot handle
       \code{Inf}). If \code{inf} is \code{NULL}, the default value of 2 times
       the maximum value in \code{x} (ignoring the infinity entries) is used.}
@@ -35,9 +35,10 @@ TSPLIB file as input need to be divided by \eqn{10^{precision}} (i.e., the
 decimal point has to be shifted \code{precision} placed to the left).
 }
 \value{
-\code{read_TSPLIB} returns an object of class \code{TSP} ot \code{ATSP}.
+\code{read_TSPLIB} returns an object of class \code{TSP} or \code{ATSP}.
 }
-\references{TSPLIB home page \url{http://www.iwr.uni-heidelberg.de/groups/comopt/software/TSPLIB95/}}
+\references{TSPLIB home page, 
+\url{http://www.iwr.uni-heidelberg.de/groups/comopt/software/TSPLIB95/}}
 %\author{ ~~who you are~~ }
 %\seealso{ ~~objects to See Also as \code{\link{help}}, ~~~ }
 %\examples{

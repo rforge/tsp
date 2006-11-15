@@ -4,6 +4,8 @@
 \alias{print.ATSP}
 \alias{labels.ATSP}
 \alias{image.ATSP}
+\alias{as.matrix}
+\alias{as.matrix.ATSP}
 \title{Class ATSP -- Asymmetric traveling salesperson problem}
 \description{
   Constructor to create an instance of the 
@@ -39,7 +41,7 @@ Objects of class \code{ATSP} are internally represented by a matrix
 
 \code{n_of_cities()} returns the number of cities in \code{x}.
 
-\code{labels()} returns a vector of the names of the cities in \code{x}.
+\code{labels()} returns a vector with the names of the cities in \code{x}.
 }
 %\references{}
 %\author{}

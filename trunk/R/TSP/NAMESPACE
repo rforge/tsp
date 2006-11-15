@@ -3,14 +3,14 @@ importFrom(grDevices, gray.colors)
 importFrom(graphics, image.default)
 
 export(
-    TSP, ATSP, 
+    TSP, ATSP, TOUR, 
     n_of_cities, 
     insert_dummy,
-    solve_TSP,
-    tsp_concorde_help, 
     tour_length,
-    read_TSPLIB,
-    write_TSPLIB
+    solve_TSP,
+    concorde_help, 
+    read_TSPLIB, write_TSPLIB,
+    as.matrix
     )
 
 S3method(print, TSP)
@@ -31,5 +31,7 @@ S3method(write_TSPLIB, TSP)
 S3method(write_TSPLIB, ATSP)
 S3method(solve_TSP, TSP)
 S3method(solve_TSP, ATSP)
+
+S3method(as.matrix, ATSP)
 
 S3method(print, TOUR)

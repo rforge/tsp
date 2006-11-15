@@ -1,5 +1,5 @@
 \name{Concorde}
-\alias{tsp_concorde_help}
+\alias{concorde_help}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Concorde TSP solver}
 \description{
@@ -10,7 +10,7 @@
 }
 \usage{
 ## obtain a list of command line options for Concorde
-tsp_concorde_help(exe = NULL)
+concorde_help(exe = NULL)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -39,9 +39,10 @@ they are used by the interface.  }
 \code{\link{solve_TSP}}
 }
 \references{
-Concorde home page \url{http://www.tsp.gatech.edu/concorde/}
+Concorde home page,
+\url{http://www.tsp.gatech.edu/concorde/}
 
-Concorde download page 
+Concorde download page, 
 \url{http://www.tsp.gatech.edu/concorde/downloads/downloads.htm}
 
 David Appletgate, Robert Bixby, Vasek Chvatal, William Cook (2001):

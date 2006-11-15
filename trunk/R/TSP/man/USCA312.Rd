@@ -1,4 +1,4 @@
-\name{USCA312}
+\name{USCA}
 \alias{USCA312}
 \alias{USCA50}
 \docType{data}

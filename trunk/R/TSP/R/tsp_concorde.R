@@ -79,7 +79,7 @@ tsp_concorde <- function(x, control = NULL){
 }
 
 ## get help page
-tsp_concorde_help <- function(exe = NULL) {
+concorde_help <- function(exe = NULL) {
       system(paste(.find_concorde(exe), ""))
 }
   

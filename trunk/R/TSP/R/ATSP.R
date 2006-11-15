@@ -44,3 +44,7 @@ image.ATSP <- function(x, order, col = gray.colors(64), ...) {
     image.default(1:p, 1:p, x[order, order], col = col, ...)
 }
 
+## coerce to matrix
+as.matrix.ATSP <- function(x){
+    unclass(x)
+}

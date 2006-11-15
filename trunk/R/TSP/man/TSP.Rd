@@ -7,9 +7,8 @@
 \alias{image.TSP}
 \title{Class TSP -- Symmetric traveling salesperson problem}
 \description{
-  Constructor to create an instance of a 
-  symmetric traveling salesperson problem (TSP) and 
-  some auxiliary methods.
+  Constructor to create an instance of a symmetric traveling salesperson
+  problem (TSP) and some auxiliary methods.
 }
 \usage{
 ## constructor
@@ -33,14 +32,14 @@ TSP(x)
       }
 \details{
 Objects of class \code{TSP} are internally represented as \code{dist} objects
-(use \code{as.dist() to get the \code{dist} object}).
+(use \code{as.dist()} to get the \code{dist} object).
 }
 \value{
 \code{TSP()} returns \code{x} as an object of class \code{TSP}.
 
 \code{n_of_cities()} returns the number of cities in \code{x}.
 
-\code{labels()} returns a vector of the names of the cities in \code{x}.
+\code{labels()} returns a vector with the names of the cities in \code{x}.
 }
 %\references{}
 %\author{}

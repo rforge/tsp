@@ -19,33 +19,39 @@ solve_TSP(x, method, control)
       selected by \code{method}.}
 }
 \details{
-Currently the following methods are available:
+Currently the following methods are available: 
 \describe{
-    \item{\code{"nearest_insertion"}, \code{"farthest_insertion"},
-        \code{"cheapest_insertion"}, \code{"arbitrary_insertion"}}{
-        Nearest, farthest, cheapest and arbitrary insertion algorithms for a
-        symmetric and asymmetric TSP (Rosenkrantz et al. 1977).  
+\item{\code{"nearest_insertion"}, 
+    \code{"farthest_insertion"},
+    \code{"cheapest_insertion"}, 
+    \code{"arbitrary_insertion"}
+    }{ 
+    Nearest,
+    farthest, cheapest and arbitrary insertion algorithms for a symmetric and
+    asymmetric TSP (Rosenkrantz et al. 1977).  
         
-        The distances between cities are stored in a distance matrix \eqn{D}
-with elements \eqn{d(i,j)}.  All insertion algorithms start with a tour
-consisting of an arbitrary city and choose in each step a city \eqn{k} not yet
-on the tour. This city is inserted into the existing tour between two
-consecutive cities \eqn{i} and \eqn{j}, such that 
+The distances between cities are stored in a distance matrix \eqn{D} with
+elements \eqn{d(i,j)}.  All insertion algorithms start with a tour consisting
+of an arbitrary city and choose in each step a city \eqn{k} not yet on the
+tour. This city is inserted into the existing tour between two consecutive
+cities \eqn{i} and \eqn{j}, such that \deqn{d(i,k) + d(k,j) - d(i,j)} is
+minimized. The algorithms stops when all cities are on the tour.
 
-\deqn{d(i,k) + d(k,j) - d(i,j)}
+The nearest insertion algorithm chooses city \eqn{k} in each step as the city
+which is \emph{nearest} to a city on the tour.  
 
-is minimized. The algorithms stops when all cities are on the tour.
+For farthest insertion, the city \eqn{k} is chosen in each step as the city
+which is \emph{farthest} to any city on the tour.  
 
-The nearest insertion algorithm chooses city k in each step as the city which is
-\emph{nearest} to a city on the tour.  For farthest insertion, the city k is
-chosen in each step as the city which is \emph{farthest} to any city on the
-tour.  Cheapest insertion chooses the city k such that the cost of inserting
-the new city (i.e., the increase in the tour's length) is minimal.  Arbitrary
-insertion chooses the city k is randomly from all cities not yet on the tour.
+Cheapest insertion chooses the city \eqn{k} such that the cost of inserting the
+new city (i.e., the increase in the tour's length) is minimal.  
+
+Arbitrary insertion chooses the city \eqn{k} randomly from all cities not
+yet on the tour.
  
 Nearest and cheapest insertion tries to build the tour using cities which fit
 well into the partial tour constructed so far.  The idea behind behind farthest
-insertion is to to link cities far away into the tour fist to establish an
+insertion is to link cities far away into the tour fist to establish an
 outline of the whole tour early.
         
         Additional control options: 
@@ -55,16 +61,15 @@ outline of the whole tour early.
         }
     
     \item{\code{"nn", "repetitive_nn"}}{ 
-        Nearest neighbor and repetitive nearest neighbor
-        algorithms for symmetric and asymmetric
-        TSPs (Rosenkrantz et al. 1977).
+        Nearest neighbor and repetitive nearest neighbor algorithms for
+        symmetric and asymmetric TSPs (Rosenkrantz et al. 1977).
 
         The algorithm starts with a tour containing a random city. Then the
-        algorithm always adds to last city in the tour the nearest not yet
+        algorithm always adds to the last city on the tour the nearest not yet
         visited city. The algorithm stops when all cities are on the tour. 
  
         Repetitive nearest neighbor constructs a nearest neighbor tour for each
-city as the starting point and returns the shortest tour found.
+        city as the starting point and returns the shortest tour found.
 
         Additional control options: 
         \describe{\item{\code{start}}{index of the first city 
@@ -76,16 +81,16 @@ city as the starting point and returns the shortest tour found.
         
         Concorde is an advanced TSP solver for \emph{only symmetric} TSPs. The
           program is not included in this package and has to be obtained and
-          installed separately (see \code{\link{tsp_concorde_help}}).
+          installed separately (see \code{\link{concorde_help}}).
 
           Additional control options: 
       \describe{
   \item{\code{exe}}{ a character string containing the path to the executable 
-      (see \code{tsp_concorde_help}).}
+      (see \code{concorde_help}).}
 
   \item{\code{clo}}{ a character string containing command line options for
 Concorde, e.g., \code{control = list(clo = "-B -v")}. See
-\code{tsp_concorde_help} on how to obtain a complete list of available
+\code{concorde_help} on how to obtain a complete list of available
 command line options.} 
 
          \item{\code{precision}}{ an integer which controls the number of
@@ -111,10 +116,10 @@ An object of class \code{TOUR}.
 \code{\link{TSP}},
 \code{\link{ATSP}},
 \code{\link{write_TSPLIB}},
-\code{\link{tsp_concorde_help}}.
+\code{\link{concorde_help}}.
 }
 \references{
-Concorde home page \url{http://www.tsp.gatech.edu/concorde/}
+Concorde home page, \url{http://www.tsp.gatech.edu/concorde/}
 
 David Appletgate, Robert Bixby, Vasek Chvatal, William Cook (2001):
 TSP cuts which do not conform to the template paradigm,
@@ -123,7 +128,7 @@ Springer.
 
 D. J. Rosenkrantz, R. E. Stearns, and Philip M. Lewis II (1977): 
 An analysis of several heuristics for the traveling salesman problem. 
-\emph{SIAM Journal on Computing, 6(3):563-­581.}
+\emph{SIAM Journal on Computing, 6(3):563--581.}
   
 
 

@@ -4,23 +4,27 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Class TOUR -- Solution to a traveling salesperson problem}
 \description{
-  Class to store the solution of a TSP. Objects of this class are 
-  returned by TSP solvers in this package.
-  Essentially, an object of class \code{TOUR} is an integer vector
-  containing the order of cities to visit.
+  Class to store the solution of a TSP. Objects of this class are returned by
+  TSP solvers in this package.  Essentially, an object of class \code{TOUR} is
+  a permutation vector containing the order of cities to visit.
 }
 \usage{
+## conctructor
+TOUR(x)
+
+## methods
 \method{print}{TOUR}(x, \ldots)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{ an object of class \code{TOUR}}.
+  \item{x}{ an integer permutation vector or, for the methods 
+      an object of class \code{TOUR}}.
   \item{\ldots}{ further arguments are passed on.}
 }
 \details{
-Since an object of class \code{TOUR} is an integer vector, it can be 
-subsetted as an ordinary vector or coerced to vector using \code{as.vector()}.
-It also contains as labels the names of the objects.
+Since an object of class \code{TOUR} is an integer vector, it can be subsetted
+as an ordinary vector or coerced to an integer vector using
+\code{as.integer()}. It also contains the names of the objects as labels.
 Additionally, \code{TOUR} has the following attributes: 
 \code{"method"}, \code{"tour_length"}.
 
@@ -39,13 +43,16 @@ does not contain the distance information.
 \code{\link{image}}.
 }
 \examples{
-data("iris")
-tsp <- TSP(dist(iris[-5]))
+data("USCA50")
 
 ## calculate a tour
-tour <- solve_TSP(tsp)
+tour <- solve_TSP(USCA50)
 tour
 
-str(tour)
+## get permutation vector
+as.integer(tour)
+
+## show labels
+labels(tour)
 }
 \keyword{classes}% at least one, from doc/KEYWORDS

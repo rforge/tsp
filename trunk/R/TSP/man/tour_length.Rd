@@ -25,13 +25,12 @@ tour_length(x, order)
 %\references{
 %}
 \examples{
-data("iris")
-tsp <- TSP(dist(iris[1:4]))
+data("USCA50")
 
 ## original order
-tour_length(tsp)
+tour_length(USCA50)
 
 ## random tour
-tour_length(tsp, sample(1:n_of_cities(tsp)))
+tour_length(USCA50, sample(1:n_of_cities(USCA50)))
 }
 \keyword{optimize}

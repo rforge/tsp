@@ -1,5 +1,5 @@
-## Nearest/farthest insertion algorithm 
-## (Johnson and Papadimitrou in Lawler et al. 1985)
+## Insertion algorithms 
+## (Rosenkrantz et al. 1977)
 
 tsp_insertion <- function(x, type = "nearest", control = NULL){
             
@@ -54,8 +54,12 @@ tsp_insertion <- function(x, type = "nearest", control = NULL){
         
         ## farthest
         else if(type_num == 2) {
-            mx <- which.max(x[js,ks, drop = FALSE])
-            k <- ks[(mx-1) %/% length(js) + 1]
+            m <- x[ks,js, drop = FALSE]
+            
+            ds <- sapply(1:length(ks), FUN = 
+                function(i)  min(m[i, , drop = FALSE]))
+            
+            k <- ks[which.max(ds)]
         }
        
         ## cheapest
