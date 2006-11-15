@@ -13,13 +13,15 @@
   rearrangement clustering (Climer and Zhang 2006).
   }
 \usage{
-insert_dummy(x, n = 1, const = 0, inf = Inf)
+insert_dummy(x, n = 1, const = 0, inf = Inf, label =  "dummy")
 }
 \arguments{
   \item{x}{an object of class \code{TSP} or \code{ATSP}.}
   \item{n}{number of dummy cities.}
   \item{const}{distance of the dummy cities to all other cities.}
   \item{inf}{distance between dummy cities.}
+  \item{label}{ labels for the dummy cities. If only one label is given, it is
+        reused for all dummy cities.}
 }
 \details{
   The dummy cities are inserted after the other cities in \code{x}. 
@@ -50,7 +52,7 @@ data("iris")
 tsp <- TSP(dist(iris[-5]))
 
 ## insert 2 dummy cities
-tsp_dummy <- insert_dummy(tsp, n = 2)
+tsp_dummy <- insert_dummy(tsp, n = 2, label = "boundary")
 
 ## get a solution for the TSP
 tour <- solve_TSP(tsp_dummy)
@@ -59,8 +61,8 @@ tour <- solve_TSP(tsp_dummy)
 image(tsp_dummy, tour)
 
 ## draw lines where the dummy cities are located
-abline(h = which(labels(tour)=="dummy"), col = "red")
-abline(v = which(labels(tour)=="dummy"), col = "red")
+abline(h = which(labels(tour)=="boundary"), col = "red")
+abline(v = which(labels(tour)=="boundary"), col = "red")
 
 ## print the results (NAs are the dummy cities)
 iris[tour, "Species"]

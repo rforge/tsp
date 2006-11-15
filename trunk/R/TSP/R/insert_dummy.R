@@ -2,7 +2,8 @@
 
 ## TODO: if n > 1 the distances between the cities have to be inf...
 
-insert_dummy.TSP.old <- function(x, n = 1, const = 0, inf = Inf) {
+insert_dummy.TSP.old <- function(x, n = 1, const = 0, inf = Inf, 
+    label = "dummy") {
     
     if(n < 1) stop(paste(sQuote("n"),"has to be >1"))
     
@@ -30,23 +31,25 @@ insert_dummy.TSP.old <- function(x, n = 1, const = 0, inf = Inf) {
 }
 
 ## use insert dummy from ATSP
-insert_dummy.TSP <- function(x, n = 1, const = 0, inf = Inf) {
-    x <- insert_dummy(ATSP(x), n, const, inf)
+insert_dummy.TSP <- function(x, n = 1, const = 0, inf = Inf, label = "dummy") {
+    x <- insert_dummy(ATSP(x), n, const, inf, label)
     TSP(x)
 }
 
-insert_dummy.ATSP <- function(x, n = 1, const = 0, inf = Inf) {
+insert_dummy.ATSP <- function(x, n = 1, const = 0, inf = Inf, label = "dummy") {
    
     method <- attr(x, "method")
     
     n <- as.integer(n)
     p <- n_of_cities(x)
     
+    if(length(label) == 1 && n > 1) label = rep(label, n)
+    
     ## add dummy rows/columns
     x <- cbind(x, matrix(0, ncol = n, nrow = p, 
-            dimnames = list(NULL, rep("dummy", n))))
+            dimnames = list(NULL, label)))
     x <- rbind(x, matrix(0, ncol = p+n, nrow = n, 
-            dimnames = list(rep("dummy", n), NULL)))
+            dimnames = list(label, NULL)))
 
     ## place inf between dummies
     if(n>1) {
@@ -59,6 +62,6 @@ insert_dummy.ATSP <- function(x, n = 1, const = 0, inf = Inf) {
 }
 
 ##generic
-insert_dummy <- function(x, n = 1, const = 0, inf = Inf) 
+insert_dummy <- function(x, n = 1, const = 0, inf = Inf, label = "dummy") 
     UseMethod("insert_dummy")
 

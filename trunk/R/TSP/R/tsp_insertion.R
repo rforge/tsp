@@ -28,6 +28,7 @@ tsp_insertion <- function(x, type = "nearest", control = NULL){
     ## we use a matrix for now (covers TSP and ATSP)
     x <- as.matrix(x)
 
+    ## place first city
     start <- control$start
     if(is.null(start)) start <- sample(1:n, 1)
     if(start < 0 || start > n) 
@@ -37,11 +38,12 @@ tsp_insertion <- function(x, type = "nearest", control = NULL){
     placed[start] <- TRUE
     order <- c(start)
 
+    ## place other cities
     while(any(placed == FALSE)) {
         
         ## find city to be inserted
-        js <- which(placed)
         ks <- which(!placed)
+        js <- which(placed)
 
         ## which.max/which.min do no random tie breaking!
         ## nearest
@@ -66,6 +68,9 @@ tsp_insertion <- function(x, type = "nearest", control = NULL){
         else if(type_num == 3) {
             k <- ks[which.min(sapply(ks, FUN = 
                     function(k) min(insertion_cost(order, k))))]
+        ## we look for the optimal insertion place for k again later
+        ## this is not necessary, but it is more convenient
+        ## to reuse the code for the other insertion algorithms for now. 
         }
         
         ## random
@@ -76,12 +81,10 @@ tsp_insertion <- function(x, type = "nearest", control = NULL){
 
         ## do insertion
         placed[k] <- TRUE
-        if(length(order) == 1) order <- c(order, k)
+        if(length(order) == 1) order <- append(order, k)
         else {
             pos <- which.min(insertion_cost(order, k))
-            if(pos == length(order)) order <- c(order, k)
-            else order <- c(order[1:pos], k, 
-                order[(pos+1):length(order)]) 
+            order <- append(order, k, after = pos)
         }
     }
 

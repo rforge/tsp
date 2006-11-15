@@ -87,11 +87,18 @@ distances between cities but, e.g, with the cost associated with traveling
 between locations. Here the price for the plane ticket between two cities may
 be different depending on which way we go. 
 
-\marginpar{explain: distance - dissimilarity - euclidean}
+It has to be noted that in this paper, following the origin of the TSP,
+the term distance is used. Distance is used here exchangeable with
+dissimilarity and no restrictions to measures which 
+obey the triangle inequality are made. 
 
-\marginpar{organization of the paper}
+The paper is organized as follows:
+In Section~\ref{sec:infrastructure} we give an overview of the infrastructure
+implemented in \pkg{TSP} and the basic usage.  In Section~\ref{sec:algo} we
+present the available algorithms.  In Section~\ref{sec:examples} we give
+several examples.  Section~\ref{sec:conclusion} concludes the paper.
 
-\section{Basic infrastructure}
+\section{Basic infrastructure}\label{sec:infrastructure}
 
 In the package~\pkg{TSP}, a traveling salesperson problem is
 defined by an object of class \class{TSP} (symmetric) or \class{ATSP}
@@ -249,7 +256,7 @@ CPU Xeon 2.8 GHz processor).
 \code{"concorde"}.  It saves the TSP using \func{TSPLIB\_save} and then calls
 the Concorde executable and reads back the resulting tour.
 
-\section{Examples}
+\section{Examples}\label{sec:examples}
 
 \subsection{Comparing some heuristics}
 In the following example, we use several heuristics to 
@@ -420,7 +427,12 @@ and the distances to the end point in the rows. Obviously this is again an
 asymmetric TSP.
 
 For the following example, we are only interested in paths starting in New York
-and ending in Los Angeles.
+and ending in Los Angeles. Therefore, we remove the two cities from the
+distance matrix, create an asymmetric TSP and insert a dummy city called
+\code{"LA/NY"}. The distances from this dummy city are replaced by the
+distances from New York and the distances towards are replaced by the distances
+towards Los Angeles.
+
 
 <<echo=FALSE>>=
 set.seed(1234)
@@ -431,21 +443,27 @@ m <- as.matrix(USCA312)
 ny <- which(labels(USCA312) == "New York, NY")
 la <- which(labels(USCA312) == "Los Angeles, CA")
 
-atsp <- m[-c(ny,la), -c(ny,la)]
+atsp <- ATSP(m[-c(ny,la), -c(ny,la)])
+atsp <- insert_dummy(atsp, label = "LA/NY")
 
-atsp <- cbind(atsp, "LA / NY" = m[-c(ny,la), ny])
-atsp <- rbind(atsp, "LA / NY" = c(m[la, -c(ny,la)], 0))
-
-atsp <- ATSP(atsp)
-
-tour <- solve_TSP(atsp, control = list(start = n_of_cities(atsp)))
-#tour <- solve_TSP(atsp)
-tour
-
-#labels(tour)
+la_ny <- which(labels(atsp) == "LA/NY")
+atsp[la_ny, ] <- c(m[-c(ny,la), ny], 0)
+atsp[, la_ny] <- c(m[la, -c(ny,la)], 0)
 @
 
-\marginpar{fix example + code?}
+We let the arbitrary insertion heuristic 
+start with the dummy city to solve the TSP.
+
+<<>>=
+tour <- solve_TSP(atsp, method ="arbitrary", control = list(start=la_ny))
+tour
+
+head(labels(tour))
+tail(labels(tour))
+@
+
+The path moves from New York on to other cities close in the State of New York
+and it passes through cities in California before ending in Los Angeles.
 
 
 \subsection{Rearrangement clustering}
@@ -470,7 +488,7 @@ set.seed(4444)
 data("iris")
 tsp <- TSP(dist(iris[-5]))
 #tsp <- TSP(dist(scale(iris[-5])))
-tsp_dummy <- insert_dummy(tsp, n = 2, const = 0)
+tsp_dummy <- insert_dummy(tsp, n = 2, label = "boundary")
 tour <- solve_TSP(tsp_dummy)
 @
 
@@ -486,8 +504,8 @@ the clusters.
 image(tsp_dummy, tour)
 
 ## draw lines where the dummy cities are located
-abline(h = which(labels(tour)=="dummy"), col = "red")
-abline(v = which(labels(tour)=="dummy"), col = "red")
+abline(h = which(labels(tour)=="boundary"), col = "red")
+abline(v = which(labels(tour)=="boundary"), col = "red")
 @
 
 \begin{figure}
@@ -521,10 +539,16 @@ this method fails to find the three groups in the dataset. The reason is the
 considerable overlap between the groups `Virginica' and `Versicolor'.
 
 
-\section{Conclusion}
+\section{Conclusion}\label{sec:conclusion}
 
-\marginpar{write conclusion}
+In this paper we presented the package \pkg{TSP} which implements the
+infrastructure to handle and solve TSPs. The package introduces classes for
+problem descriptions (\class{TSP} and \class{ATSP}) and for the solution
+(\class{TOUR}). Together with a simple interface for solving TSPs, 
+it allows for an easy and transparent usage of the package.
 
+With the interface to Concorde, \pkg{TSP} also can use a state of the art
+implementation which efficiently computes exact solutions using branch-and-cut.
 %
 \bibliographystyle{abbrvnat}
 \bibliography{tsp}
