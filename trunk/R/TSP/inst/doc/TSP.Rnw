@@ -234,7 +234,7 @@ into the tour fist to establish an outline of the whole tour early. With this
 change, the algorithm cannot be directly related to generating a minimum
 spanning tree and thus the upper bound stated above cannot be guaranteed.
 However, it can was shown that the algorithm generates tours which approach
-$2/3$ times the optimal tour length~\citep{Johnson1885}. 
+$2/3$ times the optimal tour length~\citep{Johnson1985}. 
 
 The insertion algorithms are implemented as methods 
 \code{"neatest\_insertion"},
