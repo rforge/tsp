@@ -26,6 +26,7 @@ tsp_insertion <- function(x, type = "nearest", control = NULL){
     n <- n_of_cities(x)
 
     ## we use a matrix for now (covers TSP and ATSP)
+    asym <- inherits(x, "ATSP")
     x <- as.matrix(x)
 
     ## place first city
@@ -46,22 +47,22 @@ tsp_insertion <- function(x, type = "nearest", control = NULL){
         js <- which(placed)
 
         ## which.max/which.min do no random tie breaking!
-        ## nearest
-        if(type_num == 1) {
-            mx <- which.min(x[js,ks, drop = FALSE])
-            k <- ks[(mx-1) %/% length(js) + 1]
-        }
-        ## nearest insertion can be implemented more efficiently 
-        ## (see Rosenkrantz et al 1977)
-        
-        ## farthest
-        else if(type_num == 2) {
+        ## nearest / farthest
+        if(type_num == 1 || type_num == 2) {
+            if(type_num == 1) crit <- which.min else crit <- which.max 
+            
             m <- x[ks,js, drop = FALSE]
+            
+            ## for the asymmetric case we have to take distances
+            ## from and to the city into account
+            if(asym){
+                m <- cbind(m, t(x)[ks,js, drop = FALSE]) 
+            }
             
             ds <- sapply(1:length(ks), FUN = 
                 function(i)  min(m[i, , drop = FALSE]))
             
-            k <- ks[which.max(ds)]
+            k <- ks[crit(ds)]
         }
        
         ## cheapest

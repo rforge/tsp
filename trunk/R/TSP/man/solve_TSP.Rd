@@ -145,7 +145,7 @@ tours <- list()
 tours$nearest   <- solve_TSP(tsp)
 tours$farthest  <- solve_TSP(tsp, method = "farthest_insertion")
 tours$cheapest  <- solve_TSP(tsp, method = "cheapest_insertion")
-tours$random    <- solve_TSP(tsp, method = "arbitrary_insertion")
+tours$arbitrary    <- solve_TSP(tsp, method = "arbitrary_insertion")
 tours$nn        <- solve_TSP(tsp, method = "nn")
 tours$repetitive_nn    <- solve_TSP(tsp, method = "repetitive_nn")
 
