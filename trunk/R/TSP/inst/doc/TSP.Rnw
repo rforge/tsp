@@ -256,7 +256,7 @@ cluster with 96 nodes and took in total almost 100 CPU years (assuming a single
 CPU Xeon 2.8 GHz processor).
 
 \pkg{TSP} provides a simple interface to Concorde which is used for method
-\code{"concorde"}.  It saves the TSP using \func{TSPLIB\_save} and then calls
+\code{"concorde"}.  It saves the TSP using \func{write\_TSPLIB} and then calls
 the Concorde executable and reads back the resulting tour.
 
 \section{Examples}\label{sec:examples}
