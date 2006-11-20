@@ -33,24 +33,25 @@ set.seed(1234)
 \maketitle
 \sloppy
 
-\abstract{The traveling salesperson or salesman problem (TSP) is a well known
-and important combinatorial optimization problem. The goal is to find the
-shortest tour that visits each city in a given list exactly once and then
-returns to the starting city.  Despite this simple problem statement, the
-TSP belongs to the class of NP-hard problems.
+\abstract{The traveling salesperson or salesman problem (TSP) is a well
+  known and important combinatorial optimization problem. The goal is to
+  find the shortest tour that visits each city in a given list exactly
+  once and then returns to the starting city.  Despite this simple
+  problem statement, the TSP belongs to the class of NP-hard problems.
 
-The importance of the TSP arises from the variety of it's applications.
-Besides the obvious application for vehicle routing, many other applications,
-e.g., computer wiring, cutting wallpaper, job sequencing or several data
-visualization techniques, require the solution of a TSP.
+  The importance of the TSP arises from the variety of it's
+  applications.  Apart from the obvious application for vehicle routing,
+  many other applications, e.g., computer wiring, cutting wallpaper, job
+  sequencing or several data visualization techniques, require the
+  solution of a TSP.
 
-In this paper we introduce the R~package \pkg{TSP} which provides a basic
-infrastructure for handling and solving the traveling salesman problem.  In
-addition to informal S3 classes for specifying a TSP and its (possibly optimal)
-solution, the package contains several simple heuristics to find good
-solutions. Also an interface to \emph{Concorde}, one of the currently best TSP
-solver, is provided.
-}
+  In this paper we introduce the R~package \pkg{TSP} which provides a
+  basic infrastructure for handling and solving the traveling
+  salesperson problem.  The package features informal S3 classes for
+  specifying a TSP and its (possibly optimal) solution as well as
+  several simple heuristics to find good solutions.  In addition, it
+  provides an interface to \emph{Concorde}, one of the best TSP solvers
+  currently available.}
 
 \section{Introduction}
 The traveling salesperson problem~\citep[TSP;][]{Lawler1985} is a well known
@@ -71,7 +72,7 @@ to find a permutation $\pi$ that minimizes
     \sum_{i=1}^n d(i, \pi(i)),
 \end{equation}
 % see Lenstra & Kan 1975: Some simple Applications to the TSP
-which is the length of the tour.
+which is the \emph{length} of the tour.
 
 In terms of graph theory, cities can be regarded as vertices in a complete,
 weighted graph. The edge weights represent the distances between the cities.
@@ -79,18 +80,19 @@ The goal is to find a \emph{Hamiltonian cycle} with the least
 weight~\citep{Hoffman1985}.
 
 It can be distinguished between the symmetric TSP and the more general
-asymmetric TSP.  For the symmetric case, $d(i,j) = d(j,i)$ holds, i.e., it does
-not matter if we travel from $i$ to $j$ or the other way round, the distance is
-the same. In the asymmetric case, the distances are not equal for all cities
-pairs.  Problems of this kind arise when we do not deal with spacial
-distances between cities but, e.g, with the cost associated with traveling
-between locations. Here the price for the plane ticket between two cities may
-be different depending on which way we go. 
+asymmetric TSP.  For the symmetric case, $d(i,j) = d(j,i)$ holds, i.e.,
+it does not matter if we travel from $i$ to $j$ or the other way round,
+the distance is the same. In the asymmetric case, the distances are not
+equal for all pairs of cities.  Problems of this kind arise when we do
+not deal with spatial distances between cities but, e.g., with the cost
+associated with traveling between locations. Here the price for the
+plane ticket between two cities may be different depending on which way
+we go.
 
 It has to be noted that in this paper, following the origin of the TSP,
-the term distance is used. Distance is used here exchangeable with
-dissimilarity and no restrictions to measures which 
-obey the triangle inequality are made. 
+the term \emph{distance} is used.  Distance is used here exchangeably
+with dissimilarity and no restrictions to measures which obey the
+triangle inequality are made.
 
 The paper is organized as follows:
 In Section~\ref{sec:infrastructure} we give an overview of the infrastructure
@@ -134,11 +136,11 @@ An \class{ATSP} object is represented as a square matrix.
 Obviously, asymmetric TSPs are more general than symmetric TSPs, hence,
 symmetric TSPs can also be represented as asymmetric TSPs.
 
-A popular format to save TSP descriptions to disk which is supported by most
-TSP solvers is the format used by \emph{TSPLIB}, a library of sample instances
-of the TSP maintained by \cite{Reinelt2004}. The \pkg{TSP} package provides
-\func{TSPLIB\_read} and \func{TSPLIB\_write} to read and save
-symmetric and asymmetric TSPs. 
+A popular format to save TSP descriptions to disk which is supported by
+most TSP solvers is the format used by \emph{TSPLIB}, a library of
+sample instances of the TSP maintained by \cite{Reinelt2004}. The
+\pkg{TSP} package provides \func{read\_TSPLIB} and \func{write\_TSPLIB}
+to read and save symmetric and asymmetric TSPs.
 
 The class \class{TOUR} represents a solution to a TSP in form of an integer
 permutation vector containing the ordered indices and labels of the cities to
@@ -156,10 +158,11 @@ All TSP solvers in \pkg{TSP} use the simple common interface:
 \begin{center}
 \code{solve\_TSP(x, method, control)} 
 \end{center}
-\code{x} is the TSP to be solved, \code{method} is a character string
-indicating the method used to solve the TSP and \code{control} can contain a
-list with additional information used by the solver.  The different algorithms
-currently available as methods are described in Section~\ref{sec:algo}.
+where \code{x} is the TSP to be solved, \code{method} is a character
+string indicating the method used to solve the TSP and \code{control}
+can contain a list with additional information used by the solver.  The
+different algorithms currently available as methods are described in
+Section~\ref{sec:algo}.
 
 \section{Algorithms}\label{sec:algo}
 
@@ -237,7 +240,7 @@ However, it can was shown that the algorithm generates tours which approach
 $2/3$ times the optimal tour length~\citep{Johnson1985}. 
 
 The insertion algorithms are implemented as methods 
-\code{"neatest\_insertion"},
+\code{"nearest\_insertion"},
 \code{"farthest\_insertion"},
 \code{"cheapest\_insertion"} and
 \code{"arbitrary\_insertion"}.
@@ -259,12 +262,13 @@ the Concorde executable and reads back the resulting tour.
 \section{Examples}\label{sec:examples}
 
 \subsection{Comparing some heuristics}
-In the following example, we use several heuristics to 
-find a short path in the \code{USCA50} dataset which contains the
-distances between the first 50 cities in the \code{USCA312}
-dataset. The \code{USCA312} dataset contains the distances between 
-312 cities in the USA and Canada coded as a symmetric TSP.
-The smaller dataset is used here, since some heuristics are rather slow.
+
+In the following example, we use several heuristics to find a short path
+in the \code{USCA50} data set which contains the distances between the
+first 50 cities in the \code{USCA312} data set. The \code{USCA312} data
+set contains the distances between 312 cities in the USA and Canada
+coded as a symmetric TSP.  The smaller data set is used here, since some
+of the heuristic solvers employed are rather slow.
 
 <<>>=
 library("TSP")
@@ -303,7 +307,7 @@ mtext("optimum", at = opt, side = 4, col = "red")
 \begin{figure}
 \centering
 \includegraphics[width=10cm]{TSP-barplot_USCA50}
-\caption{Comparison of the tour lengths for the USCA50 dataset.}
+\caption{Comparison of the tour lengths for the USCA50 data set.}
 \label{fig:barplot}
 \end{figure}
 
@@ -331,7 +335,7 @@ mtext("optimum", at = opt, side = 4, col = "red")
 %\begin{figure}
 %\centering
 %\includegraphics[width=10cm]{TSP-barplot_iris}
-%\caption{Comparision of the tour lengths for the iris dataset.}
+%\caption{Comparision of the tour lengths for the iris data set.}
 %\label{fig:barplot}
 %\end{figure}
 %
@@ -340,16 +344,18 @@ mtext("optimum", at = opt, side = 4, col = "red")
 
 \subsection{Finding the shortest Hamiltonian path}
 
-The problem of finding the shortest Hamiltonian path through a graph can be
-transformed into the TSP~\citep{Garfinkel1985} with cities and distances
-representing the graphs vertices and edge weights, respectively.
+The problem of finding the shortest Hamiltonian path through a graph can
+be transformed into the TSP~\citep{Garfinkel1985} with cities and
+distances representing the graphs vertices and edge weights,
+respectively.
 
-Finding the shortest Hamiltonian path through all cities disregarding the
-endpoints can be achieved by inserting a `dummy city' which has a distance of
-zero to all other cities. The position of this city in the final tour
-represents the cutting point for the path. In the following we use a heuristic
-to find a short path in the \code{USCA312} dataset.  Inserting dummy cities is
-implemented in \pkg{TSP} as \func{insert\_dummy}.
+Finding the shortest Hamiltonian path through all cities disregarding
+the endpoints can be achieved by inserting a `dummy city' which has a
+distance of zero to all other cities. The position of this city in the
+final tour represents the cutting point for the path. In the following
+we use a heuristic to find a short path in the \code{USCA312} data set.
+Inserting dummy cities is implemented in \pkg{TSP} as
+\func{insert\_dummy}.
 
 <<echo=FALSE>>=
 set.seed(1234)
@@ -391,7 +397,7 @@ distances between the starting city and all other cities are no longer
 symmetric.
 
 As an example, we choose the city New York to be the starting city.
-We transform the dataset into an asymmetric TSP and set the column 
+We transform the data set into an asymmetric TSP and set the column 
 corresponding to New York to zero before solving the TSP. This means
 that the distance to return from the last city in the path
 to New York does not contribute to the path length.
@@ -476,7 +482,7 @@ dummy cities must separate the most distant cities and thus lie exactly on the
 optimal cluster boundaries.
 
 We insert two dummy cities 
-into the TSP for the iris dataset and perform rearrangement clustering
+into the TSP for the iris data set and perform rearrangement clustering
 using the nearest insertion algorithm. Note that this algorithm 
 does not find the optimal solution and it is not guaranteed that the 
 dummy cities will present the optimal cluster boundaries.
@@ -492,11 +498,11 @@ tsp_dummy <- insert_dummy(tsp, n = 2, label = "boundary")
 tour <- solve_TSP(tsp_dummy)
 @
 
-Next, we plot the TSP's permutated distance matrix using shading to represent
-distances. The result is displayed as Figure~\ref{fig:clustering}. Lighter
-areas represent larger distances. The additional red lines represent the
-positions of the dummy cities in the tour, which mark the found boundaries of
-the clusters.
+Next, we plot the TSP's permuted distance matrix using shading to
+represent distances. The result is displayed as
+Figure~\ref{fig:clustering}. Lighter areas represent larger
+distances. The additional red lines represent the positions of the dummy
+cities in the tour, which mark the found boundaries of the clusters.
 
 
 <<fig=TRUE, include=FALSE, label=clustering>>=
@@ -512,12 +518,12 @@ abline(v = which(labels(tour)=="boundary"), col = "red")
 \centering
 \includegraphics[width=10cm]{TSP-clustering}
 \caption{Result of rearrangement clustering using three dummy cities and the 
-nearest insertion algorithm on the iris dataset.}
+nearest insertion algorithm on the iris data set.}
 \label{fig:clustering}
 \end{figure}
 
 We can also look at how well the found partitioning fits the structure in the
-data given by the species field in the dataset.
+data given by the species field in the data set.
 
 <<>>=
 iris[tour, "Species"]
@@ -530,12 +536,12 @@ iris[tour, "Species"]
 @
 
 
-The resulting clustering perfectly splits the iris dataset into a group
+The resulting clustering perfectly splits the iris data set into a group
 containing only examples of the species `Setosa' and a second group containing
 examples for `Virginica' and `Versicolor'. Note that since the used heuristic
 resolves ties randomly, this result may not be achieved every time.  The
 optimal tour is always found by Concorde. However, using three dummy cities,
-this method fails to find the three groups in the dataset. The reason is the
+this method fails to find the three groups in the data set. The reason is the
 considerable overlap between the groups `Virginica' and `Versicolor'.
 
 
