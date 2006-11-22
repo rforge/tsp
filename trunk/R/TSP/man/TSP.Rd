@@ -15,7 +15,7 @@
 }
 \usage{
 ## constructor
-TSP(x)
+TSP(x, labels = NULL)
 
 ## coercion
 as.TSP(object)
@@ -31,6 +31,8 @@ as.TSP(object)
   \item{x, object}{ an object (currently \code{dist} or a symmetric
       matrix) to be converted into a \code{TSP} or, for the methods, 
       an object of class \code{TSP}.}
+  \item{labels}{optional city labels. If not given, labels are taken 
+      from \code{x}.}
   \item{col}{ color scheme for image. }
   \item{order}{ order of cities for the image as
       an integer vector or an object of class \code{TOUR}.}

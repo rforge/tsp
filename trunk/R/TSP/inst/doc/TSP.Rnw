@@ -116,10 +116,12 @@ of this infrastructure.
 \end{figure}
 
 \class{TSP} objects can be created from a distance matrix (a \class{dist}
-object) or a symmetric matrix using \func{TSP}.  \class{ATSP} objects are
-created by \func{ATSP} from square matrices representing the distances.
-In the creation process, labels are taken and stored as city names in the
-object. Several methods are defined for the classes:
+object) or a symmetric matrix using the creator function \func{TSP} or coercion
+with \func{as.TSP}.  Similarly, \class{ATSP} objects are created by \func{ATSP}
+or \func{as.ATSP} from square matrices representing the distances.  In the
+creation process, labels are taken and stored as city names in the object or
+can be explicitely given as arguments to the creator functions.  Several
+methods are defined for the classes:
 \begin{itemize}
     \item \func{print} displays basic information about the problem (number of
         cities and the used distance measure).
@@ -285,7 +287,7 @@ length of 14497. The optimal solution can be found using Concorde
 (\code{method = "concorde"}). It is omitted here, since Concorde has to be
 installed separately.
 
-<<fig=TRUE, include=FALSE, label=barplot_USCA50, width=7, height=4>>=
+<<fig=TRUE, include=FALSE, label=dotchart_USCA50, width=7, height=4>>=
 methods <- c("nearest_insertion", "farthest_insertion", "cheapest_insertion",
     "arbitrary_insertion", "nn", "repetitive_nn")
 
@@ -307,16 +309,15 @@ mtext("optimum", at = opt, side = 3, col = "red")
 \centering
 \includegraphics[width=10cm]{TSP-dotchart_USCA50}
 \caption{Comparison of the tour lengths for the USCA50 data set.}
-\label{fig:barplot}
+\label{fig:dotchart}
 \end{figure}
 
 
 \subsection{Finding the shortest Hamiltonian path}
 
-The problem of finding the shortest Hamiltonian path through a graph can
-be transformed into the TSP~\citep{Garfinkel1985} with cities and
-distances representing the graphs vertices and edge weights,
-respectively.
+The problem of finding the shortest Hamiltonian path through a graph can be
+transformed into the TSP with cities and distances representing the graphs
+vertices and edge weights, respectively~\citep{Garfinkel1985}. 
 
 Finding the shortest Hamiltonian path through all cities disregarding
 the endpoints can be achieved by inserting a `dummy city' which has a
@@ -344,20 +345,31 @@ TSP and print the labels to see the resulting tour.
 tour <- solve_TSP(tsp)
 #tour <- solve_TSP(tsp, method ="Concorde")
 tour
-
-labels(tour)
-which(labels(tour)== "dummy")
 @
 
 Since the dummy city has distance zero to all other cities, the path length is
 equal to the tour length reported above. The path starts with the first city in
-the list after the `dummy' city (the index in the tour is printed above) and
-ends with the city right before it. In the example above, this results in
-a path from Lihue in Hawaii to Yellowknife in Canada's Northwest Territories.
-However, the path found by the heuristic is almost double the optimal path
-length found by Concorde with a length of $34928$.
+the list after the `dummy' city  and ends with the city right before it. 
+In the following we show the 20 cities before and 20 after the dummy city.
 
-A related problem is to find the shortest Hamiltonian path starting with a
+<<>>=
+#labels(tour)
+dummy <- which(labels(tour)== "dummy")
+labels(tour)[(dummy-20):(dummy+20)]
+@
+
+The tour found in the example results in a path from Lihue in Hawaii to
+Yellowknife in Canada's Northwest Territories. It has to be mentioned, that the
+path found by the used heuristic is almost double the optimal path length found
+by Concorde with a length of $34928$, ilustrating the power of modern 
+TSP algorithms.
+
+For the following two examples, we show in a very low level way how the
+distance matrix between cities can be modified to solve related shortest
+Hamiltonian path problems. These examples serve as illustrations of how
+modifications can be made to transform different problems into a TSP.
+
+The first problem is to find the shortest Hamiltonian path starting with a
 given city. In this case, all distances to the selected city are set to zero,
 forcing the evaluation of all possible paths starting with this city and
 disregarding the way back from the final city in the tour.  By modifying the
@@ -378,7 +390,7 @@ set.seed(1234)
 @
 
 <<>>=
-atsp <- ATSP(USCA312)
+atsp <- as.ATSP(USCA312)
 ny <- which(labels(USCA312) == "New York, NY")
 atsp[, ny] <- 0
 tour <- solve_TSP(atsp, control = list(start = ny))
@@ -450,10 +462,10 @@ other. \cite{Climer2006} show that in the optimal solution of the TSP, the
 dummy cities must separate the most distant cities and thus lie exactly on the
 optimal cluster boundaries.
 
-We insert two dummy cities 
-into the TSP for the iris data set and perform rearrangement clustering
-using the nearest insertion algorithm. Note that this algorithm 
-does not find the optimal solution and it is not guaranteed that the 
+We insert two dummy cities into the TSP for the iris data set (the class
+attribute called \code{"Species"} is used as city labels) and perform
+rearrangement clustering using the nearest insertion algorithm. Note that this
+algorithm does not find the optimal solution and it is not guaranteed that the
 dummy cities will present the optimal cluster boundaries.
 
 <<echo=FALSE>>=
@@ -493,8 +505,8 @@ nearest insertion algorithm on the iris data set.}
 
 We can also look at how well the found partitioning fits the structure in the
 data given by the species field in the data set. Since we used the species as 
-the label for the cities in the TSP, the labels in the tour 
-represent the partitioning with the dummy cities names boundary seperating
+the city labels in the TSP, the labels in the tour 
+represent the partitioning with the dummy cities named `boundary' seperating
 groups.
 
 <<>>=

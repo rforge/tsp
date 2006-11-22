@@ -2,7 +2,7 @@
 TSP <- function(x, labels = NULL) {
     if(inherits(x, "TSP")) return(x)
     x <- as.TSP(x)
-    if(!is.null(labels)) attr(x, "Labels") <- as.labels
+    if(!is.null(labels)) attr(x, "Labels") <- labels
     x
 }
 

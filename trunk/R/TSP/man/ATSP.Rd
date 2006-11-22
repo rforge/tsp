@@ -17,7 +17,7 @@
 }
 \usage{
 ## constructor
-ATSP(x)
+ATSP(x, labels = NULL)
 
 ## coercion
 as.ATSP(object)
@@ -33,6 +33,8 @@ as.ATSP(object)
   \item{x, object}{ an object (a square matrix)
       to be converted into an \code{ATSP} or, for the methods, 
       an object of class \code{ATSP}.}
+  \item{labels}{optional city labels. If not given, labels are taken 
+      from \code{x}.}
   \item{col}{ color scheme for image. }
   \item{order}{ order of cities as an integer vector or an object of class
       \code{TOUR}.}

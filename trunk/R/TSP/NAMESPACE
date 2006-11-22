@@ -10,9 +10,12 @@ export(
     solve_TSP,
     concorde_help, 
     read_TSPLIB, write_TSPLIB,
-    as.matrix
+    as.matrix,
+    as.TSP,
+    as.ATSP
     )
 
+## TSP/ATSP
 S3method(print, TSP)
 S3method(n_of_cities, TSP)
 S3method(labels, TSP)
@@ -32,6 +35,12 @@ S3method(write_TSPLIB, ATSP)
 S3method(solve_TSP, TSP)
 S3method(solve_TSP, ATSP)
 
+## coercions
 S3method(as.matrix, ATSP)
+S3method(as.TSP, dist)
+S3method(as.TSP, matrix)
+S3method(as.ATSP, dist)
+S3method(as.ATSP, matrix)
 
+## TOUR
 S3method(print, TOUR)
