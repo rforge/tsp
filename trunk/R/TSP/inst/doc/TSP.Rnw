@@ -116,10 +116,8 @@ of this infrastructure.
 \end{figure}
 
 \class{TSP} objects can be created from a distance matrix (a \class{dist}
-object) or a symmetric matrix using a constructor function \func{TSP}
-or coercion with \func{as.TSP}.  \class{ATSP} objects are
-created by \func{ATSP} or coercion (\code{as.ATSP}) 
-from square matrices representing the distances.
+object) or a symmetric matrix using \func{TSP}.  \class{ATSP} objects are
+created by \func{ATSP} from square matrices representing the distances.
 In the creation process, labels are taken and stored as city names in the
 object. Several methods are defined for the classes:
 \begin{itemize}
@@ -279,69 +277,38 @@ tsp <- USCA50
 tsp
 @
 
-The tours using different heuristics are stored in the list \code{tours} and
-the tour lengths are compared using the bar plot in Figure~\ref{fig:barplot}.
-The horizontal line in the plot represents the optimal solution with a tour
+The tours using different heuristics are stored in the list \code{tours}.
+As an example we show the first tour. Then 
+the tour lengths are compared using the dot chart in Figure~\ref{fig:dotchart}.
+The vertical line in the plot represents the optimal solution with a tour
 length of 14497. The optimal solution can be found using Concorde
 (\code{method = "concorde"}). It is omitted here, since Concorde has to be
 installed separately.
 
 <<fig=TRUE, include=FALSE, label=barplot_USCA50, width=7, height=4>>=
-tours <- list()
-tours$nearest   <- solve_TSP(tsp)
-tours$farthest  <- solve_TSP(tsp, method = "farthest_insertion")
-tours$cheapest  <- solve_TSP(tsp, method = "cheapest_insertion")
-tours$arbitrary <- solve_TSP(tsp, method = "arbitrary_insertion")
-tours$nn        <- solve_TSP(tsp, method = "nn")
-tours$repetitive_nn    <- solve_TSP(tsp, method = "repetitive_nn")
+methods <- c("nearest_insertion", "farthest_insertion", "cheapest_insertion",
+    "arbitrary_insertion", "nn", "repetitive_nn")
+
+tours <- lapply(methods, FUN = function(m) solve_TSP(tsp, method = m))
+names(tours) <- methods
 # tours$concorde  <- solve_TSP(tsp, method = "concorde")
 
-tours
+tours[[1]]
 
-barplot(sapply(tours, FUN = attr, "tour_length"), ylab = "tour length")
-
+dotchart(sapply(tours, FUN = attr, "tour_length"), 
+xlab = "tour length", xlim = c(0, 25000))
 ## add optimum
 opt <- 14497
-abline(h = opt, col = "red")
-mtext("optimum", at = opt, side = 4, col = "red")
+abline(v = opt, col = "red")
+mtext("optimum", at = opt, side = 3, col = "red")
 @
 
 \begin{figure}
 \centering
-\includegraphics[width=10cm]{TSP-barplot_USCA50}
+\includegraphics[width=10cm]{TSP-dotchart_USCA50}
 \caption{Comparison of the tour lengths for the USCA50 data set.}
 \label{fig:barplot}
 \end{figure}
-
-%Use the iris data to create a TSP.
-%<<>>=
-%data("iris")
-%tsp <- TSP(dist(iris[-5]))
-%tsp
-%@
-%
-%Calculate some tours
-%
-%<<fig=TRUE, include=FALSE, label=barplot_iris, width=6, height=4>>=
-%tours <- list()
-%tours$farthest  <- solve_TSP(tsp)
-%tours$nearest   <- solve_TSP(tsp, method = "nearest_insertion")
-%tours$greedy    <- solve_TSP(tsp, method = "greedy")
-%#tours$concorde  <- solve_TSP(tsp, method = "concorde")
-%tours
-%
-%barplot(sapply(tours, FUN = attr, "tour_length"))
-%abline(h = 51.77891, col = "red") # optimal length
-%@
-%
-%\begin{figure}
-%\centering
-%\includegraphics[width=10cm]{TSP-barplot_iris}
-%\caption{Comparision of the tour lengths for the iris data set.}
-%\label{fig:barplot}
-%\end{figure}
-%
-
 
 
 \subsection{Finding the shortest Hamiltonian path}
@@ -494,7 +461,7 @@ set.seed(4444)
 @
 <<>>=
 data("iris")
-tsp <- TSP(dist(iris[-5]))
+tsp <- TSP(dist(iris[-5]), labels = iris[, "Species"])
 #tsp <- TSP(dist(scale(iris[-5])))
 tsp_dummy <- insert_dummy(tsp, n = 2, label = "boundary")
 tour <- solve_TSP(tsp_dummy)
@@ -525,16 +492,17 @@ nearest insertion algorithm on the iris data set.}
 \end{figure}
 
 We can also look at how well the found partitioning fits the structure in the
-data given by the species field in the data set.
+data given by the species field in the data set. Since we used the species as 
+the label for the cities in the TSP, the labels in the tour 
+represent the partitioning with the dummy cities names boundary seperating
+groups.
 
 <<>>=
-iris[tour, "Species"]
+labels(tour)
 
 ## do Concorde
-# tsp <- TSP(dist(iris[-5]))
-# tsp_dummy <- insert_dummy(tsp, n = 3)
 # tour <- solve_TSP(tsp_dummy, method = "concorde")
-# iris[tour, "Species"]
+# labels(tour)
 @
 
 

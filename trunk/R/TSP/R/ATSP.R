@@ -1,8 +1,10 @@
 ## create a (asymmetric) ATSP problem
-ATSP <- function(x) {
+ATSP <- function(x, labels = NULL) {
     if(inherits(x, "ATSP")) return(x)
 
-    as.ATSP(x)
+    x <- as.ATSP(x)
+    if(!is.null(labels)) attr(x, "Labels") <- labels
+    x
 }
 
 as.ATSP <- function(object) UseMethod("as.ATSP")

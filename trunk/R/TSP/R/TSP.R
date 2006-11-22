@@ -1,7 +1,9 @@
 ## create a TSP problem
-TSP <- function(x) {
+TSP <- function(x, labels = NULL) {
     if(inherits(x, "TSP")) return(x)
-    as.TSP(x)
+    x <- as.TSP(x)
+    if(!is.null(labels)) attr(x, "Labels") <- as.labels
+    x
 }
 
 ## coercion
