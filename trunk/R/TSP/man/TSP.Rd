@@ -1,5 +1,8 @@
 \name{TSP}
 \alias{TSP}
+\alias{as.TSP}
+\alias{as.TSP.matrix}
+\alias{as.TSP.dist}
 \alias{n_of_cities}
 \alias{n_of_cities.TSP}
 \alias{print.TSP}
@@ -13,6 +16,9 @@
 \usage{
 ## constructor
 TSP(x)
+
+## coercion
+as.TSP(object)
 
 ## methods
 \method{n_of_cities}{TSP}(x)

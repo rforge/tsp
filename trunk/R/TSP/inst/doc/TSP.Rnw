@@ -116,8 +116,10 @@ of this infrastructure.
 \end{figure}
 
 \class{TSP} objects can be created from a distance matrix (a \class{dist}
-object) or a symmetric matrix using \func{TSP}.  \class{ATSP} objects are
-created by \func{ATSP} from square matrices representing the distances.
+object) or a symmetric matrix using a constructor function \func{TSP}
+or coercion with \func{as.TSP}.  \class{ATSP} objects are
+created by \func{ATSP} or coercion (\code{as.ATSP}) 
+from square matrices representing the distances.
 In the creation process, labels are taken and stored as city names in the
 object. Several methods are defined for the classes:
 \begin{itemize}

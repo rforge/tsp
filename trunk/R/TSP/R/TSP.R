@@ -1,25 +1,32 @@
 ## create a TSP problem
 TSP <- function(x) {
     if(inherits(x, "TSP")) return(x)
-    
-    ## check x
-    if(inherits(x, "dist")) {
-        ## make sure we have a upper triangle matrix w/o diagonal
-        ## if(attr(x, "Diag") == TRUE || attr(x, "Upper") == TRUE)
-        x <- as.dist(x, diag = FALSE, upper = FALSE)
-    }else if(is.matrix(x) && isSymmetric(x)) {
-        method <- attr(x, "method")
-        x <- as.dist(x, diag = FALSE, upper = FALSE)
-        attr(x, "method") <- method
-    }else stop("TSP requires an object of class ", 
-        sQuote("dist"), " or a symmetric matrix")
-
-    ## check for NAs
-    if(any(is.nan(x))) stop(paste(sQuote("NAs"), "not supported"))
-    
-    class(x) <- c("TSP", class(x))
-    x
+    as.TSP(x)
 }
+
+## coercion
+as.TSP <- function(object) UseMethod("as.TSP")
+as.TSP.dist <- function(object){
+    ## make sure we have a upper triangle matrix w/o diagonal
+    object <- as.dist(object, diag = FALSE, upper = FALSE)
+    
+    if(any(is.nan(object))) stop(paste(sQuote("NAs"), "not supported"))
+    class(object) <- c("TSP", class(object))
+    object
+}
+
+as.TSP.matrix <- function(object){
+    if(!isSymmetric(object)) stop("TSP requires a symmetric matrix")
+
+    method <- attr(object, "method")
+    object <- as.dist(object, diag = FALSE, upper = FALSE)
+    attr(object, "method") <- method
+
+    if(any(is.nan(object))) stop(paste(sQuote("NAs"), "not supported"))
+    class(object) <- c("TSP", class(object))
+    object
+}
+
 
 ## print
 print.TSP <- function(x, ...) {

@@ -1,23 +1,30 @@
 ## create a (asymmetric) ATSP problem
 ATSP <- function(x) {
     if(inherits(x, "ATSP")) return(x)
-    
-    method <- attr(x, "method")
-    
-    ## check x
-    if(inherits(x, "dist")) {
-        x <- as.matrix(x)
-    }else if(is.matrix(x) && dim(x)[1] == dim(x)[2]) {
-        ## matrix is ok
-    }else stop("ATSP requires a square matrix")
+
+    as.ATSP(x)
+}
+
+as.ATSP <- function(object) UseMethod("as.ATSP")
+as.ATSP.matrix <- function(object){
+    .isSquare <- function(x) (dim(x)[1] == dim(x)[2])
+
+    if(!.isSquare(object)) stop("ATSP requires a square matrix")
 
     ## check for NAs
-    if(any(is.nan(x))) stop(paste(sQuote("NAs"), "not supported"))
-    
-    class(x) <- c("ATSP", class(x))
-    attr(x, "method") <- method
-    x
+    if(any(is.nan(object))) stop(paste(sQuote("NAs"), "not supported"))
+
+    class(object) <- c("ATSP", class(object))
+    object
 }
+
+as.ATSP.dist <- function(object){
+    method <- attr(object, "method")
+    object <- as.ATSP(as.matrix(object)) 
+    attr(object, "method") <- method
+    object
+}
+
 
 ## print
 print.ATSP <- function(x, ...) {

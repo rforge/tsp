@@ -1,5 +1,8 @@
 \name{ATSP}
 \alias{ATSP}
+\alias{as.ATSP}
+\alias{as.ATSP.dist}
+\alias{as.ATSP.matrix}
 \alias{n_of_cities.ATSP}
 \alias{print.ATSP}
 \alias{labels.ATSP}
@@ -15,6 +18,9 @@
 \usage{
 ## constructor
 ATSP(x)
+
+## coercion
+as.ATSP(object)
 
 ## methods
 \method{n_of_cities}{ATSP}(x)
