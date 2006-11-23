@@ -279,13 +279,20 @@ tsp <- USCA50
 tsp
 @
 
-The tours using different heuristics are stored in the list \code{tours}.
-As an example we show the first tour. Then 
-the tour lengths are compared using the dot chart in Figure~\ref{fig:dotchart}.
-The vertical line in the plot represents the optimal solution with a tour
-length of 14497. The optimal solution can be found using Concorde
-(\code{method = "concorde"}). It is omitted here, since Concorde has to be
-installed separately.
+
+We calculate tours using different heuristics and store the results in the the
+list \code{tours}. As an example, we show the first tour which displays the
+used method, the number of cities involved and the tour length.  All tour
+lengths are compared using the dot chart in Figure~\ref{fig:dotchart}.  For the
+chart, we add a point for the optimal solution which has a tour length of
+14497. The optimal solution can be found using Concorde (\code{method =
+"concorde"}).  It is omitted here, since Concorde has to be installed
+separately.
+
+<<echo=FALSE>>=
+set.seed(1234)
+@
+
 
 <<fig=TRUE, include=FALSE, label=dotchart_USCA50, width=7, height=4>>=
 methods <- c("nearest_insertion", "farthest_insertion", "cheapest_insertion",
@@ -297,12 +304,13 @@ names(tours) <- methods
 
 tours[[1]]
 
-dotchart(sapply(tours, FUN = attr, "tour_length"), 
+
+opt <- 14497
+dotchart(c(sapply(tours, FUN = attr, "tour_length"), optimal = opt), 
 xlab = "tour length", xlim = c(0, 25000))
 ## add optimum
-opt <- 14497
-abline(v = opt, col = "red")
-mtext("optimum", at = opt, side = 3, col = "red")
+#abline(v = opt, col = "red")
+#mtext("optimum", at = opt, side = 3, col = "red")
 @
 
 \begin{figure}
@@ -363,7 +371,7 @@ The tour found in the example results in a path from Lihue in Hawaii to
 Yellowknife in Canada's Northwest Territories. Such a tour can also be 
 visualized using the packages \pkg{sp}, \pkg{maps} and \pkg{maptools}.
 
-<<fig=TRUE, include=FALSE, label=map1>>=
+<<fig=TRUE, include=FALSE, label=map1, width=8, height=8>>=
 library("maps")
 library("sp")
 library("maptools")
@@ -373,12 +381,12 @@ data("USCA312_map")
 plot_path <- function(path){
     plot(as(USCA312_coords, "Spatial"), axes = TRUE)
     plot(USCA312_basemap, add = TRUE, col = "gray")
-
+    points(USCA312_coords, pch = 3, cex = 0.4, col = "red")
+    
     line <- SpatialLines(list(Lines(Line(USCA312_coords[path,]))))
-    plot(line, add=TRUE, col = "red")
-    points(USCA312_coords, pch = 3, cex = 0.4, col = "black")
+    plot(line, add=TRUE, col = "black")
     points(USCA312_coords[c(head(path,1), tail(path,1)),], pch = 19, 
-        col = "red")
+        col = "black")
 }
 
 plot_path(path)
@@ -423,7 +431,7 @@ to calculate a tour and then cut at New York City to create a path.
 set.seed(1234)
 @
 
-<<fig=TRUE, include=FALSE, label=map2>>=
+<<fig=TRUE, include=FALSE, label=map2, width=8, height=8>>=
 atsp <- as.ATSP(USCA312)
 ny <- which(labels(USCA312) == "New York, NY")
 atsp[, ny] <- 0
@@ -489,7 +497,7 @@ atsp[, la_ny] <- c(m[la, -c(ny,la)], 0)
 We let the arbitrary insertion heuristic 
 start with the dummy city to solve the TSP.
 
-<<fig=TRUE, include=FALSE, label=map3>>=
+<<fig=TRUE, include=FALSE, label=map3, width=8, height=8>>=
 tour <- solve_TSP(atsp, method ="nearest_insertion")
 tour
 
