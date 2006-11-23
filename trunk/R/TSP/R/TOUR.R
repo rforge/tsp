@@ -1,9 +1,15 @@
 TOUR <- function(x){
     if(inherits(x, "TOUR")) return(x)
     
-    x <- as.integer(x)
-    class(x) <- "TOUR"
-    x
+    as.TOUR(x)
+}
+
+## coercion
+as.TOUR <- function(object) UseMethod("as.TOUR")
+as.TOUR.integer <- function(object){
+    as.integer(object)
+    class(object) <- "TOUR"
+    object
 }
 
 

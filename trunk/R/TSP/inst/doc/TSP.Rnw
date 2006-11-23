@@ -334,7 +334,7 @@ set.seed(1234)
 <<>>=
 library("TSP")
 data("USCA312")
-tsp <- insert_dummy(USCA312)
+tsp <- insert_dummy(USCA312, label = "cut")
 tsp
 @
 
@@ -342,24 +342,57 @@ The TSP contains now an additional dummy city and we can try to solve this
 TSP and print the labels to see the resulting tour.
 
 <<>>=
-tour <- solve_TSP(tsp)
-#tour <- solve_TSP(tsp, method ="Concorde")
+tour <- solve_TSP(tsp, method="nearest_insertion")
+#tour <- solve_TSP(tsp, method ="concorde")
 tour
 @
 
 Since the dummy city has distance zero to all other cities, the path length is
 equal to the tour length reported above. The path starts with the first city in
 the list after the `dummy' city  and ends with the city right before it. 
-In the following we show the 20 cities before and 20 after the dummy city.
+We use \func{cut\_path} to create a path and show the 
+first and last 6 cities on it.
 
 <<>>=
-#labels(tour)
-dummy <- which(labels(tour)== "dummy")
-labels(tour)[(dummy-20):(dummy+20)]
+path <- cut_tour(tour, "cut")
+head(labels(path))
+tail(labels(path))
 @
 
 The tour found in the example results in a path from Lihue in Hawaii to
-Yellowknife in Canada's Northwest Territories. It has to be mentioned, that the
+Yellowknife in Canada's Northwest Territories. Such a tour can also be 
+visualized using the packages \pkg{sp}, \pkg{maps} and \pkg{maptools}.
+
+<<fig=TRUE, include=FALSE, label=map1>>=
+library("maps")
+library("sp")
+library("maptools")
+
+data("USCA312_map")
+
+plot_path <- function(path){
+    plot(as(USCA312_coords, "Spatial"), axes = TRUE)
+    plot(USCA312_basemap, add = TRUE, col = "gray")
+
+    line <- SpatialLines(list(Lines(Line(USCA312_coords[path,]))))
+    plot(line, add=TRUE, col = "red")
+    points(USCA312_coords, pch = 3, cex = 0.4, col = "black")
+    points(USCA312_coords[c(head(path,1), tail(path,1)),], pch = 19, 
+        col = "red")
+}
+
+plot_path(path)
+@
+
+\begin{figure}
+\centering
+\includegraphics[width=10cm]{TSP-map1}
+\caption{A ``short'' Hamiltonian path for the USCA312 dataset.}
+\label{fig:map1}
+\end{figure}
+
+The map containing the path is presented in Figure~\ref{fig:map1}.
+It has to be mentioned, that the
 path found by the used heuristic is almost double the optimal path length found
 by Concorde with a length of $34928$, ilustrating the power of modern 
 TSP algorithms.
@@ -382,26 +415,41 @@ We transform the data set into an asymmetric TSP and set the column
 corresponding to New York to zero before solving the TSP. This means
 that the distance to return from the last city in the path
 to New York does not contribute to the path length.
-We also tell the heuristic to first place the city New York which
-helps the heuristic find a better solution than when this city is placed later.
+We use the nearest neighbor heuristic 
+to calculate a tour and then cut at New York City to create a path.
+
 
 <<echo=FALSE>>=
 set.seed(1234)
 @
 
-<<>>=
+<<fig=TRUE, include=FALSE, label=map2>>=
 atsp <- as.ATSP(USCA312)
 ny <- which(labels(USCA312) == "New York, NY")
 atsp[, ny] <- 0
-tour <- solve_TSP(atsp, control = list(start = ny))
+tour <- solve_TSP(atsp, method ="nearest_insertion")
 tour
+path <- cut_tour(tour, ny, exclude_cut = FALSE)
 
-head(labels(tour))
-tail(labels(tour))
+plot_path(path)
+
+head(labels(path))
+tail(labels(path))
 @
 
-The found path begins with New York and cities in New Jersey and
-ends in the west of Canada.
+\begin{figure}
+\centering
+\includegraphics[width=10cm]{TSP-map2}
+\caption{A Hamiltonian path for the USCA312 dataset starting in New York City.}
+\label{fig:map2}
+\end{figure}
+
+The found path 
+is presented in Figure~\ref{fig:map2}. It
+begins with New York City and cities in New Jersey and
+ends in Hawaii. The path shows the typical behavior 
+of the nearest neighbor heuristic with first connecting the cities close by and
+then making rather big ``jumps'' for the final cities.
 
 Finding the shortest Hamiltonian path which ends in a given city can be achieved
 likewise by setting the row corresponding to this city in the distance
@@ -441,16 +489,31 @@ atsp[, la_ny] <- c(m[la, -c(ny,la)], 0)
 We let the arbitrary insertion heuristic 
 start with the dummy city to solve the TSP.
 
-<<>>=
-tour <- solve_TSP(atsp, method ="arbitrary", control = list(start=la_ny))
+<<fig=TRUE, include=FALSE, label=map3>>=
+tour <- solve_TSP(atsp, method ="nearest_insertion")
 tour
 
-head(labels(tour))
-tail(labels(tour))
+path_labels <- c("New York, NY", 
+    labels(cut_tour(tour, la_ny)), "Los Angeles, CA")
+path_ids <- match(path_labels, labels(USCA312))
+
+head(path_labels)
+tail(path_labels)
+
+plot_path(path_ids)
 @
+
+\begin{figure}
+\centering
+\includegraphics[width=10cm]{TSP-map3}
+\caption{A Hamiltonian path for the USCA312 dataset starting in New York City
+and ending in Los Angles.}
+\label{fig:map3}
+\end{figure}
 
 The path moves from New York on to other cities close in the State of New York
 and it passes through cities in California before ending in Los Angeles.
+The whole path is displayed in Figure~\ref{fig:map3}.
 
 
 \subsection{Rearrangement clustering}

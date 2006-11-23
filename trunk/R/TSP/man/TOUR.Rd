@@ -1,6 +1,8 @@
 \name{TOUR}
 \alias{TOUR}
 \alias{print.TOUR}
+\alias{as.TOUR}
+\alias{as.TOUR.integer}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Class TOUR -- Solution to a traveling salesperson problem}
 \description{
@@ -12,6 +14,9 @@
 ## conctructor
 TOUR(x)
 
+## coercion
+as.TOUR(object)
+
 ## methods
 \method{print}{TOUR}(x, \ldots)
 }
@@ -19,6 +24,7 @@ TOUR(x)
 \arguments{
   \item{x}{ an integer permutation vector or, for the methods 
       an object of class \code{TOUR}}.
+  \item{object}{ data (an integer vector) which can be coerced to \code{TOUR}.}.
   \item{\ldots}{ further arguments are passed on.}
 }
 \details{

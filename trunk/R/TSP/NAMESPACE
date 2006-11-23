@@ -6,13 +6,15 @@ export(
     TSP, ATSP, TOUR, 
     n_of_cities, 
     insert_dummy,
+    cut_tour,
     tour_length,
     solve_TSP,
     concorde_help, 
     read_TSPLIB, write_TSPLIB,
     as.matrix,
     as.TSP,
-    as.ATSP
+    as.ATSP,
+    as.TOUR
     )
 
 ## TSP/ATSP
@@ -44,3 +46,5 @@ S3method(as.ATSP, matrix)
 
 ## TOUR
 S3method(print, TOUR)
+S3method(cut_tour, TOUR)
+S3method(as.TOUR, integer)
