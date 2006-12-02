@@ -56,8 +56,9 @@ plot(USCA312_basemap, add=TRUE, col = "gray")
 
 
 ## plot tour and add cities
-line <- SpatialLines(list(Lines(Line(USCA312_coords[c(tour, tour[1]),]))))
-plot(line, add=TRUE, col = "red")
+tour_line <- SpatialLines(list(Lines(list(
+    Line(USCA312_coords[c(tour, tour[1]),])))))
+plot(tour_line, add=TRUE, col = "red")
 points(USCA312_coords, pch=3, cex=0.4, col="black")
 }
 \keyword{datasets}

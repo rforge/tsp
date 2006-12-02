@@ -61,18 +61,18 @@ returns to the starting city.  The TSP has many applications including computer
 wiring, vehicle routing, clustering of data arrays and machine
 scheduling~\citep{Lenstra1975}.
 
-Formally, the TSP can be stated as: The distances between $n$ cities are
-stored in a distance matrix $D$ with elements $d(i,j)$ where $i,j = 1\dots n$
-and the diagonal elements $d(i,i) = 0$. A tour can be represented by a
+Formally, the TSP can be stated as: The distances between $n$ cities are stored
+in a distance matrix $D$ with elements $d(i,j)$ where $i,j = 1\dots n$ and the
+diagonal elements $d(i,i) = 0$. A tour can be represented by a cyclic
 permutation $\pi$ of $\{1, 2,\dots, n\}$ where $\pi(i)$ represents the city
-that follows city $i$ on the tour.  The traveling salesperson problem is then
+that follows city $i$ on the tour. The traveling salesperson problem is then
 to find a permutation $\pi$ that minimizes
 
 \begin{equation}
     \sum_{i=1}^n d(i, \pi(i)),
 \end{equation}
 % see Lenstra & Kan 1975: Some simple Applications to the TSP
-which is the \emph{length} of the tour.
+which is called the \emph{length of the tour.}
 
 In terms of graph theory, cities can be regarded as vertices in a complete,
 weighted graph. The edge weights represent the distances between the cities.
@@ -147,8 +147,11 @@ to read and save symmetric and asymmetric TSPs.
 The class \class{TOUR} represents a solution to a TSP in form of an integer
 permutation vector containing the ordered indices and labels of the cities to
 visit. In addition, it stores an attribute indicating the length of the tour.
-Again, suitable \func{print} and \func{labels} methods are provided.
-The raw permutation vector can be obtained from a tour using \func{as.integer}.
+Again, suitable \func{print} and \func{labels} methods are provided.  The raw
+permutation vector (i.e., the order in which cities are visited) can be
+obtained from a tour using \func{as.integer}. With \func{cut\_tour}, a
+circular tour can be split at a specified city resulting in a path represented
+by a vector of city indices.
 
 The length of a tour can always be calculated using \func{tour\_length} and
 specifying a TSP and a tour. Instead of the tour, an integer permutation vector
@@ -168,7 +171,7 @@ Section~\ref{sec:algo}.
 
 \section{Algorithms}\label{sec:algo}
 
-The NP-hardness of the TSP make it already for medium sized TSP instances
+The NP-completeness of the TSP makes it already for medium sized TSP instances
 necessary to rely on heuristics. In \pkg{TSP}, we implemented some simple
 heuristics described by \cite{Rosenkrantz1977}: the nearest neighbor algorithm
 and some variants of the insertion algorithm.
@@ -183,7 +186,7 @@ not yet visited city. The algorithm stops when all cities are on the tour.
 This algorithm is implemented as method \code{"nn"} for \func{solve\_TSP}.
 
 An extension to this algorithm is to repeat it with each city as
-the starting point and then return the best of the found tour. 
+the starting point and then return the best of the found tours. 
 This algorithm is implemented as method \code{"repetitive\_nn"}.
 
 \subsection{Insertion algorithms}
@@ -215,9 +218,9 @@ not yet on the tour.
 
 The nearest and cheapest insertion algorithms are variants of to the minimum
 spanning tree algorithm which is known to be a good algorithm to find a
-Hamiltonian cycle in a connected, undirected graph with a close to minimal
-weight sum.  For  nearest and cheapest insertion, adding a city to a partial
-tour corresponds to adding an edge to a partial spanning tree.  
+Hamiltonian cycle with a close to minimal weight sum in a connected, undirected
+graph.  For nearest and cheapest insertion, adding a city to a partial tour
+corresponds to adding an edge to a partial spanning tree.  
 %
 %Here the TSP is solved by finding
 %a Hamiltonian cycle in a connected, undirected graph with a minimal weight
@@ -383,8 +386,8 @@ plot_path <- function(path){
     plot(USCA312_basemap, add = TRUE, col = "gray")
     points(USCA312_coords, pch = 3, cex = 0.4, col = "red")
     
-    line <- SpatialLines(list(Lines(Line(USCA312_coords[path,]))))
-    plot(line, add=TRUE, col = "black")
+    path_line <- SpatialLines(list(Lines(list(Line(USCA312_coords[path,])))))
+    plot(path_line, add=TRUE, col = "black")
     points(USCA312_coords[c(head(path,1), tail(path,1)),], pch = 19, 
         col = "black")
 }
@@ -435,7 +438,7 @@ set.seed(1234)
 atsp <- as.ATSP(USCA312)
 ny <- which(labels(USCA312) == "New York, NY")
 atsp[, ny] <- 0
-tour <- solve_TSP(atsp, method ="nearest_insertion")
+tour <- solve_TSP(atsp, method ="nn")
 tour
 path <- cut_tour(tour, ny, exclude_cut = FALSE)
 
@@ -494,11 +497,10 @@ atsp[la_ny, ] <- c(m[-c(ny,la), ny], 0)
 atsp[, la_ny] <- c(m[la, -c(ny,la)], 0)
 @
 
-We let the arbitrary insertion heuristic 
-start with the dummy city to solve the TSP.
+We use again the nearest neighbor heuristic.
 
 <<fig=TRUE, include=FALSE, label=map3, width=8, height=8>>=
-tour <- solve_TSP(atsp, method ="nearest_insertion")
+tour <- solve_TSP(atsp, method ="nn")
 tour
 
 path_labels <- c("New York, NY", 

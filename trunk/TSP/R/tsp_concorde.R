@@ -11,7 +11,7 @@ tsp_concorde <- function(x, control = NULL){
     ## check x
     if(!inherits(x, "TSP")) stop("Concorde only solves symmetric TSPs.")
     
-    cat("\nrunning Concorde:\n")
+    ##cat("\nrunning Concorde:\n")
     
 
     ## get max (excluding inf) to check for possible integer overflows
@@ -66,7 +66,7 @@ tsp_concorde <- function(x, control = NULL){
     
     if(!file.access(tmp_file_out) == 0) 
     stop("Problems with reading Concorde's output. Is Concorde properly installed?")
-    else cat("Concorde done.\n")
+    ##else cat("Concorde done.\n")
     
     order <- scan(tmp_file_out, what = integer(0), quiet = TRUE)
     ## remove number of nodes and add one (result starts with 0)
