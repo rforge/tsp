@@ -81,16 +81,16 @@ outline of the whole tour early.
         
         Concorde is an advanced TSP solver for \emph{only symmetric} TSPs. The
           program is not included in this package and has to be obtained and
-          installed separately (see \code{\link{concorde_help}}).
+          installed separately (see \code{\link{help_concorde_}}).
 
           Additional control options: 
       \describe{
   \item{\code{exe}}{ a character string containing the path to the executable 
-      (see \code{concorde_help}).}
+      (see \code{help_concorde}).}
 
   \item{\code{clo}}{ a character string containing command line options for
 Concorde, e.g., \code{control = list(clo = "-B -v")}. See
-\code{concorde_help} on how to obtain a complete list of available
+\code{help_concorde} on how to obtain a complete list of available
 command line options.} 
 
          \item{\code{precision}}{ an integer which controls the number of
@@ -116,7 +116,7 @@ An object of class \code{TOUR}.
 \code{\link{TSP}},
 \code{\link{ATSP}},
 \code{\link{write_TSPLIB}},
-\code{\link{concorde_help}}.
+\code{\link{help_concorde}}.
 }
 \references{
 Concorde home page, \url{http://www.tsp.gatech.edu/concorde/}

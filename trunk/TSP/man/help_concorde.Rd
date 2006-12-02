@@ -45,11 +45,6 @@ David Appletgate, Robert Bixby, Vasek Chvatal, William Cook (2001):
 TSP cuts which do not conform to the template paradigm,
 Computational Combinatorial Optimization, M. Junger and D. Naddef (editors),
 Springer.
-
-D. S. Johnson, C. H. Papadimitriou (1985): Performance guarantees for
-heuristics (chapter 5). In: E. L. Lawler, J. K. Lenstra, A.H.G. Rinnooy Kan, D.
-B. Shmoys (eds.) The traveling salesman problem - A guided tour of
-combinatorial optimization, Wiley \& Sons.
 }
 %\author{Michael Hahsler}
 %\examples{
