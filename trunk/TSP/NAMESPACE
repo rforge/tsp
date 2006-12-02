@@ -1,3 +1,5 @@
+useDynLib(TSP)
+
 importFrom(stats, as.dist)
 importFrom(grDevices, gray.colors)
 importFrom(graphics, image.default)

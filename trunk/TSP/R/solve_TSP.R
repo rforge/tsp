@@ -24,7 +24,8 @@ solve_TSP <- function(x, method = NULL, control = NULL)
         "arbitrary_insertion",     
         "nn",
         "repetitive_nn",
-        "concorde"
+        "concorde",
+        "two_opt"
     )
 
     if(is.null(method)) methodNr <- 1
@@ -47,6 +48,8 @@ solve_TSP <- function(x, method = NULL, control = NULL)
         order <- tsp_repetitive_nn(x, control = control)
     }else if(methodNr == 7) {
         order <- tsp_concorde(x, control = control)
+    }else if(methodNr == 8) {
+        order <- tsp_two_opt(x, control = control)
     }
 
     if(!is.integer(order)) order <- as.integer(order)
