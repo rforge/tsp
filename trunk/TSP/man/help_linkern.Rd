@@ -1,5 +1,5 @@
 \name{Chained Lin-Kernighan}
-\alias{help_linken}
+\alias{help_linkern}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Concorde's Chained Lin-Kernighan Implementation}
 \description{
