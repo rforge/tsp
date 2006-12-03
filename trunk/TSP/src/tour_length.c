@@ -1,7 +1,5 @@
 #include <R.h>
-#include <Rinternals.h>
 #include <Rdefines.h>
-
 
 #include "matrix_pos.h"
 
@@ -28,7 +26,7 @@ SEXP tour_length_dist(SEXP R_dist, SEXP R_order) {
     // close tour
     tour_length += REAL(R_dist)[LT_POS(n, order[n-1]-1, order[0]-1)]; 
     
-    PROTECT(R_tour_length = allocVector(REALSXP, 1));
+    PROTECT(R_tour_length = NEW_NUMERIC(1));
     REAL(R_tour_length)[0] = tour_length;
     UNPROTECT(1);
     
@@ -57,7 +55,7 @@ SEXP tour_length_matrix(SEXP R_matrix, SEXP R_order) {
     // close tour
     tour_length += REAL(R_matrix)[M_POS(n, order[n-1]-1, order[0]-1)]; 
     
-    PROTECT(R_tour_length = allocVector(REALSXP, 1));
+    PROTECT(R_tour_length = NEW_NUMERIC(1));
     REAL(R_tour_length)[0] = tour_length;
     UNPROTECT(1);
     

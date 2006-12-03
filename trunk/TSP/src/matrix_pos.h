@@ -19,7 +19,7 @@
 
 #ifndef M_POS
 #define M_POS(rows, i, j)   \
-    ((i) + (j)*(rows))
+    (i) + (j)*(rows)
 #endif
 
 
