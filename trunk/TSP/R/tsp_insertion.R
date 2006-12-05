@@ -46,7 +46,7 @@ tsp_insertion <- function(x, type = "nearest", control = NULL){
             
             ds <- sapply(1:length(ks), FUN = 
                 function(i)  min(m[i, , drop = FALSE]))
-            
+
             k <- ks[crit(ds)]
         }
        
@@ -67,9 +67,12 @@ tsp_insertion <- function(x, type = "nearest", control = NULL){
 
         ## do insertion
         placed[k] <- TRUE
+        
         if(length(order) == 1) order <- append(order, k)
         else {
             pos <- which.min(.Call("insertion_cost", x, order, k))
+            if(length(pos) == 0) pos <- 1 ### in case we only have Inf and
+                                          ### which mean does not do it
             order <- append(order, k, after = pos)
         }
     }

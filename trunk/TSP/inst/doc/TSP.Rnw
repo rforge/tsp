@@ -304,13 +304,14 @@ methods <- c("nearest_insertion", "farthest_insertion", "cheapest_insertion",
 tours <- lapply(methods, FUN = function(m) solve_TSP(tsp, method = m))
 names(tours) <- methods
 # tours$concorde  <- solve_TSP(tsp, method = "concorde")
+# tours$concorde  <- solve_TSP(tsp, method = "linkern")
 
 tours[[1]]
 
 
 opt <- 14497
 dotchart(c(sapply(tours, FUN = attr, "tour_length"), optimal = opt), 
-xlab = "tour length", xlim = c(0, 25000))
+xlab = "tour length", xlim = c(0, 20000))
 ## add optimum
 #abline(v = opt, col = "red")
 #mtext("optimum", at = opt, side = 3, col = "red")
@@ -353,7 +354,7 @@ The TSP contains now an additional dummy city and we can try to solve this
 TSP and print the labels to see the resulting tour.
 
 <<>>=
-tour <- solve_TSP(tsp, method="nearest_insertion")
+tour <- solve_TSP(tsp, method="farthest_insertion")
 #tour <- solve_TSP(tsp, method ="concorde")
 tour
 @
@@ -370,8 +371,8 @@ head(labels(path))
 tail(labels(path))
 @
 
-The tour found in the example results in a path from Lihue in Hawaii to
-Yellowknife in Canada's Northwest Territories. Such a tour can also be 
+The tour found in the example results in a path from Prince Rupert in
+British Columbia to Lihue on Hawaii. Such a tour can also be 
 visualized using the packages \pkg{sp}, \pkg{maps} and \pkg{maptools}.
 
 <<fig=TRUE, include=FALSE, label=map1, width=8, height=8>>=
@@ -426,7 +427,7 @@ We transform the data set into an asymmetric TSP and set the column
 corresponding to New York to zero before solving the TSP. This means
 that the distance to return from the last city in the path
 to New York does not contribute to the path length.
-We use the nearest neighbor heuristic 
+We use the nearest insertion heuristic 
 to calculate a tour and then cut at New York City to create a path.
 
 
@@ -438,7 +439,7 @@ set.seed(1234)
 atsp <- as.ATSP(USCA312)
 ny <- which(labels(USCA312) == "New York, NY")
 atsp[, ny] <- 0
-tour <- solve_TSP(atsp, method ="nn")
+tour <- solve_TSP(atsp, method ="nearest_insertion")
 tour
 path <- cut_tour(tour, ny, exclude_cut = FALSE)
 
@@ -458,9 +459,10 @@ tail(labels(path))
 The found path 
 is presented in Figure~\ref{fig:map2}. It
 begins with New York City and cities in New Jersey and
-ends in Hawaii. The path shows the typical behavior 
-of the nearest neighbor heuristic with first connecting the cities close by and
-then making rather big ``jumps'' for the final cities.
+ends in north east of Canada. 
+%The path shows the typical behavior 
+%of the nearest neighbor heuristic with first connecting the cities close by and
+%then making rather big ``jumps'' for the final cities.
 
 Finding the shortest Hamiltonian path which ends in a given city can be achieved
 likewise by setting the row corresponding to this city in the distance
@@ -497,10 +499,10 @@ atsp[la_ny, ] <- c(m[-c(ny,la), ny], 0)
 atsp[, la_ny] <- c(m[la, -c(ny,la)], 0)
 @
 
-We use again the nearest neighbor heuristic.
+We use again the nearest insertion heuristic.
 
 <<fig=TRUE, include=FALSE, label=map3, width=8, height=8>>=
-tour <- solve_TSP(atsp, method ="nn")
+tour <- solve_TSP(atsp, method ="nearest_insertion")
 tour
 
 path_labels <- c("New York, NY", 
@@ -535,8 +537,9 @@ other. \cite{Climer2006} show that in the optimal solution of the TSP, the
 dummy cities must separate the most distant cities and thus lie exactly on the
 optimal cluster boundaries.
 
-We insert two dummy cities into the TSP for the iris data set (the class
-attribute called \code{"Species"} is used as city labels) and perform
+For the example, we use the well known iris data set. Since we know that the
+dataset contains thre classes denoted by the attribute called \code{"Species"},
+we insert three dummy cities into the TSP for the iris data set and perform
 rearrangement clustering using the nearest insertion algorithm. Note that this
 algorithm does not find the optimal solution and it is not guaranteed that the
 dummy cities will present the optimal cluster boundaries.
@@ -548,7 +551,7 @@ set.seed(4444)
 data("iris")
 tsp <- TSP(dist(iris[-5]), labels = iris[, "Species"])
 #tsp <- TSP(dist(scale(iris[-5])))
-tsp_dummy <- insert_dummy(tsp, n = 2, label = "boundary")
+tsp_dummy <- insert_dummy(tsp, n = 3, label = "boundary")
 tour <- solve_TSP(tsp_dummy)
 @
 
@@ -576,11 +579,13 @@ nearest insertion algorithm on the iris data set.}
 \label{fig:clustering}
 \end{figure}
 
-We can also look at how well the found partitioning fits the structure in the
-data given by the species field in the data set. Since we used the species as 
-the city labels in the TSP, the labels in the tour 
-represent the partitioning with the dummy cities named `boundary' seperating
-groups.
+
+One pair of red horizontal and vertical lines exactly separates the darker from
+lighter areas. The second pair occurs inside the larger dark.  We can look at
+how well the found partitioning fits the structure in the data given by the
+species field in the data set. Since we used the species as the city labels in
+the TSP, the labels in the tour represent the partitioning with the dummy
+cities named `boundary' seperating groups.
 
 <<>>=
 labels(tour)
@@ -591,15 +596,15 @@ labels(tour)
 @
 
 
-The resulting clustering perfectly splits the iris data set into a group
-containing only examples of the species `Setosa' and a second group containing
-examples for `Virginica' and `Versicolor'. Note that since the used heuristic
-resolves ties randomly, this result may not be achieved every time.  The
-optimal tour is always found by Concorde. However, using three dummy cities,
-this method fails to find the three groups in the data set. The reason is the
-considerable overlap between the groups `Virginica' and `Versicolor'.
-
-
+On boundary perfectly splits the iris data set into a group containing only
+examples of the species `Setosa' and a second group containing examples for
+`Virginica' and `Versicolor'. However, the second boundary only separates two
+examples of the species `Virginica' from other examples of the same species.
+This indicates that in the path generated by the TSP at exactly this point a
+large jump must have ocurred.  Even in the optimal tour found by Concorde, this
+problem occurs.  A reason why the rearrangement clustering fails to split the
+data into three groups is the considerable overlap between the groups
+`Virginica' and `Versicolor'.
 \section{Conclusion}\label{sec:conclusion}
 
 In this paper we presented the package \pkg{TSP} which implements the

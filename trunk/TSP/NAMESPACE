@@ -5,7 +5,10 @@ importFrom(grDevices, gray.colors)
 importFrom(graphics, image.default)
 
 export(
-    TSP, ATSP, TOUR, 
+    TSP, 
+    ATSP, 
+    TOUR, 
+    ATSP_to_TSP,
     n_of_cities, 
     insert_dummy,
     cut_tour,
@@ -13,7 +16,8 @@ export(
     solve_TSP,
     help_linkern, 
     help_concorde, 
-    read_TSPLIB, write_TSPLIB,
+    read_TSPLIB, 
+    write_TSPLIB,
     as.matrix,
     as.TSP,
     as.ATSP,

@@ -7,7 +7,12 @@ TOUR <- function(x){
 ## coercion
 as.TOUR <- function(object) UseMethod("as.TOUR")
 as.TOUR.integer <- function(object){
-    as.integer(object)
+    object <- as.integer(object)
+    
+    ## check tour
+    if(any(object < 1 || object > length(object) || is.na(object))) 
+        stop("tour contains illegal elements.")
+    
     class(object) <- "TOUR"
     object
 }

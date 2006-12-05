@@ -24,21 +24,21 @@
 
 SEXP two_opt(SEXP x, SEXP t) {
     if (TYPEOF(x) != REALSXP)
-	error("'x' invalid storage type");
+	error("distance matrix has invalid storage type");
     if (TYPEOF(t) != INTSXP)
-	error("'t' invalid storage type");
+	error("tour has invalid storage type");
     int i, n, f = 0;
 
     // check length
     n = 1 + (int) sqrt(2*LENGTH(x));
     if (LENGTH(x) != n*(n-1)/2)
-	error("'x' invalid length");
+	error("distance matrix has invalid length");
     if (LENGTH(t) != n)
-	error("'t' invalid length");
+	error("tour has invalid length");
 
     for (i = 0; i < n; i++)
 	if (INTEGER(t)[i] < 1 || INTEGER(t)[i] > n)
-	    error("'t' invalid");
+	    error("tour contains invalid values");
     
     PROTECT(t = duplicate(t)); 
     do {

@@ -1,11 +1,14 @@
 library("TSP")
 
-n <- 100
-tries <- 20
+n <- 50
+tries <- 10
 d <- "euclidean"
 #d <- "manhattan"
 
-methods <- c("nearest", "farthest", "cheapest", "nn", "repetitive", "concorde")
+#methods <- c("nearest", "farthest", "cheapest", "arbitrary", 
+    #    "nn", "repetitive", "two_opt", "linkern", "concorde")
+methods <- c("nearest", "farthest", "cheapest", "arbitrary", 
+    "nn", "repetitive", "two_opt", "linkern", "concorde")
 res <- matrix(0, ncol = length(methods), nrow = 0)
 
 run <- function() {
