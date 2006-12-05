@@ -178,9 +178,10 @@ methods <- c("nearest_insertion", "farthest_insertion", "cheapest_insertion",
 
 
 ## calculate tours
+methods <- c("nearest_insertion", "farthest_insertion", "cheapest_insertion",
+    "arbitrary_insertion", "nn", "repetitive_nn")
 tours <- lapply(methods, FUN = function(m) solve_TSP(tsp, method = m))
 names(tours) <- methods
-
 
 ## use the external solver which has to be installed separately
 \dontrun{
@@ -188,7 +189,7 @@ tours$concorde  <- solve_TSP(tsp, method = "concorde")
 tours$linkern  <- solve_TSP(tsp, method = "linkern")
 }
 
-## show one tour
+## show first tour
 tours[[1]]
 
 ## compare tour lengths
