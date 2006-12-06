@@ -37,7 +37,7 @@ set.seed(1234)
   known and important combinatorial optimization problem. The goal is to
   find the shortest tour that visits each city in a given list exactly
   once and then returns to the starting city.  Despite this simple
-  problem statement, the TSP belongs to the class of NP-hard problems.
+  problem statement, the TSP belongs to the class of NP-complete problems.
 
   The importance of the TSP arises from the variety of it's
   applications.  Apart from the obvious application for vehicle routing,
@@ -49,17 +49,19 @@ set.seed(1234)
   basic infrastructure for handling and solving the traveling
   salesperson problem.  The package features informal S3 classes for
   specifying a TSP and its (possibly optimal) solution as well as
-  several simple heuristics to find good solutions.  In addition, it
-  provides an interface to \emph{Concorde}, one of the best TSP solvers
+  several heuristics to find good solutions. In addition, it
+  provides an interface to \emph{Concorde}, one of the best exact TSP solvers
   currently available.}
 
 \section{Introduction}
-The traveling salesperson problem~\citep[TSP;][]{Lawler1985} is a well known
+The traveling salesperson problem~\citep[TSP;][]{Lawler1985, Gutin2002} 
+is a well known
 and important combinatorial optimization problem. The goal is to find the
 shortest tour that visits each city in a given list exactly once and then
-returns to the starting city.  The TSP has many applications including computer
-wiring, vehicle routing, clustering of data arrays and machine
-scheduling~\citep{Lenstra1975}.
+returns to the starting city.  The TSP has many applications including vehicle
+routing, computer wiring, machine sequencing and scheduling, frequency
+assignment in communication networks and structuring of
+matrices~\citep{Lenstra1975, Punnen2002}.
 
 Formally, the TSP can be stated as: The distances between $n$ cities are stored
 in a distance matrix $D$ with elements $d(i,j)$ where $i,j = 1\dots n$ and the
@@ -74,25 +76,31 @@ to find a permutation $\pi$ that minimizes
 % see Lenstra & Kan 1975: Some simple Applications to the TSP
 which is called the \emph{length of the tour.}
 
-In terms of graph theory, cities can be regarded as vertices in a complete,
-weighted graph. The edge weights represent the distances between the cities.
-The goal is to find a \emph{Hamiltonian cycle} with the least
-weight~\citep{Hoffman1985}.
+In terms of graph theory, 
+the TSP can be regarded as a complete graph $G = (V, E)$, where the
+cities correspond to the node set  $V = \{1,2,\cdots,n\}$
+and each edge $e \in E$ has an associated weight representing the 
+distance between the nodes it connects.
+If the graph is not complete, the missing edges can be
+replaced by edges with very large distances.
+The goal is then to find a \emph{Hamiltonian cycle} with the least
+weight in the graph~\citep{Hoffman1985}.
 
 It can be distinguished between the symmetric TSP and the more general
 asymmetric TSP.  For the symmetric case, $d(i,j) = d(j,i)$ holds, i.e.,
 it does not matter if we travel from $i$ to $j$ or the other way round,
 the distance is the same. In the asymmetric case, the distances are not
-equal for all pairs of cities.  Problems of this kind arise when we do
+equal for all pairs of cities. Problems of this kind arise when we do
 not deal with spatial distances between cities but, e.g., with the cost
 associated with traveling between locations. Here the price for the
 plane ticket between two cities may be different depending on which way
 we go.
+\marginpar{ATSP to TSP missing}
 
-It has to be noted that in this paper, following the origin of the TSP,
-the term \emph{distance} is used.  Distance is used here exchangeably
-with dissimilarity and no restrictions to measures which obey the
-triangle inequality are made.
+It has to be noted that in this paper, following the origin of the TSP, the
+term \emph{distance} is used.  Distance is used here exchangeably with
+dissimilarity or cost and unless explicitely stated no restrictions to measures
+which obey the triangle inequality are made.
 
 The paper is organized as follows:
 In Section~\ref{sec:infrastructure} we give an overview of the infrastructure
@@ -100,7 +108,7 @@ implemented in \pkg{TSP} and the basic usage.  In Section~\ref{sec:algo} we
 present the available algorithms.  In Section~\ref{sec:examples} we give
 several examples.  Section~\ref{sec:conclusion} concludes the paper.
 
-\section{Basic infrastructure}\label{sec:infrastructure}
+\section{The TSP infrastructure}\label{sec:infrastructure}
 
 In the package~\pkg{TSP}, a traveling salesperson problem is
 defined by an object of class \class{TSP} (symmetric) or \class{ATSP}
@@ -137,6 +145,10 @@ therefore, if needed, can be coerced to \class{dist} or to a matrix.
 An \class{ATSP} object is represented as a square matrix.
 Obviously, asymmetric TSPs are more general than symmetric TSPs, hence,
 symmetric TSPs can also be represented as asymmetric TSPs.
+To formulate an asymmetric TSP as a symmetric TSP with
+double the number of cities, \func{ATSP\_to\_TSP}
+is provides. The function creates the necessary dummy cities and
+adapts the distance matrix accordingly. 
 
 A popular format to save TSP descriptions to disk which is supported by
 most TSP solvers is the format used by \emph{TSPLIB}, a library of
@@ -169,32 +181,50 @@ can contain a list with additional information used by the solver.  The
 different algorithms currently available as methods are described in
 Section~\ref{sec:algo}.
 
-\section{Algorithms}\label{sec:algo}
+\section{Algorithms and heuristics}\label{sec:algo}
+
+Exact solutions for a TSP can be calculated using dynamic
+programming~\citep{Held1962}, however, due to the exponential
+space requirements, this approach is limited to very small instances.
+A modern approach is to use branch-and-bound to find the optimal
+solution. In \pkg{TSP}, we provide an interface to 
+Concorde~\citep{Applegate2000}, a solver which
+uses for extremely small instances dynamic programming and 
+for larger instances branch-and-cut.
 
 The NP-completeness of the TSP makes it already for medium sized TSP instances
-necessary to rely on heuristics. In \pkg{TSP}, we implemented some simple
+more time efficient to rely on heuristics. 
+TSP heuristics typically fall into two groups, tour construction heuristics
+and tour improvement heuristics.
+In \pkg{TSP}, we implemented some simple tour construction
 heuristics described by \cite{Rosenkrantz1977}: the nearest neighbor algorithm
 and some variants of the insertion algorithm.
-The package also provides an interface to the Concorde TSP solver. 
+As tour imporvement heuristics we implemented a heuristic
+which exchanges two edges in the graph representation of the 
+TSP~\citep{Croes1958} and we provide an interface to the 
+implementation of the Lin-Kernighan heuristic~\citep{Lin1973}
+provided with Concorde~\citep{Applegate2003}.
 
+In the following, we present the differnt algorithms.
 
 \subsection{Nearest neighbor algorithm}
-The nearest neighbor algorithm~\citep{Rosenkrantz1977} follows a very simple
-greedy procedure: The algorithm starts with a tour containing a randomly chosen
-city.  Then the algorithm always adds to the last city in the tour the nearest
-not yet visited city. The algorithm stops when all cities are on the tour.  
-This algorithm is implemented as method \code{"nn"} for \func{solve\_TSP}.
+The nearest neighbor algorithm~\citep{Rosenkrantz1977} 
+is a tour construction algorithm which follows a very simple greedy procedure:
+The algorithm starts with a tour containing a randomly chosen city.  Then the
+algorithm always adds to the last city in the tour the nearest not yet visited
+city. The algorithm stops when all cities are on the tour.  This algorithm is
+implemented as method \code{"nn"} for \func{solve\_TSP}.
 
 An extension to this algorithm is to repeat it with each city as
 the starting point and then return the best of the found tours. 
 This algorithm is implemented as method \code{"repetitive\_nn"}.
 
 \subsection{Insertion algorithms}
-All insertion algorithms~\citep{Rosenkrantz1977} start with a tour consisting
-of an arbitrary city and then choose in each step a city $k$ not yet on the
-tour.  This city is inserted into the existing tour between two consecutive
-cities $i$ and $j$, such that $$d(i,k) + d(k,j) - d(i,j)$$ is minimized.  The
-algorithms stops when all cities are on the tour.
+All insertion algorithms~\citep{Rosenkrantz1977} start constructing a tour with
+a tour consisting of an arbitrary city and then choose in each step a city $k$
+not yet on the tour.  This city is inserted into the existing tour between two
+consecutive cities $i$ and $j$, such that $$d(i,k) + d(k,j) - d(i,j)$$ is
+minimized.  The algorithms stops when all cities are on the tour.
 
 The insertion algorithms differ in the way the city to be inserted next is
 chosen. The following insertion algorithms are implemented:
@@ -221,18 +251,6 @@ spanning tree algorithm which is known to be a good algorithm to find a
 Hamiltonian cycle with a close to minimal weight sum in a connected, undirected
 graph.  For nearest and cheapest insertion, adding a city to a partial tour
 corresponds to adding an edge to a partial spanning tree.  
-%
-%Here the TSP is solved by finding
-%a Hamiltonian cycle in a connected, undirected graph with a minimal weight
-%sum. A known method for finding a good solution is to first generate a
-%minimum spanning tree.  A spanning tree of a connected, undirected graph is a
-%tree composed of all vertices in the graph and a subset of the edges. The
-%minimum spanning tree is a graphs spanning tree with minimal weight. Such a
-%minimum spanning tree can be found using a distance matrix as input in less
-%than $O(n^2)$ (e.g. using the algorithms by \cite{Kruskal1956} or
-%\cite{Prim1957}). From the minimum spanning tree a Hamiltonian cycle is built
-%using depth first traversal of the tree~\citep{Rosenkrantz1977}.  
-%
 For TSPs with distances obeying the triangular inequality, the upper bound for
 the length of the tour found by the minimum spanning tree algorithm is twice
 the optimal tour length.
@@ -251,10 +269,17 @@ The insertion algorithms are implemented as methods
 \code{"arbitrary\_insertion"}.
 
 
+
+\subsection{Edge exchange algorithms}
+2-opt
+Lin-Kernighan
+\marginpar{missing}
+
 \subsection{Concorde}
 
-Concorde~\citep{Applegate1998,Applegate2006} is currently one of the best
+Concorde~\citep{Applegate2000,Applegate2006} is currently one of the best
 implementations for solving symmetric TSPs based on the branch-and-cut method.
+\marginpar{more on the algorithm!}
 In May 2004, Concorde was used to find the optimal solution for the TSP of
 visiting all 24,978 cities in Sweden. The computation was carried out on a
 cluster with 96 nodes and took in total almost 100 CPU years (assuming a single

@@ -14,6 +14,10 @@ tsp_insertion <- function(x, type = "nearest", control = NULL){
     asym <- inherits(x, "ATSP")
     x <- as.matrix(x)
 
+    ## prepare criterion for nearest/farthest
+    if(type_num == 1) crit <- which.min 
+    if(type_num == 2) crit <- which.max 
+
     ## place first city
     start <- control$start
     if(is.null(start)) start <- sample(1:n, 1)
@@ -33,9 +37,7 @@ tsp_insertion <- function(x, type = "nearest", control = NULL){
 
         ## which.max/which.min do no random tie breaking!
         ## nearest / farthest
-        if(type_num == 1 || type_num == 2) {
-            if(type_num == 1) crit <- which.min else crit <- which.max 
-            
+        if(type_num < 3) {
             m <- x[ks,js, drop = FALSE]
             
             ## for the asymmetric case we have to take distances
@@ -47,16 +49,23 @@ tsp_insertion <- function(x, type = "nearest", control = NULL){
             ds <- sapply(1:length(ks), FUN = 
                 function(i)  min(m[i, , drop = FALSE]))
 
-            k <- ks[crit(ds)]
+            winner_index <- crit(ds)
+            ## in case it was all Inf/-Inf
+            if(length(winner_index) == 0) winner_index <- 1
+            k <- ks[winner_index] 
         }
        
         ## cheapest
         else if(type_num == 3) {
-            k <- ks[which.min(sapply(ks, FUN = 
-                    function(k) min(.Call("insertion_cost", x, order, k))))]
-        ## we look for the optimal insertion place for k again later
-        ## this is not necessary, but it is more convenient
-        ## to reuse the code for the other insertion algorithms for now. 
+            winner_index <- which.min(sapply(ks, FUN =
+                    function(k) min(.Call("insertion_cost", x, order, k))))
+            ## in case it was all Inf/-Inf
+            if(length(winner_index) == 0) winner_index <- 1
+            k <- ks[winner_index]
+
+            ## we look for the optimal insertion place for k again later
+            ## this is not necessary, but it is more convenient
+            ## to reuse the code for the other insertion algorithms for now. 
         }
         
         ## random
@@ -72,7 +81,7 @@ tsp_insertion <- function(x, type = "nearest", control = NULL){
         else {
             pos <- which.min(.Call("insertion_cost", x, order, k))
             if(length(pos) == 0) pos <- 1 ### in case we only have Inf and
-                                          ### which mean does not do it
+                                          ### so which.min does not do it
             order <- append(order, k, after = pos)
         }
     }

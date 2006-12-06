@@ -3,29 +3,29 @@
 \title{Reformulate a ATSP as a symmetric TSP}
 \description{
 A ATSP can be formulated as a symmetric TSP by doubling the number of
-cities (Jonker and Volgenant 1983). Then the TSP can be solved 
-which also solves the original ATSP.
+cities (Jonker and Volgenant 1983). The solution of the TSP 
+also represents the solution of the original ATSP.
 }
 \usage{
-ATSP_to_TSP(x, M = Inf, cheap_link = -10)
+ATSP_to_TSP(x, impossible = Inf, cheap = -Inf)
 }
 \arguments{
   \item{x}{an ATSP.}
-  \item{M}{value for impossible edges.}
-  \item{cheap_link}{value for the link between a city and the corresponding 
+  \item{infeasible}{value for impossible connections.}
+  \item{cheap}{value for distance between a city and its corresponding 
       dummy city.}
 }
 \details{
-To reformulate the ATSP as a TSP, for each city a dummy city (e.g, for
-'New York' a dummy city 'New York*') is added. Between each city and its
-corresponding dummy city a distance with value \code{cheap_link} is used.
-This makes sure that cities and dummy cities will always occur together
-in the solution. The original distances are used 
-between the cities and the dummy cities, 
-where the cities are responsible for the distances going to the city and 
-the dummy cities are responsible for the distances coming from the
-city. The distances between all cities or between all dummy cities are
-set to \code{M}, a very large value which makes the infeasible.
+To reformulate the ATSP as a TSP, for each city a dummy city (e.g, for 'New
+York' a dummy city 'New York*') is added. Between each city and its
+corresponding dummy city a negative or very small distance with value
+\code{cheap} is used.  This makes sure that each cities always occurs in the
+solution together with its dummy city.  The original distances are used between
+the cities and the dummy cities, where each city is responsible for the
+distance going to the city and the dummy city is responsible for the distance
+coming from the city. The distances between all cities and the distances
+between all dummy cities are set to \code{infeasible}, a very large value which
+makes the infeasible.
 
 %The result is a distance matrix for the TSP of the following form:
 %
@@ -48,15 +48,21 @@ traveling salesman problems, \emph{Operations Research Letters, 2, 161--163.}
 \examples{
 data("USCA50")
 
+## set the distances towards Austin to zero which makes it a ATSP
 austin <- which(labels(USCA50) == "Austin, TX")
-
 atsp <- as.ATSP(USCA50)
 atsp[, austin] <- 0
 
+## reformulate as a TSP
 tsp <- ATSP_to_TSP(atsp)
 labels(tsp)
 
-tour <- solve_TSP(tsp)
-labels(tour)
+## create tour (now you could use Concorde or LK)
+tour_atsp <- solve_TSP(tsp, method="nn")
+head(labels(tour_atsp), n = 10)
+
+## filter out the dummy cities
+tour <- TOUR(tour_atsp[tour_atsp <= n_of_cities(atsp)])
+tour_length(atsp, tour)
 }
 \keyword{optimize}

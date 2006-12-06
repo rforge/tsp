@@ -6,13 +6,20 @@ TOUR <- function(x){
 
 ## coercion
 as.TOUR <- function(object) UseMethod("as.TOUR")
-as.TOUR.integer <- function(object){
+as.TOUR.numeric <-  function(object){
+    l <- labels(object)
     object <- as.integer(object)
-    
+    names(object) <- l
+    as.TOUR(object)
+}
+as.TOUR.integer <- function(object){
+
     ## check tour
-    if(any(object < 1 || object > length(object) || is.na(object))) 
+    if(any(object < 1) || any(object > length(object)) || any(is.na(object))) 
         stop("tour contains illegal elements.")
-    
+
+    if(any(duplicated(object))) stop("tour indices are not unique.")
+
     class(object) <- "TOUR"
     object
 }

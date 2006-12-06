@@ -15,8 +15,11 @@ tour_length(x, order)
       as a integer vector or an object of class \code{TOUR}.  If no order is
       given, the cities are visited in the original order in \code{x}. }
 }
-%\details{
-%}
+\details{
+If a distance in the tour is infinite, the result is also infinite. If 
+the tour contains positive and negative infinite distances the method
+returns \code{NA}.
+}
 \seealso{
 \code{\link{TSP}},
 \code{\link{ATSP}},

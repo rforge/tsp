@@ -19,12 +19,20 @@ write_TSPLIB.TSP <- function(x, file, precision = 6, inf = NULL) {
     
     ## fixes for TSPLIB/Concorde
     ## infinity is not available so we use a relatively large number
-    inf_index <- is.infinite(x)
-    if(is.null(inf)) inf <- max(x[!inf_index]) * 2
-    if(any(inf_index)) {
-        warning(paste("Infinity values are replaced by",
-                inf), immediate. = TRUE)
-        x[inf_index] <- inf
+    posInf_index <- x == Inf
+    if(any(posInf_index)) {
+        posInf <- if(is.null(inf)) max(x[!posInf_index]) * 2 else inf
+        warning(paste("Pos. infinity values are replaced by",
+                posInf), immediate. = TRUE)
+        x[posInf_index] <- posInf
+    }
+    
+    negInf_index <- x == -Inf
+    if(any(negInf_index)) {
+        negInf <- if(is.null(inf)) min(x[!negInf_index]) * 2 else -inf
+        warning(paste("Neg. infinity values are replaced by",
+                negInf), immediate. = TRUE)
+        x[negInf_index] <- negInf
     }
     
     ## only integers can be used as weights
@@ -48,14 +56,22 @@ write_TSPLIB.ATSP <- function(x, file, precision = 6, inf = NULL) {
         "EDGE_WEIGHT_TYPE: EXPLICIT",
         format, 
         file = zz, sep = "\n")
-    
+
     ## infinity is not available so we use a relatively large number
-    inf_index <- is.infinite(x)
-    if(is.null(inf)) inf <- max(x[!inf_index]) * 2
-    if(any(inf_index)) {
-        warning(paste("Infinity values are replaced by",
-                inf), immediate. = TRUE)
-        x[inf_index] <- inf
+    posInf_index <- x == Inf
+    if(any(posInf_index)) {
+        posInf <- if(is.null(inf)) max(x[!posInf_index]) * 2 else inf
+        warning(paste("Pos. infinity values are replaced by",
+                posInf), immediate. = TRUE)
+        x[posInf_index] <- negInf
+    }
+
+    negInf_index <- x == -Inf
+    if(any(negInf_index)) {
+        posInf <- if(is.null(inf)) min(x[!negInf_index]) * 2 else -inf
+        warning(paste("Neg. infinity values are replaced by",
+                negInf), immediate. = TRUE)
+        x[negInf_index] <- negInf
     }
     
     ## only integers can be used as weights
