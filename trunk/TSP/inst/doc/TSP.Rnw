@@ -71,13 +71,13 @@ in a distance matrix $D$ with elements $d_{i,j}$ where $i,j = 1\dots n$ and the
 diagonal elements $d_{i,i} = 0$. A tour can be represented by a cyclic
 permutation $\pi$ of $\{1, 2,\dots, n\}$ where $\pi(i)$ represents the city
 that follows city $i$ on the tour. The traveling salesperson problem is then
-to find a permutation $\pi$ that minimizes
+to find a permutation $\pi$ that minimizes the  \emph{length of the tour}
+denoted by
 
 \begin{equation}
-    \sum_{i=1}^n d_{i\pi(i)},
+    \sum_{i=1}^n d_{i\pi(i)}.
 \end{equation}
 % see Lenstra & Kan 1975: Some simple Applications to the TSP
-which is called the \emph{length of the tour.}
 
 Depending on the nature of the 
 distance matrix $D$, one can distinguish between the symmetric
@@ -109,7 +109,7 @@ several examples.  Section~\ref{sec:conclusion} concludes the paper.
 
 \section{Theory}\label{sec:TSP}
 In this section, we briefly summarize some properties of the TSP
-which are important fo the rest of the paper.
+which are important to the rest of the paper.
 
 \subsection{Different formulations of the TSP}\label{sec:formulations}
 Other than the permutation problem in the introduction, the TSP can also be
@@ -194,8 +194,8 @@ with $\alpha > 0$ and $\beta \in \mathbb{R}$ holds.
 From the equality we see that addititve and multiplicative constants
 leave the optimal solution invariant. 
 
-A different manipulation is to reformulate a asymmetric TSP $D$
-as a symmetric TSP $D'$.
+A different manipulation is to reformulate a asymmetric TSP
+as a symmetric TSP.
 This is possible by doubling the number of cities~\citep{Jonker1983}. For each
 city a dummy city is added. Between each city and its corresponding dummy city
 a very small distance (e.g., $-\infty$) is used.  This makes sure that each
@@ -215,7 +215,7 @@ as a symmetric TSP to the right.
     d_{2,1} &0          &d_{2,3}    \\
     d_{3,1} &d_{3,2}    &0          \\
 \end{pmatrix}
-\Rightarrow
+\Longleftrightarrow
 \begin{pmatrix}
   0         &\infty     &\infty     & -\infty       &d_{2,1}    &d_{3,1}    \\
   \infty    &0          &\infty     & d_{1,2} &-\infty          &d_{3,1}    \\
@@ -233,17 +233,73 @@ The new symmetric TSP can be solved using techniques for symmetric TSPs
 Removing the dummy cities from the resulting tour gives the  solution
 for the original ATSP.
 
-\subsection{Solving the TSP}\label{sec:algo}
+\marginpar{Explain paths here?}
 
-Exact solutions for a TSP can be calculated using dynamic
-programming and branch-and-bound procedures.  
 
-For solving a TSP by dynamic programming~\citep{Held1962}\dots
+\subsection{Exact solutions to the TSP}\label{sec:algo}
 
-however, due to the exponential
-space requirements, this approach is limited to very small instances.
-A modern approach is to use branch-and-bound to find the optimal
-solution. 
+\marginpar{should it be $(n-1)!$?}
+Finding the exact solution to a TSP with $n$ cities requires to check $n!$
+possible tours. To evaluate all possible tours is infeasible for even small
+TSP instances. However, algorithmic procedures like dynamic
+programming and branch-and-bound can be used improve efficiency. 
+
+\cite{Held1962} presented the following dynamic programming formulation for
+the TSP. The aim is to find the optimal 
+permutation $\pi = \{1, i_2, i_3,\dots,i_n\}$
+of the integers $1$ through $n$ representing the order in which the
+cities are visited. Given $S \subset \{2, 3, \dots, n\}$ and $l \in S$, let
+$d^*(S, l)$ denote the length of the shortest path from city $1$ to city $l$,
+visiting all cities in between. For $S = \{l\}$, $d^*(S,l)$ is defined
+as $d_{1l}$. The shortest path for larger sets with $|S| > 1$ is
+
+\begin{equation}
+    d^*(S,l) = \mathrm{min}_{m \in S-l}\{d^*(S-l,m) + d_{ml}\}.
+    %\text{ for } |S| > 1.
+\end{equation}
+
+Finally, the minimal tour length for a complete tour which includes returning
+to city $1$ is
+
+\begin{equation}
+    d^{**} = \mathrm{min}_{l \in \{2,3,\dots,n\}}\{d^*(\{2,3,\dots,n\}, l)
+    + d_{l1}\}. 
+\end{equation}
+
+Using the last two equations, the quantities $d^*(S,l)$ can be computed
+recursively and the minimal tour length $d^**$ can be found.
+In a second step, the optimal permutation can be computed 
+in reverse order, staring with $i_n$ and working succesively back to
+$i_2$. It exploits the fact that a permutation $\pi$ can only be optimal,
+if
+
+\begin{equation}
+    d^{**} = d^*(\{2,3,\dots,n\}, i_n) + d_{i_n1}
+\end{equation}
+and, for $2 \le p \le n-1$,
+\begin{equation}
+    d^*(\{i_2, i_3,\dots, i_p, i_{p+1}\}, i_{p+1}) = 
+    d^*(\{i_2,i_3,\dots,i_p\}, i_p) + d_{i_pi_{p+1}}.
+\end{equation}
+
+The space complexity needed to store the values for 
+all $d^*(S,l)$ is $(n-1)2^{n-2}$ which severely restricts the
+a dynamic programming algorithm to only TSP problems of small sizes.
+However, for very small TSP instances the approach is very time efficient.
+
+Branch-and-bound uses a differnt search strategy. The problem of minimizing the
+tour length is recursively divided into subproblems (branching) which form a
+search tree. For the subproblems fast ways to find lower and upper bounds of
+the optimal solution in the subproblem are found (bounding). Using this bounds
+subproblems can be discarded (pruned) if another subproblem is found with a
+upper bound smaller than the former problem's lower bound.
+If the upper and lower bound of a subproblem fall together, the subproblem
+is solved. The procedure stops if all subproblems ar either pruned or solved
+and thus the solution to the main problem is found.
+
+% cite
+%A. H. Land and A. G. Doig, An Automatic Method for Solving Discrete Programming% Problems Econometrica, Vol.28 (1960), pp. 497-520.
+
 
 
 
@@ -252,6 +308,9 @@ In \pkg{TSP}, we provide an interface to
 Concorde~\citep{Applegate2000}, a solver which
 uses for extremely small instances dynamic programming and 
 for larger instances a branch-and-bound variation.
+
+
+\subsection{Heuristics for the TSP}\label{sec:heuristics}
 
 The NP-completeness of the TSP makes it already for medium sized TSP instances
 more time efficient to rely on heuristics. 
