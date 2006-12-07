@@ -73,7 +73,7 @@ Currently the following methods are available:
     first city (default: random city).}}
 }
 
-\item{\code{"two_opt"}}{Two edge exchange improvement procedure (Croes 1958).
+\item{\code{"2-opt"}}{Two edge exchange improvement procedure (Croes 1958).
     
     This procedure systematically exchanges two edges in the graph represented
     by the distance matrix till no improvements are possible. Exchanging two
@@ -174,12 +174,10 @@ tsp <- USCA50
 
 ## methods
 methods <- c("nearest_insertion", "farthest_insertion", "cheapest_insertion",
-    "arbitrary_insertion", "nn", "repetitive_nn", "two_opt")
+    "arbitrary_insertion", "nn", "repetitive_nn", "2-opt")
 
 
 ## calculate tours
-methods <- c("nearest_insertion", "farthest_insertion", "cheapest_insertion",
-    "arbitrary_insertion", "nn", "repetitive_nn")
 tours <- lapply(methods, FUN = function(m) solve_TSP(tsp, method = m))
 names(tours) <- methods
 
@@ -195,6 +193,6 @@ tours[[1]]
 ## compare tour lengths
 opt <- 14497 # optained by concorde
 tour_lengths <- c(sapply(tours, FUN = attr, "tour_length"), optimal = opt) 
-dotchart(tour_lengths, xlab = "tour length", xlim = c(0, max(tour_lengths)))
+dotchart(tour_lengths/opt*100-100, xlab = "percent excess over optimum")
 }
 \keyword{optimize}% at least one, from doc/KEYWORDS

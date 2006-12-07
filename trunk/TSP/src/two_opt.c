@@ -2,127 +2,110 @@
 #include <R.h>
 #include <Rdefines.h>
 
+#include "matrix_pos.h"
 
-/* two_opt implements a greedy heuristic that exchanges two edges 
- * immediately if this improves the tour length and stops if no further
- * improvement (over all combinations of edges) is possible. exchanging
- * edges amounts to reversing subpaths.
+
+/* 2-opt 
  *
- * the time complexity is O(n^2) with n the number of cities.
+ * R_matrix ... matrix with distances
+ * R_t .. tour
  *
- * note: the algorithm could easily be extended to a simulated 
- *	 annealing algorithm. the code is slightly optimized.
+ * neg inf is nt handled correctly!
  *
- * (C) ceeboo 2006
- * License: GPL
- *
- * x ... dist
- * t ... tour as a integer vector
- * returns a new tour as an integer vector
  */
 
+SEXP two_opt(SEXP R_matrix, SEXP R_t) {
+  
+    int i, j, n;
+    int swaps;
+    int swap1, swap2;
+    double e1, e2, e1_swap, e2_swap;
+    double imp, cur_imp;
+    int tmp;
+    int t;
 
-SEXP two_opt(SEXP x, SEXP t) {
-    if (TYPEOF(x) != REALSXP)
-	error("distance matrix has invalid storage type");
-    if (TYPEOF(t) != INTSXP)
-	error("tour has invalid storage type");
-    int i, n, f = 0;
-
-    // check length
-    n = 1 + (int) sqrt(2*LENGTH(x));
-    if (LENGTH(x) != n*(n-1)/2)
-	error("distance matrix has invalid length");
-    if (LENGTH(t) != n)
-	error("tour has invalid length");
+    // check   
+    n = INTEGER(GET_DIM(R_matrix))[0];
+    if (LENGTH(R_t) != n)
+        error("tour has invalid length");
 
     for (i = 0; i < n; i++)
-	if (INTEGER(t)[i] < 1 || INTEGER(t)[i] > n)
-	    error("tour contains invalid values");
-    
-    PROTECT(t = duplicate(t)); 
-    do {
-	int i, j, k = 0, l = 0, c1, c2, c3, c4 = n-1;
-	double e23, e13, e12, e34, e24, e31, e41;
-	
-	f = 0;
-	c1 = INTEGER(t)[0]-1;
-	for (i = 1; i < n-1; i++) {
-	    c2 = INTEGER(t)[i]-1;
-	    c3 = INTEGER(t)[i+1]-1;
-	    if (c2 > c3)
-		e23 = REAL(x)[c2+c3*(n-1)-c3*(c3+1)/2-1];
-	    else
-		e23 = REAL(x)[c3+c2*(n-1)-c2*(c2+1)/2-1];
-	    if (c1 > c3)
-		e13 = REAL(x)[c1+c3*(n-1)-c3*(c3+1)/2-1];
-	    else
-		e13 = REAL(x)[c3+c1*(n-1)-c1*(c1+1)/2-1];
-	    if (e23 > e13) {
-		f++;
-		for (k = 0; k < (i+1)/2; k++) {
-		    l = INTEGER(t)[i-k];
-		    INTEGER(t)[i-k] = INTEGER(t)[k];
-		    INTEGER(t)[k] = l;
-		}
-		c1 = INTEGER(t)[0]-1;
-	    }
-	}
-	for (i = 0; i < n-3; i++) {
-	    c1 = INTEGER(t)[i]-1;
-	    c2 = INTEGER(t)[i+1]-1;
-	    if (c1 > c2)
-		e12 = REAL(x)[c1+c2*(n-1)-c2*(c2+1)/2-1];
-	    else
-		e12 = REAL(x)[c2+c1*(n-1)-c1*(c1+1)/2-1];
-	    for (j = i+2; j < n-1; j++) {
-		c3 = INTEGER(t)[j]-1;
-		c4 = INTEGER(t)[j+1]-1;
-		if (c3 > c4)
-		    e34 = REAL(x)[c3+c4*(n-1)-c4*(c4+1)/2-1];
-		else
-		    e34 = REAL(x)[c4+c3*(n-1)-c3*(c3+1)/2-1];
-		if (c2 > c4)
-		    e24 = REAL(x)[c2+c4*(n-1)-c4*(c4+1)/2-1];
-		else
-		    e24 = REAL(x)[c4+c2*(n-1)-c2*(c2+1)/2-1];
-		if (c3 > c1)
-		    e31 = REAL(x)[c3+c1*(n-1)-c1*(c1+1)/2-1];
-		else
-		    e31 = REAL(x)[c1+c3*(n-1)-c3*(c3+1)/2-1];
+        if (INTEGER(R_t)[i] < 1 || INTEGER(R_t)[i] > n)
+            error("tour contains invalid values");
 
-		if (e12+e34 > e24+e31) {
-		    f++;
-		    for (k = 0; k < (j-i)/2; k++) {
-			l = INTEGER(t)[j-k];
-			INTEGER(t)[j-k] = INTEGER(t)[i+1+k];
-			INTEGER(t)[i+1+k] = l;
-		    }
-		    c2 = INTEGER(t)[i+1]-1;
-		    if (c1 > c2)
-			e12 = REAL(x)[c1+c2*(n-1)-c2*(c2+1)/2-1];
-		    else
-			e12 = REAL(x)[c2+c1*(n-1)-c1*(c1+1)/2-1];
-		}
-	    }
-	    if (c4 > c1)
-		e41 = REAL(x)[c4+c1*(n-1)-c1*(c1+1)/2-1];
-	    else
-		e41 = REAL(x)[c1+c4*(n-1)-c4*(c4+1)/2-1];
-	    if (e12 > e41) {
-		f++;
-		for (k = 0; k < (j-i)/2; k++) {
-		    l = INTEGER(t)[j-k];
-		    INTEGER(t)[j-k] = INTEGER(t)[i+1+k];
-		    INTEGER(t)[i+1+k] = l;
-		}
-	    }
-	    R_CheckUserInterrupt();
-	}
-    } while (f);
-   
+    // main loop
+    PROTECT(R_t = duplicate(R_t));
+    do{
+        swaps = 0;
+        imp = 0.0;
+
+        for (i = 0; i < (n-2); i++){
+            e1 = REAL(R_matrix)
+                [M_POS(n, INTEGER(R_t)[i]-1, INTEGER(R_t)[i+1]-1)]; 
+
+            for (j = (i+1); j < (n-1); j++){
+                e2 = REAL(R_matrix)
+                    [M_POS(n, INTEGER(R_t)[j]-1, INTEGER(R_t)[j+1]-1)];
+
+                e1_swap = REAL(R_matrix)
+                    [M_POS(n, INTEGER(R_t)[i]-1, INTEGER(R_t)[j]-1)];
+                e2_swap = REAL(R_matrix)
+                    [M_POS(n, INTEGER(R_t)[i+1]-1, INTEGER(R_t)[j+1]-1)];
+                
+                // handle pos inf
+                if (e1_swap == R_PosInf || e2_swap == R_PosInf) 
+                    cur_imp = 0;
+                else if (e1 == R_PosInf || e2 == R_PosInf) 
+                    cur_imp = R_PosInf;
+                else cur_imp = e1+e2 -e1_swap-e2_swap;
+
+                if(cur_imp > 0) {
+                    swaps++;
+                    if(cur_imp > imp) {
+                        imp = cur_imp;
+                        swap1 = i+1; swap2 = j;
+                    }
+                }
+            }
+        
+            // swap including last city 
+            e2 = REAL(R_matrix)
+                [M_POS(n, INTEGER(R_t)[n-1]-1, INTEGER(R_t)[0]-1)];
+
+            e1_swap = REAL(R_matrix)
+                [M_POS(n, INTEGER(R_t)[i]-1, INTEGER(R_t)[n-1]-1)];
+            e2_swap = REAL(R_matrix)
+                [M_POS(n, INTEGER(R_t)[i+1]-1, INTEGER(R_t)[0]-1)];
+
+            cur_imp = e1+e2 -e1_swap-e2_swap;
+
+            if(cur_imp > 0) {
+                swaps++;
+                if(cur_imp > imp) {
+                    imp = cur_imp;
+                    swap1 = i+1; swap2 = n-1;
+                }
+            }
+        }
+
+        //printf("%d possible swaps\n", swaps);
+        //printf("%f best improvement\n", imp);
+        //printf("swapping %d to %d\n", swap1, swap2);
+        
+        // invert
+        if(swaps > 0){
+            for(i = 0; i < (swap2-swap1+1)/2; i++) { // +1 for even length
+                tmp = INTEGER(R_t)[swap1+i];
+                INTEGER(R_t)[swap1+i] = INTEGER(R_t)[swap2-i];
+                INTEGER(R_t)[swap2-i] = tmp;
+            }
+        }
+
+        R_CheckUserInterrupt();
+    }while (swaps >0);
+
     UNPROTECT(1);
-    return t;
+    return R_t;
 }
 
-/**/
+

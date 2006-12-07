@@ -7,6 +7,6 @@ tsp_two_opt <- function(x, control = NULL){
             else solve_TSP(x, method = "farthest")
     
 
-    tour <- .Call("two_opt", as.dist(x), as.integer(tour))
+    tour <- .Call("two_opt", as.matrix(x), as.integer(tour))
 }
 

@@ -24,7 +24,7 @@ solve_TSP <- function(x, method = NULL, control = NULL)
         "arbitrary_insertion",     
         "nn",
         "repetitive_nn",
-        "two_opt",
+        "2-opt",
         "concorde",
         "linkern"
     )

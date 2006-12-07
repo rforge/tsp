@@ -7,11 +7,11 @@ cities (Jonker and Volgenant 1983). The solution of the TSP
 also represents the solution of the original ATSP.
 }
 \usage{
-ATSP_to_TSP(x, impossible = Inf, cheap = -Inf)
+ATSP_to_TSP(x, infeasible = Inf, cheap = -Inf)
 }
 \arguments{
   \item{x}{an ATSP.}
-  \item{infeasible}{value for impossible connections.}
+  \item{infeasible}{value for infeasible connections.}
   \item{cheap}{value for distance between a city and its corresponding 
       dummy city.}
 }

@@ -205,7 +205,10 @@ TSP~\citep{Croes1958} and we provide an interface to the
 implementation of the Lin-Kernighan heuristic~\citep{Lin1973}
 provided with Concorde~\citep{Applegate2003}.
 
-In the following, we present the differnt algorithms.
+A good overview of heuristics together with an experimental comparison 
+can be found in~\cite{Johnson2002}.
+
+In the following, we present the differnt available algorithms.
 
 \subsection{Nearest neighbor algorithm}
 The nearest neighbor algorithm~\citep{Rosenkrantz1977} 
