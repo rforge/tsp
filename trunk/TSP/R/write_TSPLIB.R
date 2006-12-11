@@ -37,6 +37,9 @@ write_TSPLIB.TSP <- function(x, file, precision = 6, inf = NULL) {
     
     ## only integers can be used as weights
     if(storage.mode(x) != "integer") x <- as.integer(x * 10^precision)
+    
+    if(any(is.na(x))) stop("integer overflow, please reduce precision.")
+
 
     cat("EDGE_WEIGHT_SECTION", x, file = zz, sep = "\n")
     cat("EOF", file = zz, sep = "\n")
@@ -76,6 +79,8 @@ write_TSPLIB.ATSP <- function(x, file, precision = 6, inf = NULL) {
     
     ## only integers can be used as weights
     if(storage.mode(x) != "integer") x <- as.integer(x * 10^precision)
+    
+    if(any(is.na(x))) stop("integer overflow, please reduce precision.")
 
     cat("EDGE_WEIGHT_SECTION", x, file = zz, sep = "\n")
     cat("EOF", file = zz, sep = "\n")

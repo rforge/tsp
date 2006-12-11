@@ -12,6 +12,10 @@ as.TSP.dist <- function(object){
     ## make sure we have a upper triangle matrix w/o diagonal
     object <- as.dist(object, diag = FALSE, upper = FALSE)
     
+    ## make sure we have labels
+    if(is.null(attr(object, "Lables"))) 
+    attr(object, "Lables") <- c(1:n_of_cities(object))
+
     if(any(is.nan(object))) stop(paste(sQuote("NAs"), "not supported"))
     class(object) <- c("TSP", class(object))
     object
@@ -23,6 +27,10 @@ as.TSP.matrix <- function(object){
     method <- attr(object, "method")
     object <- as.dist(object, diag = FALSE, upper = FALSE)
     attr(object, "method") <- method
+    
+    ## make sure we have labels
+    if(is.null(attr(object, "Lables"))) 
+    attr(object, "Lables") <- c(1:n_of_cities(object))
 
     if(any(is.nan(object))) stop(paste(sQuote("NAs"), "not supported"))
     class(object) <- c("TSP", class(object))

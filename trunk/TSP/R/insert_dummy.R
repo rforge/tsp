@@ -26,6 +26,7 @@ insert_dummy.TSP.old <- function(x, n = 1, const = 0, inf = Inf,
     
     attributes(d) <- attributes(x)
     attr(d, "Size") <- p
+    ## the following line has problems with R-devel
     attr(d, "Labels") <- c(rep("dummy", n), attr(x, "Labels"))
     d
 }
