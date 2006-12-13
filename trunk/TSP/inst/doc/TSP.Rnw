@@ -503,19 +503,20 @@ The available algorithms are shown in Table~\ref{tab:methods}.
 \begin{table}
     \caption{Available algorithms in \pkg{TSP}.}\label{tab:methods}
     \centering
-    \begin{tabular}{ll}
+    \begin{tabular}{llc}
     \hline
-    {\bf Algorithm} & {\bf Method argument} \\
+    {\bf Algorithm} & {\bf Method argument} & {\bf Applicable to} \\
     \hline
-    Nearest neighbor algorithm & \code{"nn"}\\
-    Repetitive nearest neighbor algorithm & \code{"repetitive\_nn"}\\
-    Nearest insertion & \code{"nearest\_insertion"} \\
-    Farthest insertion & \code{"farthest\_insertion"} \\
-    Cheapest insertion & \code{"cheapest\_insertion"} \\
-    Arbitrary insertion & \code{"arbitrary\_insertion"} \\
-    Concorde TSP solver & \code{"concorde"} \\
-    2-Opt improvement heuristic &  \code{"2-opt"} \\
-    Chained Lin-Kernighan &  \code{"linkern"} \\
+    Nearest neighbor algorithm & \code{"nn"} & TSP/ATSP \\
+    Repetitive nearest neighbor algorithm & \code{"repetitive\_nn"} 
+            & TSP/ATSP \\
+    Nearest insertion & \code{"nearest\_insertion"} & TSP/ATSP  \\
+    Farthest insertion & \code{"farthest\_insertion"} & TSP/ATSP  \\
+    Cheapest insertion & \code{"cheapest\_insertion"} & TSP/ATSP  \\
+    Arbitrary insertion & \code{"arbitrary\_insertion"} & TSP/ATSP  \\
+    Concorde TSP solver & \code{"concorde"} & TSP  \\
+    2-Opt improvement heuristic &  \code{"2-opt"}  & TSP/ATSP \\
+    Chained Lin-Kernighan &  \code{"linkern"}  & TSP \\
 \hline
 \end{tabular}
 \end{table}
@@ -694,13 +695,13 @@ distances the symmetric TSP is changed into an asymmetric TSP since the
 distances between the starting city and all other cities are no longer
 symmetric.
 
-As an example, we choose the city New York to be the starting city.
-We transform the data set into an asymmetric TSP and set the column 
-corresponding to New York to zero before solving the TSP. This means
-that the distance to return from the last city in the path
-to New York does not contribute to the path length.
-We use the nearest insertion heuristic 
-to calculate a tour and then cut at New York City to create a path.
+As an example, we choose the city New York to be the starting city.  We
+transform the data set into an asymmetric TSP and set the column corresponding
+to New York to zero before solving the TSP. This means that the distance to
+return from the last city in the path to New York does not contribute to the
+path length.  We use the nearest neighbor heuristic to calculate an initial
+tour which is then improved using $2$-Opt moves and cut at New York City to
+create a path.
 
 
 <<echo=FALSE>>=
@@ -711,7 +712,9 @@ set.seed(1234)
 atsp <- as.ATSP(USCA312)
 ny <- which(labels(USCA312) == "New York, NY")
 atsp[, ny] <- 0
-tour <- solve_TSP(atsp, method ="nearest_insertion")
+initial_tour <- solve_TSP(atsp, method="nn")
+initial_tour
+tour <- solve_TSP(atsp, method ="2-opt", control = list(tour = initial_tour))
 tour
 path <- cut_tour(tour, ny, exclude_cut = FALSE)
 
@@ -731,7 +734,7 @@ tail(labels(path))
 The found path 
 is presented in Figure~\ref{fig:map2}. It
 begins with New York City and cities in New Jersey and
-ends in the northeast of Canada. 
+ends in a city in Manitoba, Canada. 
 %The path shows the typical behavior 
 %of the nearest neighbor heuristic with first connecting the cities close by and
 %then making rather big ``jumps'' for the final cities.
@@ -774,7 +777,7 @@ atsp[, la_ny] <- c(m[la, -c(ny,la)], 0)
 We use again the nearest insertion heuristic.
 
 <<fig=TRUE, include=FALSE, label=map3, width=8, height=8>>=
-tour <- solve_TSP(atsp, method ="nearest_insertion")
+tour <- solve_TSP(atsp, method ="nearest")
 tour
 
 path_labels <- c("New York, NY", 
@@ -783,7 +786,6 @@ path_ids <- match(path_labels, labels(USCA312))
 
 head(path_labels)
 tail(path_labels)
-
 plot_path(path_ids)
 @
 
