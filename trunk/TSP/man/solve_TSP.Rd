@@ -173,7 +173,7 @@ data("USCA50")
 tsp <- USCA50
 
 ## methods
-methods <- c("nearest_insertion", "farthest_insertion", "cheapest_insertion",
+methods <- c("nearest_insertion", "cheapest_insertion", "farthest_insertion", 
     "arbitrary_insertion", "nn", "repetitive_nn", "2-opt")
 
 

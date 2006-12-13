@@ -2,7 +2,16 @@
 ## (Rosenkrantz et al. 1977)
 
 tsp_insertion <- function(x, type = "nearest", control = NULL){
-            
+    
+    ## since sample has an annoying convenience feature for
+    ## lenght(x) == 1
+    choose1 <- function(x) if(length(x) > 1) sample(x, 1) else x
+    
+    ## this is slower than which.min and which.max but works also
+    ## correctly for only values Inf in x and breaks ties randomly 
+    choose1_min <- function(x) choose1(which(x == min(x)))
+    choose1_max <- function(x) choose1(which(x == max(x)))
+
     types <- c("nearest", "farthest", "cheapest", "arbitrary")
     type_num <- pmatch(type, types)
     if(is.na(type_num)) stop(paste("Unknown insertion type: ", sQuote(type)))
@@ -15,8 +24,8 @@ tsp_insertion <- function(x, type = "nearest", control = NULL){
     x <- as.matrix(x)
 
     ## prepare criterion for nearest/farthest
-    if(type_num == 1) crit <- which.min 
-    if(type_num == 2) crit <- which.max 
+    if(type_num == 1) crit <- choose1_min 
+    if(type_num == 2) crit <- choose1_max
 
     ## place first city
     start <- control$start
@@ -35,7 +44,6 @@ tsp_insertion <- function(x, type = "nearest", control = NULL){
         ks <- which(!placed)
         js <- which(placed)
 
-        ## which.max/which.min do no random tie breaking!
         ## nearest / farthest
         if(type_num < 3) {
             m <- x[ks,js, drop = FALSE]
@@ -50,17 +58,13 @@ tsp_insertion <- function(x, type = "nearest", control = NULL){
                 function(i)  min(m[i, , drop = FALSE]))
 
             winner_index <- crit(ds)
-            ## in case it was all Inf/-Inf
-            if(length(winner_index) == 0) winner_index <- 1
             k <- ks[winner_index] 
         }
        
         ## cheapest
         else if(type_num == 3) {
-            winner_index <- which.min(sapply(ks, FUN =
+            winner_index <- choose1_min(sapply(ks, FUN =
                     function(k) min(.Call("insertion_cost", x, order, k))))
-            ## in case it was all Inf/-Inf
-            if(length(winner_index) == 0) winner_index <- 1
             k <- ks[winner_index]
 
             ## we look for the optimal insertion place for k again later
@@ -69,7 +73,7 @@ tsp_insertion <- function(x, type = "nearest", control = NULL){
         }
         
         ## random
-        else if(type_num == 4) k <- if(length(ks) > 1) sample(ks, 1) else ks
+        else if(type_num == 4) k <- choose1(ks)
         
         ## just in case
         else stop("unknown insertion type")
@@ -79,9 +83,7 @@ tsp_insertion <- function(x, type = "nearest", control = NULL){
         
         if(length(order) == 1) order <- append(order, k)
         else {
-            pos <- which.min(.Call("insertion_cost", x, order, k))
-            if(length(pos) == 0) pos <- 1 ### in case we only have Inf and
-                                          ### so which.min does not do it
+            pos <- choose1_min(.Call("insertion_cost", x, order, k))
             order <- append(order, k, after = pos)
         }
     }

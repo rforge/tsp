@@ -2,9 +2,9 @@
 
 tsp_two_opt <- function(x, control = NULL){
 
-    ## improve a given tour or create a tour using farthest insertion
+    ## improve a given tour or create a random tour
     tour <- if(!is.null(control$tour)) control$tour 
-            else solve_TSP(x, method = "farthest")
+            else sample(1:n_of_cities(x))
     
 
     tour <- .Call("two_opt", as.matrix(x), as.integer(tour))

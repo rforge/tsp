@@ -1,5 +1,8 @@
 ## interface to the Concorde algorithm (can only handle TSP)
 
+
+.concord_path <- NULL
+
 tsp_concorde <- function(x, control = NULL){
 
     ## get parameters
@@ -65,7 +68,7 @@ tsp_concorde <- function(x, control = NULL){
     system(paste(exe, "-x", "-o", tmp_file_out , clo, tmp_file_in))
     
     if(!file.access(tmp_file_out) == 0) 
-    stop("Problems with reading Concorde's output. Is Concorde properly installed?")
+    stop("Problems with reading Concorde's output. Is concorde properly installed?")
     ##else cat("Concorde done.\n")
     
     order <- scan(tmp_file_out, what = integer(0), quiet = TRUE)
@@ -131,7 +134,7 @@ tsp_linkern <- function(x, control = NULL){
     system(paste(exe, verbatim, "-o", tmp_file_out , clo, tmp_file_in))
     
     if(!file.access(tmp_file_out) == 0) 
-    stop("Problems with reading Linkern's output. Is Linkern properly installed?")
+    stop("Problems with reading linkern's output. Is linkern properly installed?")
     ##else cat("Concorde done.\n")
     
     order <- read.table(tmp_file_out)[,1]
@@ -152,15 +155,32 @@ help_concorde <- function(exe = NULL) {
 help_linkern <- function(exe = NULL) {
       system(paste(.find_exe(exe, "linkern"), ""))
 }
-  
+
+## path
+concorde_path <- function(path){
+    .concorde_path <<- path
+
+    ## null unsets the path
+    if(!is.null(path)) {
+        ex <- c(list.files(path, pattern = "concorde"),
+            list.files(path, pattern = "linkern"))
+        if(length(ex) < 1) 
+        warning(paste("no executable (concorde, linkern) found in", path))
+        cat("found:", ex, "\n")
+    }
+}
+
+
 ## helper to find the concorde executable
 .find_exe <- function(exe = NULL, prog) {
-    ## use environment variable?
-    #if(is.null(exe))    exe <- Sys.getenv("R_CONCORDE")
-    ## last resort (hopefully it is in the PATH)
-    #if(exe == "")       exe <- prog
-    if(is.null(exe))       exe <- prog
-    
+    ## if not specified
+    if(is.null(exe)) {
+        ## was the path set ?
+        if(!is.null(.concorde_path)) 
+        exe <- paste(.concorde_path, .Platform$file.sep, prog, sep ="")
+        ## no, so it must be in the systems execution path
+        else exe <- prog
+    }
     exe
 }
 

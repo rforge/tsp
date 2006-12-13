@@ -16,6 +16,7 @@ export(
     solve_TSP,
     help_linkern, 
     help_concorde, 
+    concorde_path,
     read_TSPLIB, 
     write_TSPLIB,
     as.matrix,

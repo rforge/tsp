@@ -80,6 +80,11 @@ the optimization problem to find a permutation $\pi$ that minimizes the
 \end{equation}
 % see Lenstra & Kan 1975: Some simple Applications to the TSP
 
+For the minimization of the tour length, $(n-1)!$ permutation vectors
+have to be compared which results in a very hard to solve problem known to be
+NP-complete~\citep{Johnson1985a}.
+
+% where does this belong?
 Depending on the nature of the distance matrix $D$, one can distinguish between
 the symmetric TSP and the more general asymmetric TSP. For the symmetric case,
 $d_{ij} = d_{ji}$ holds, i.e., it does not matter if we travel from $i$ to $j$
@@ -100,12 +105,12 @@ R package \pkg{TSP} which provides a infrastructure for handling and
 solving TSPs in R.
 
 The paper is organized as follows:
-\marginpar{fix me!}
 in Section~\ref{sec:TSP} we briefly present important aspects of the TSP
 including different problem formulations and approaches to solve TSPs.  In
 Section~\ref{sec:infrastructure} we give an overview of the infrastructure
-implemented in \pkg{TSP} and the basic usage.  In Section~\ref{sec:examples} we
-give several examples.  Section~\ref{sec:conclusion} concludes the paper.
+implemented in \pkg{TSP} and the basic usage.  In Section~\ref{sec:examples},
+several examples are used to illustrate the packages capabilities.  
+Section~\ref{sec:conclusion} concludes the paper.
 
 \section{Theory}\label{sec:TSP}
 In this section, we briefly summarize some aspects of the TSP
@@ -132,6 +137,8 @@ problems~\citep[see, e.g.,][]{Punnen2002}.  The \emph{integer programming (IP)
 formulation} for the asymmetric TSP is based on the assignment problem which is
 described as follows:
 
+
+\marginpar{Should we use matrix notation?} 
 \[
 \begin{array}{rl}
     \text{Minimize }     & \sum_{i=1}^n\sum_{j=1}^n{d_{ij}x_{ij}} \\[3mm]
@@ -173,6 +180,7 @@ partial description of constraints is used and improved iteratively in a
 branch-and-bound approach.
 
 \subsection{Useful manipulations of the distance matrix}
+\label{sec:manipulations}
 
 Sometimes it is useful to transform the distance matrix $D = (d_{ij})$ of a TSP
 into a different matrix $D' = (d'_{ij})$ which has the same optimal solution.
@@ -226,7 +234,7 @@ TSPs (which are currently far more advanced than techniques for ATSPs).
 Removing the dummy cities from the resulting tour gives the  solution for the
 original ATSP.
 
-\marginpar{Explain paths here?}
+\marginpar{Explain manipulations for paths here?}
 
 
 \subsection{Finding exact solutions for the TSP}\label{sec:exact}
@@ -389,27 +397,34 @@ $2/3$ times the optimal tour length~\citep{Johnson1985}.
 \subsubsection{Tour improvement heuristics}
 
 Tour improvement heuristics are simple local search heuristics which try to
-improve an initial tour.
+improve an initial tour. A comprehensive treatment of the topic
+can be found in the chapter by \cite{Rego2002}.
 
-\paragraph{$k$-Opt heuristics.} The idea is to define a neighborhood structure on the set
-of tours. Typically, a tour $t$ is a neighbor of another tour $t'$ if tour $t'$
-can be optained from $t$ by deleting $k$ edges and replacing them by a set of
-different feasible edges (a $k$-Opt move).  In such a structure, the tour can
-be iteratively improved by always changing from one tour to its best neighbor
-till no further improvement is possible. The resulting tour represents a local
-optimum which is called $k$-optimal.
+\paragraph{$k$-Opt heuristics.} The idea is to define a neighborhood structure
+on the set of all admissible tours. Typically, a tour $t'$ is a neighbor of
+another tour $t$ if tour $t'$ can be obtained from $t$ by deleting $k$ edges
+and replacing them by a set of different feasible edges (a $k$-Opt move).  In
+such a structure, the tour can be iteratively improved by always moving from
+one tour to its best neighbor till no further improvement is possible. The
+resulting tour represents a local optimum which is called $k$-optimal.
 
 Typically, $2$-Opt~\citep{Croes1958} and $3$-Opt~\citep{Lin1965} heuristics
 are used in practice.
 
 \paragraph{Lin-Kernighan heuristic.}
-This heuristic\citep{Lin1973} does not use a fixed value for $k$ for it's
-$k$-Opt moves, but tries to find the best choice of $k$ for each move.
-The $k$-Opt moves are represented as a sequence of $2$-Opt moves
-which is build up move by move\dots
+This heuristic~\citep{Lin1973} does not use a fixed value for $k$ for it's
+$k$-Opt moves, but tries to find the best choice of $k$ for each move.  The
+heuristic uses the fact that each $k$-Opt move can be represented as a sequence
+of $2$-Opt moves.  It builds up a sequence of $2$-Opt moves, checking after
+each additional move, if a stopping rule is met. Then the part of the sequence
+which gives the best improvement is used. This is equivalent to a choice of one
+$k$-Opt move with variable $k$. Such moves are used till a local optimum
+is reached. 
 
-\marginpar{missing}
-
+By using full backtracking, the optimal solution can always be found, but the
+running time would be immense. Therefore, only limited backtracking is allowed
+in the procedure, which helps to find better local optima or even the optimal
+solution. Further improvements to the procedure are described by \cite{Lin1973}.
 
 
 \section{Computational infrastructure: the TSP package}
@@ -446,15 +461,14 @@ methods are defined for the classes:
         argument \code{order}.
 \end{itemize}
 
-Internally, an object of class \class{TSP} is a \class{dist} object and, 
-therefore, if needed, can be coerced to \class{dist} or to a matrix.
-An \class{ATSP} object is represented as a square matrix.
-Obviously, asymmetric TSPs are more general than symmetric TSPs, hence,
-symmetric TSPs can also be represented as asymmetric TSPs.
-To formulate an asymmetric TSP as a symmetric TSP with
-double the number of cities, \func{ATSP\_to\_TSP}
-is provides. The function creates the necessary dummy cities and
-adapts the distance matrix accordingly. 
+Internally, an object of class \class{TSP} is a \class{dist} object and,
+therefore, if needed, can be coerced to \class{dist} or to a matrix.  An
+\class{ATSP} object is represented as a square matrix.  Obviously, asymmetric
+TSPs are more general than symmetric TSPs, hence, symmetric TSPs can also be
+represented as asymmetric TSPs.  To formulate an asymmetric TSP as a symmetric
+TSP with double the number of cities (see Section \ref{sec:manipulations}),
+\func{ATSP\_to\_TSP} is provides. The function creates the necessary dummy
+cities and adapts the distance matrix accordingly. 
 
 A popular format to save TSP descriptions to disk which is supported by
 most TSP solvers is the format used by \emph{TSPLIB}, a library of
@@ -500,7 +514,7 @@ The available algorithms are shown in Table~\ref{tab:methods}.
     Cheapest insertion & \code{"cheapest\_insertion"} \\
     Arbitrary insertion & \code{"arbitrary\_insertion"} \\
     Concorde TSP solver & \code{"concorde"} \\
-    2-opt improvement heuristic &  \code{"2-opt"} \\
+    2-Opt improvement heuristic &  \code{"2-opt"} \\
     Chained Lin-Kernighan &  \code{"linkern"} \\
 \hline
 \end{tabular}
@@ -508,7 +522,7 @@ The available algorithms are shown in Table~\ref{tab:methods}.
 
 All algorithms except the Concorde TSP solver and the Chained Lin-Kernighan
 heuristic are included in the package and distributed under the Gnu Public
-Licencse (GPL). For the Concorde TSP solver and the Chained Lin-Kernighan
+License (GPL). For the Concorde TSP solver and the Chained Lin-Kernighan
 heuristic only an simple interface (using \func{write\_TSPLIB}, calling the
 executable and reads back the resulting tour) is included in \pkg{TSP}.  The
 code itself is part of the Concorde distribution, has to be installed
@@ -717,7 +731,7 @@ tail(labels(path))
 The found path 
 is presented in Figure~\ref{fig:map2}. It
 begins with New York City and cities in New Jersey and
-ends in north east of Canada. 
+ends in the northeast of Canada. 
 %The path shows the typical behavior 
 %of the nearest neighbor heuristic with first connecting the cities close by and
 %then making rather big ``jumps'' for the final cities.
@@ -873,6 +887,11 @@ it allows for an easy and transparent usage of the package.
 
 With the interface to Concorde, \pkg{TSP} also can use a state of the art
 implementation which efficiently computes exact solutions using branch-and-cut.
+
+\section*{Acknowledgments}
+The authors of this paper want to thank Roger Bivand for providing the 
+code to correctly draw tours and paths on a projected map.
+
 %
 \bibliographystyle{abbrvnat}
 \bibliography{tsp}
