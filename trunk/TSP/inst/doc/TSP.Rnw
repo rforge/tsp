@@ -1,8 +1,8 @@
 \documentclass[10pt,a4paper]{article}
 
 \usepackage{a4wide}
-\setlength{\parskip}{0.5ex plus0.1ex minus0.1ex}
-\setlength{\parindent}{0em}
+%\setlength{\parindent}{0pt}
+%\setlength{\parskip}{6pt plus 2pt minus 1pt}
 
 \usepackage[round,longnamesfirst]{natbib}
 \usepackage{hyperref}
@@ -22,7 +22,10 @@
 \usepackage{Sweave}
 %% \VignetteIndexEntry{Introduction to TSP}
 
+
+
 \begin{document}
+
 
 <<echo=FALSE>>=
 options(width = 75)
@@ -62,11 +65,7 @@ The traveling salesperson problem~\citep[TSP;][]{Lawler1985, Gutin2002}
 is a well known
 and important combinatorial optimization problem. The goal is to find the
 shortest tour that visits each city in a given list exactly once and then
-returns to the starting city.  The TSP has many applications including vehicle
-routing, computer wiring, machine sequencing and scheduling, frequency
-assignment in communication networks and structuring of
-matrices~\citep{Lenstra1975, Punnen2002}.
-
+returns to the starting city.  
 Formally, the TSP can be stated as: The distances between $n$ cities are stored
 in a distance matrix $D$ with elements $d_{i,j}$ where $i,j = 1\dots n$ and the
 diagonal elements $d_{i,i} = 0$. A tour can be represented by a cyclic
@@ -80,30 +79,17 @@ the optimization problem to find a permutation $\pi$ that minimizes the
 \end{equation}
 % see Lenstra & Kan 1975: Some simple Applications to the TSP
 
-For the minimization of the tour length, $(n-1)!$ permutation vectors
-have to be compared which results in a very hard to solve problem known to be
-NP-complete~\citep{Johnson1985a}.
-
-% where does this belong?
-Depending on the nature of the distance matrix $D$, one can distinguish between
-the symmetric TSP and the more general asymmetric TSP. For the symmetric case,
-$d_{ij} = d_{ji}$ holds, i.e., it does not matter if we travel from $i$ to $j$
-or the other way round, the distance is the same. In the asymmetric case
-(called ATSP), the distances are not equal for all pairs of cities. Problems of
-this kind arise when we do not deal with spatial distances between cities but,
-e.g., with the cost associated with traveling between locations. Here the price
-for the plane ticket between two cities may be different depending on which way
-we go.
-
-It has to be noted that in this paper, following the origin of the TSP, the
-term \emph{distance} is used.  Distance is used here exchangeably with
-dissimilarity or cost and, unless explicitly stated, no restrictions to
-measures which obey the triangle inequality are made.
+For this minimization task, the tour length of $(n-1)!$ permutation vectors
+have to be compared. This results in a very hard to solve problem which is
+known to be NP-complete~\citep{Johnson1985a}.
+However, solving TSPs is an important part of applications in many areas
+including vehicle routing, computer wiring, machine sequencing and scheduling,
+frequency assignment in communication networks and structuring of
+matrices~\citep{Lenstra1975, Punnen2002}.
 
 In this paper we give a very brief overview of the TSP and introduce the
 R package \pkg{TSP} which provides a infrastructure for handling and
 solving TSPs in R.
-
 The paper is organized as follows:
 in Section~\ref{sec:TSP} we briefly present important aspects of the TSP
 including different problem formulations and approaches to solve TSPs.  In
@@ -118,6 +104,20 @@ which are important for the implementation of the \pkg{TSP} package
 described in this paper. For a complete treatment of all aspects of the
 TSP, we refer the interested reader to the classic book edited by
 \cite{Lawler1985} and the more modern book edited by \cite{Gutin2002}.
+
+It has to be noted that in this paper, following the origin of the TSP, the
+term \emph{distance} is used.  Distance is used here exchangeably with
+dissimilarity or cost and, unless explicitly stated, no restrictions to
+measures which obey the triangle inequality are made.  An important distincion
+can be made between the symmetric TSP and the more general asymmetric TSP.  For
+the symmetric case (normally referred to as just \emph{TSP}), for all distances
+in $D$ the equality $d_{ij} = d_{ji}$ holds, i.e., it does not matter if we
+travel from $i$ to $j$ or the other way round, the distance is the same. In the
+asymmetric case (called \emph{ATSP}), the distances are not equal for all pairs
+of cities. Problems of this kind arise when we do not deal with spatial
+distances between cities but, e.g., with the cost or needed time associated
+with traveling between locations. Here the price for the plane ticket between
+two cities may be different depending on which way we go.
 
 \subsection{Different formulations of the TSP}\label{sec:formulations}
 Other than the permutation problem in the introduction, the TSP can also be
@@ -134,11 +134,10 @@ to improve existing tours.
 
 TSPs can also be represented as integer and linear programming
 problems~\citep[see, e.g.,][]{Punnen2002}.  The \emph{integer programming (IP)
-formulation} for the asymmetric TSP is based on the assignment problem which is
+formulation} is based on the assignment problem which is
 described as follows:
 
 
-\marginpar{Should we use matrix notation?} 
 \[
 \begin{array}{rl}
     \text{Minimize }     & \sum_{i=1}^n\sum_{j=1}^n{d_{ij}x_{ij}} \\[3mm]
@@ -151,11 +150,11 @@ described as follows:
 
 The solution matrix $\mathbf{X} = (x_{ij})$ of the assignment problem
 represents a tour or a collection of subtour (several unconnected cycles) where
-all edges which corresponding to elements $x_{ij} = 1$ are on the
-tour or a subtour. Additional restrictions, called \emph{subtour elimination
+only edges which corresponding to elements $x_{ij} = 1$ are on the tour or a
+subtour. Additional restrictions, called \emph{subtour elimination
 constraints,} are necessary to avoid subtours. Unfortunately, in addition to
-that the integer programming problem is NP-hard, also the number of subtour
-elimination constraints grows exponentially with the number of cities. 
+that the integer programming problem in itself is NP-hard, also the number of
+subtour elimination constraints grows exponentially with the number of cities. 
 %Several constraints
 %have been developed~\citep[see][]{Punnen2002}.
 
@@ -163,21 +162,21 @@ elimination constraints grows exponentially with the number of cities.
 The \emph{linear programming (LP) formulation} of the TS is given by:
 \[
 \begin{array}{rl}
-    \text{Minimize }     & \sum_{i=1}^m{w_ix_i}  = \mathbf{x}^T\mathbf{w}\\[3mm] 
+    \text{Minimize }     & \sum_{i=1}^m{w_ix_i}  = \mathbf{w}^T\mathbf{x}\\[3mm] 
     \text{Subject to }   & \\
     & \mathbf{x} \in \mathcal{S} \\
 \end{array}
 \]
-where $m$ is the number of edges in $G$, $w_i \in \mathbf{w}$ is the weight of
-edge $e_i$ and $\mathbf{x}$ is the incidence vector indicating the presence or
-absence of each edge in the tour. Again, the constraints given by $\mathbf{x}
-\in \mathcal{S}$ are problematic since they have to contain the set of
-incidence vectors of all possible Hamiltonian cycles in $G$ which amounts to a
-direct search of all possibilities and thus is infeasible. However, relaxed
-versions of the linear programming problem with removed integrality and subtour
-elimination constraints are extensively used by modern TSP solvers where such a
-partial description of constraints is used and improved iteratively in a
-branch-and-bound approach.
+where $m$ is the number of edges $e_i$ in $G$, $w_i \in \mathbf{w}$ is the
+weight of edge $e_i$ and $\mathbf{x}$ is the incidence vector indicating the
+presence or absence of each edge in the tour. Again, the constraints given by
+$\mathbf{x} \in \mathcal{S}$ are problematic since they have to contain the set
+of incidence vectors of all possible Hamiltonian cycles in $G$ which amounts to
+a direct search of all $(n-1)!$ possibilities and thus in general is
+infeasible. However, relaxed versions of the linear programming problem with
+removed integrality and subtour elimination constraints are extensively used by
+modern TSP solvers where such a partial description of constraints is used and
+improved iteratively in a branch-and-bound approach.
 
 \subsection{Useful manipulations of the distance matrix}
 \label{sec:manipulations}
@@ -200,12 +199,12 @@ from 1 to a maximal value.
 A different manipulation is to reformulate a asymmetric TSP as a symmetric TSP.
 This is possible by doubling the number of cities~\citep{Jonker1983}. For each
 city a dummy city is added. Between each city and its corresponding dummy city
-a very small distance (e.g., $-\infty$) is used.  This makes sure that each
+a very small value (e.g., $-\infty$) is used.  This makes sure that each
 cities always occurs in the solution together with it's dummy city. The original
 distances are used between the cities and the dummy cities, where each city is
 responsible for the distance going to the city and the dummy city is
 responsible for the distance coming from the city. The distances between all
-cities and the distances between all dummy cities are set to, a very large
+cities and the distances between all dummy cities are set to a very large
 value (e.g., $\infty$) which makes these edges infeasible. An example for
 equivalent formulations as a asymmetric TSP (to the left) and
 a symmetric TSP (to the right) for
@@ -230,24 +229,23 @@ three cities is:
 
 Instead of the infinity values suitably large negative and positive values can
 be used.  The new symmetric TSP can be solved using techniques for symmetric
-TSPs (which are currently far more advanced than techniques for ATSPs).
+TSPs which are currently far more advanced than techniques for ATSPs.
 Removing the dummy cities from the resulting tour gives the  solution for the
 original ATSP.
-
-\marginpar{Explain manipulations for paths here?}
 
 
 \subsection{Finding exact solutions for the TSP}\label{sec:exact}
 
 Finding the exact solution to a TSP with $n$ cities requires to check $(n-1)!$
 possible tours. To evaluate all possible tours is infeasible for even small TSP
-instances. To find the optimal tour, a permutation $\pi = \{1, i_2,
-i_3,\dots,i_n\}$ of the integers $1$ through $n$ representing the order in
-which the cities are visited, \cite{Held1962} presented the following
-\emph{dynamic programming} formulation: Given $S \subset \{2, 3, \dots, n\}$
-and $l \in S$, let $d^*(S, l)$ denote the length of the shortest path from city
-$1$ to city $l$, visiting all cities in-between. For $S = \{l\}$, $d^*(S,l)$ is
-defined as $d_{1l}$. The shortest path for larger sets with $|S| > 1$ is
+instances. To find the optimal tour
+\cite{Held1962} presented the following
+\emph{dynamic programming} formulation: Given a subset of city indices 
+(excluding the first city)
+$S \subset \{2, 3, \dots, n\}$ and $l \in S$, let $d^*(S, l)$ denote the length of the
+shortest path from city $1$ to city $l$, visiting all cities in $S$ in-between.
+For $S = \{l\}$, $d^*(S,l)$ is defined as $d_{1l}$. The shortest path for
+larger sets with $|S| > 1$ is
 
 \begin{equation}
     d^*(S,l) = \mathrm{min}_{m \in S-l}\Bigl( d^*(S-l,m) + d_{ml}\Bigl).
@@ -263,11 +261,11 @@ to city $1$ is
 \end{equation}
 
 Using the last two equations, the quantities $d^*(S,l)$ can be computed
-recursively and the minimal tour length $d^{**}$ can be found.
-In a second step, the optimal permutation can be computed 
-in reverse order, staring with $i_n$ and working successively back to
-$i_2$. The procedure exploits the fact that a permutation $\pi$ can only 
-be optimal, if
+recursively and the minimal tour length $d^{**}$ can be found.  In a second
+step, the optimal permutation $\pi = \{1, i_2, i_3,\dots,i_n\}$ of city indices
+$1$ through $n$ can be computed in reverse order, staring with $i_n$ and
+working successively back to $i_2$. The procedure exploits the fact that a
+permutation $\pi$ can only be optimal, if
 
 \begin{equation}
     d^{**} = d^*(\{2,3,\dots,n\}, i_n) + d_{i_n1}
@@ -279,7 +277,7 @@ and, for $2 \le p \le n-1$,
 \end{equation}
 
 The space complexity of storing the values for all $d^*(S,l)$ is $(n-1)2^{n-2}$
-which severely restricts the a dynamic programming algorithm to TSP
+which severely restricts the dynamic programming algorithm to TSP
 problems of small sizes. However, for very small TSP instances the approach is
 fast and efficient.
 %\marginpar{time complexity if order $n^22^n$. Check!}
@@ -299,7 +297,7 @@ standard linear programming solvers. If the found $\mathbf{x}^*$ belongs to
 $\mathcal{S}$, the optimal solution of the original problem is found,
 otherwise, a linear inequality can be found which satisfies all points in
 $\mathcal{S}$ but violates $\mathbf{x}^*$. Such an inequality is called a
-cutting-plane or a \emph{cut}. A family of such cutting-planes can be added to
+cutting-plane or cut. A family of such cutting-planes can be added to
 the inequality system  $A\mathbf{x} \le b$ to get a tighter relaxation for the
 next iteration. 
 
@@ -308,7 +306,7 @@ function due to adding cuts gets very small, the problem is branched into two
 subproblems which can be minimized separately. Branching is done iteratively
 which leads to a binary tree of subproblems. Each subproblem is either solved
 without further branching or is found to be irrelevant because its relaxed
-version already produces a longer path than another already found solution.
+version already produces a longer path than a solution of another subproblem.
 This method is called \emph{branch-and-cut}~\citep{Padberg1990} which is a
 variation of the well known \emph{branch-and-bound}~\citep{Land1960} procedure.
 
@@ -325,15 +323,15 @@ in~\cite{Applegate2000}.
 
 The NP-completeness of the TSP makes it already for medium sized TSP instances
 more time efficient to rely on heuristics, if a good but not necessarily
-optimal solution sufficed.  TSP heuristics typically fall into two groups, tour
+optimal solution suffices.  TSP heuristics typically fall into two groups, tour
 construction heuristics 
 which create tours from scratch and tour improvement heuristics
 which use simple local search heuristics to improve existing tours.
 
-In the following we
-will only discuss heuristics available in \pkg{TSP}, for a comprehensive
-overview of TSP heuristics including an experimental comparison, we refer the
-reader to the book chapter by \cite{Johnson2002}.
+In the following we will only discuss heuristics available in \pkg{TSP}, for a
+comprehensive overview of the multitude of TSP heuristics including an
+experimental comparison, we refer the reader to the book chapter by
+\cite{Johnson2002}.
 
 \subsubsection{Tour construction heuristics}
 The implemented tour construction heuristics are the nearest neighbor algorithm
@@ -341,9 +339,9 @@ and the insertion algorithms.
 
 \paragraph{Nearest neighbor algorithm.}
 The nearest neighbor algorithm~\citep{Rosenkrantz1977} 
-is a tour construction algorithm which follows a very simple greedy procedure:
-The algorithm starts with a tour containing a randomly chosen city.  Then the
-algorithm always adds to the last city in the tour the nearest not yet visited
+follows a very simple greedy procedure:
+The algorithm starts with a tour containing a randomly chosen city and then
+always adds to the last city in the tour the nearest not yet visited
 city. The algorithm stops when all cities are on the tour.  
 
 An extension to this algorithm is to repeat it with each city as
@@ -364,10 +362,10 @@ chosen. The following variations are implemented:
 
 \begin{description}
 \item[Nearest insertion] The city $k$ is chosen in each step as
-the city which is \emph{nearest} to a city on the tour.
+the city which is nearest to a city on the tour.
 
 \item[Farthest insertion] The city $k$ is chosen in each step as
-the city which is \emph{farthest} to any of the cities on the tour.
+the city which is farthest to any of the cities on the tour.
 
 \item[Cheapest insertion] The city $k$ is chosen in each step 
 such that the cost of inserting the new city is minimal.
@@ -378,14 +376,12 @@ not yet on the tour.
 \end{description}
 
 
-The nearest and cheapest insertion algorithms are variants of to the minimum
-spanning tree algorithm~\citep{Kruskal1956} which is known to be a good
-algorithm to find a Hamiltonian cycle with a close to minimal weight sum in a
-connected, undirected graph.  For nearest and cheapest insertion, adding a city
-to a partial tour corresponds to adding an edge to a partial spanning tree.
-For TSPs with distances obeying the triangular inequality, the upper bound for
-the length of the tour found by the minimum spanning tree algorithm is twice
-the optimal tour length.
+The nearest and cheapest insertion algorithms correspond to the minimum
+spanning tree algorithm by \cite{Prim1957}. Adding a city to a partial tour
+corresponds to adding an edge to a partial spanning tree. For TSPs with
+distances obeying the triangular inequality, the equality to minimum spanning
+trees provides a theoretical upper bound for the two algorithms of twice the
+optimal tour length.
 
 The idea behind the farthest insertion algorithm is to link cities far outside
 into the tour fist to establish an outline of the whole tour early. With this
@@ -398,7 +394,7 @@ $2/3$ times the optimal tour length~\citep{Johnson1985}.
 
 Tour improvement heuristics are simple local search heuristics which try to
 improve an initial tour. A comprehensive treatment of the topic
-can be found in the chapter by \cite{Rego2002}.
+can be found in the book chapter by \cite{Rego2002}.
 
 \paragraph{$k$-Opt heuristics.} The idea is to define a neighborhood structure
 on the set of all admissible tours. Typically, a tour $t'$ is a neighbor of
@@ -424,7 +420,8 @@ is reached.
 By using full backtracking, the optimal solution can always be found, but the
 running time would be immense. Therefore, only limited backtracking is allowed
 in the procedure, which helps to find better local optima or even the optimal
-solution. Further improvements to the procedure are described by \cite{Lin1973}.
+solution. Further improvements to the procedure are described 
+by \cite{Lin1973}.
 
 
 \section{Computational infrastructure: the TSP package}
@@ -522,20 +519,19 @@ The available algorithms are shown in Table~\ref{tab:methods}.
 \end{table}
 
 All algorithms except the Concorde TSP solver and the Chained Lin-Kernighan
-heuristic are included in the package and distributed under the Gnu Public
-License (GPL). For the Concorde TSP solver and the Chained Lin-Kernighan
-heuristic only an simple interface (using \func{write\_TSPLIB}, calling the
-executable and reads back the resulting tour) is included in \pkg{TSP}.  The
-code itself is part of the Concorde distribution, has to be installed
-separately and is governed by a different license which, which allows only for
-academic use.  
-The interfaces where includes since
-Concorde~\citep{Applegate2000,Applegate2006} is currently one of the best
-implementations for solving symmetric TSPs based on the branch-and-cut method
-discussed in section~\ref{sec:exact}.  In May 2004, Concorde was used to find
-the optimal solution for the TSP of visiting all 24,978 cities in Sweden. The
-computation was carried out on a cluster with 96 nodes and took in total almost
-100 CPU years (assuming a single CPU Xeon 2.8 GHz processor).
+heuristic (a Lin-Kernighan variation described in \cite{Applegate2003}) are
+included in the package and distributed under the GNU Public License (GPL). For
+the Concorde TSP solver and the Chained Lin-Kernighan heuristic only an simple
+interface (using \func{write\_TSPLIB}, calling the executable and reads back
+the resulting tour) is included in \pkg{TSP}.  The code itself is part of the
+Concorde distribution, has to be installed separately and is governed by a
+different license which allows only for academic use.  The interfaces where
+includes since Concorde~\citep{Applegate2000,Applegate2006} is currently one of
+the best implementations for solving symmetric TSPs based on the branch-and-cut
+method discussed in section~\ref{sec:exact}.  In May 2004, Concorde was used to
+find the optimal solution for the TSP of visiting all 24,978 cities in Sweden.
+The computation was carried out on a cluster with 96 nodes and took in total
+almost 100 CPU years (assuming a single CPU Xeon 2.8 GHz processor).
 
 \section{Examples}\label{sec:examples}
 
@@ -644,9 +640,9 @@ head(labels(path))
 tail(labels(path))
 @
 
-The tour found in the example results in a path from Prince Rupert in
-British Columbia to Lihue on Hawaii. Such a tour can also be 
-visualized using the packages \pkg{sp}, \pkg{maps} and \pkg{maptools}.
+The tour found in the example results in a path from Lihue on Hawaii to Prince
+Rupert in British Columbia. Such a tour can also be visualized using the
+packages \pkg{sp}, \pkg{maps} and \pkg{maptools}.
 
 <<fig=TRUE, include=FALSE, label=map1, width=8, height=8>>=
 library("maps")
@@ -676,11 +672,10 @@ plot_path(path)
 \label{fig:map1}
 \end{figure}
 
-The map containing the path is presented in Figure~\ref{fig:map1}.
-It has to be mentioned, that the
-path found by the used heuristic is almost double the optimal path length found
-by Concorde with a length of $34928$, illustrating the power of modern 
-TSP algorithms.
+The map containing the path is presented in Figure~\ref{fig:map1}.  It has to
+be mentioned that the path found by the used heuristic is considerable longer
+than the optimal path found by Concorde with a length of $34928$,
+illustrating the power of modern TSP algorithms.
 
 For the following two examples, we show in a very low level way how the
 distance matrix between cities can be modified to solve related shortest
@@ -691,13 +686,13 @@ The first problem is to find the shortest Hamiltonian path starting with a
 given city. In this case, all distances to the selected city are set to zero,
 forcing the evaluation of all possible paths starting with this city and
 disregarding the way back from the final city in the tour.  By modifying the
-distances the symmetric TSP is changed into an asymmetric TSP since the
+distances the symmetric TSP is changed into an asymmetric TSP  (ATSP) since the
 distances between the starting city and all other cities are no longer
 symmetric.
 
 As an example, we choose the city New York to be the starting city.  We
-transform the data set into an asymmetric TSP and set the column corresponding
-to New York to zero before solving the TSP. This means that the distance to
+transform the data set into an ATSP and set the column corresponding
+to New York to zero before solving it. This means that the distance to
 return from the last city in the path to New York does not contribute to the
 path length.  We use the nearest neighbor heuristic to calculate an initial
 tour which is then improved using $2$-Opt moves and cut at New York City to
@@ -708,7 +703,7 @@ create a path.
 set.seed(1234)
 @
 
-<<fig=TRUE, include=FALSE, label=map2, width=8, height=8>>=
+<<>>=
 atsp <- as.ATSP(USCA312)
 ny <- which(labels(USCA312) == "New York, NY")
 atsp[, ny] <- 0
@@ -718,10 +713,11 @@ tour <- solve_TSP(atsp, method ="2-opt", control = list(tour = initial_tour))
 tour
 path <- cut_tour(tour, ny, exclude_cut = FALSE)
 
-plot_path(path)
-
 head(labels(path))
 tail(labels(path))
+@
+<<fig=TRUE, include=FALSE, label=map2, width=8, height=8>>=
+plot_path(path)
 @
 
 \begin{figure}
@@ -731,10 +727,8 @@ tail(labels(path))
 \label{fig:map2}
 \end{figure}
 
-The found path 
-is presented in Figure~\ref{fig:map2}. It
-begins with New York City and cities in New Jersey and
-ends in a city in Manitoba, Canada. 
+The found path  is presented in Figure~\ref{fig:map2}. It begins with New York
+City and cities in New Jersey and ends in a city in Manitoba, Canada. 
 %The path shows the typical behavior 
 %of the nearest neighbor heuristic with first connecting the cities close by and
 %then making rather big ``jumps'' for the final cities.
@@ -776,8 +770,8 @@ atsp[, la_ny] <- c(m[la, -c(ny,la)], 0)
 
 We use again the nearest insertion heuristic.
 
-<<fig=TRUE, include=FALSE, label=map3, width=8, height=8>>=
-tour <- solve_TSP(atsp, method ="nearest")
+<<>>=
+tour <- solve_TSP(atsp, method ="nearest_insertion")
 tour
 
 path_labels <- c("New York, NY", 
@@ -786,6 +780,8 @@ path_ids <- match(path_labels, labels(USCA312))
 
 head(path_labels)
 tail(path_labels)
+@
+<<fig=TRUE, include=FALSE, label=map3, width=8, height=8>>=
 plot_path(path_ids)
 @
 
