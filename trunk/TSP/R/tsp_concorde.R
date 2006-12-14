@@ -1,8 +1,5 @@
 ## interface to the Concorde algorithm (can only handle TSP)
 
-
-.concord_path <- NULL
-
 tsp_concorde <- function(x, control = NULL){
 
     ## get parameters
@@ -158,7 +155,7 @@ help_linkern <- function(exe = NULL) {
 
 ## path
 concorde_path <- function(path){
-    .concorde_path <<- path
+    .GlobalEnv[[".concorde_path"]] <- path
 
     ## null unsets the path
     if(!is.null(path)) {
@@ -176,7 +173,7 @@ concorde_path <- function(path){
     ## if not specified
     if(is.null(exe)) {
         ## was the path set ?
-        if(!is.null(.concorde_path)) 
+        if(exists(".concorde_path") && !is.null(.concorde_path)) 
         exe <- paste(.concorde_path, .Platform$file.sep, prog, sep ="")
         ## no, so it must be in the systems execution path
         else exe <- prog
