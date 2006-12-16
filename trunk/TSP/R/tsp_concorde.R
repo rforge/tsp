@@ -154,18 +154,24 @@ help_linkern <- function(exe = NULL) {
 }
 
 ## path
-concorde_path <- function(path){
-    .GlobalEnv[[".concorde_path"]] <- path
+concorde_path <- local({
+    .path <- NULL
+    function(path){
+        if(missing(path)) .path else {
+            .path <<- path
+            if(!is.null(path)) {
+                ex <- c(list.files(path, pattern = "concorde"),
+                    list.files(path, pattern = "linkern"))
+                if(length(ex) < 1)
+                warning(paste("no executable (concorde, linkern) found in", 
+                        path))
+                cat("found:", ex, "\n")
+            }
+            invisible(.path)
 
-    ## null unsets the path
-    if(!is.null(path)) {
-        ex <- c(list.files(path, pattern = "concorde"),
-            list.files(path, pattern = "linkern"))
-        if(length(ex) < 1) 
-        warning(paste("no executable (concorde, linkern) found in", path))
-        cat("found:", ex, "\n")
+        }
     }
-}
+})
 
 
 ## helper to find the concorde executable
@@ -173,8 +179,8 @@ concorde_path <- function(path){
     ## if not specified
     if(is.null(exe)) {
         ## was the path set ?
-        if(exists(".concorde_path") && !is.null(.concorde_path)) 
-        exe <- paste(.concorde_path, .Platform$file.sep, prog, sep ="")
+        if(!is.null(concorde_path())) 
+        exe <- paste(concorde_path(), .Platform$file.sep, prog, sep ="")
         ## no, so it must be in the systems execution path
         else exe <- prog
     }

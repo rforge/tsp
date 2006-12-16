@@ -1,4 +1,4 @@
-\name{Concorde TSP package}
+\name{Concorde}
 \alias{concorde_path}
 \alias{help_concorde}
 \alias{help_linkern}
