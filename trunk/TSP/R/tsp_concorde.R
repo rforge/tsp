@@ -145,11 +145,11 @@ tsp_linkern <- function(x, control = NULL){
 }
 
 ## get help page
-help_concorde <- function(exe = NULL) {
+concorde_help <- function(exe = NULL) {
       system(paste(.find_exe(exe, "concorde"), ""))
 }
 
-help_linkern <- function(exe = NULL) {
+linkern_help <- function(exe = NULL) {
       system(paste(.find_exe(exe, "linkern"), ""))
 }
 

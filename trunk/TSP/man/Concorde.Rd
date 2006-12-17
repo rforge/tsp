@@ -1,7 +1,8 @@
 \name{Concorde}
+\alias{Concorde}
 \alias{concorde_path}
-\alias{help_concorde}
-\alias{help_linkern}
+\alias{concorde_help}
+\alias{linkern_help}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{The Concorde TSP package}
 \description{
@@ -15,10 +16,12 @@
   be obtained separately from the Concorde web site (see details).
 }
 \usage{
-## obtain a list of command line options for the solvers
-help_concorde(exe = NULL)
-help_linkern(exe = NULL)
+## set path for executables
 concorde_path(path)
+
+## obtain a list of command line options for the solvers
+concorde_help(exe = NULL)
+linkern_help(exe = NULL)
 }
 \arguments{
   \item{exe}{ an optional character string containing the whole path to the
@@ -39,8 +42,8 @@ make them executable, or you can get the source code and compile it on your
 own.
 
 To get a list of all available command line options which can be used via the
-\code{clo} option for \code{solve_TSP} use \code{help\_concorde()} and
-\code{help\_linkern()}.  Several options (\option{-x}, \option{-o},
+\code{clo} option for \code{solve_TSP} use \code{concorde\_help()} and
+\code{linkern\_help()}.  Several options (\option{-x}, \option{-o},
 \option{-N},  \option{-Q}) are not available via \code{solve_TSP} since they
 are used by the interface.  
 }

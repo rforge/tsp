@@ -91,16 +91,16 @@ Currently the following methods are available:
     Concorde is an advanced exact TSP solver for \emph{only symmetric} TSPs
     based on branch-and-cut.  The program is not included in this package and
     has to be obtained and installed separately (see
-    \code{\link{help_concorde}}).
+    \code{\link{Concorde}}).
 
     Additional control options: 
     \describe{
     \item{\code{exe}}{ a character string containing the path to the executable 
-    (see \code{help_concorde}).}
+    (see \code{Concorde}).}
 
     \item{\code{clo}}{ a character string containing command line options for
     Concorde, e.g., \code{control = list(clo = "-B -v")}. See
-    \code{help_concorde} on how to obtain a complete list of available
+    \code{concorde_help} on how to obtain a complete list of available
     command line options.} 
 
     \item{\code{precision}}{ an integer which controls the number of
@@ -124,7 +124,7 @@ Currently the following methods are available:
     heuristic uses variable \eqn{k} edge exchanges to
     improve an initial tour.  The program is not included in this package and
     has to be obtained and installed separately (see
-    \code{\link{help_linkern}}).
+    \code{\link{Concorde}}).
     
     Additional control options: see Concorde above.
     }
@@ -140,8 +140,7 @@ An object of class \code{TOUR}.
 \code{\link{TSP}},
 \code{\link{ATSP}},
 \code{\link{write_TSPLIB}},
-\code{\link{help_concorde}},
-\code{\link{help_linkern}}.
+\code{\link{Concorde}}.
 }
 \references{
 Concorde home page, \url{http://www.tsp.gatech.edu/concorde/}
