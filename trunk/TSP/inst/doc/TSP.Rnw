@@ -182,7 +182,7 @@ improved iteratively in a branch-and-bound approach.
 \label{sec:manipulations}
 
 Sometimes it is useful to transform the distance matrix $D = (d_{ij})$ of a TSP
-into a different matrix $D' = (d'_{ij})$ which has the same optimal solution.
+into a diffeeent matrix $D' = (d'_{ij})$ which has the same optimal solution.
 Such a transformation requires that for any Hamiltonian cycle $H$ in a graph
 represented by distance matrix $D$ the equality
 
@@ -733,6 +733,26 @@ City and cities in New Jersey and ends in a city in Manitoba, Canada.
 %of the nearest neighbor heuristic with first connecting the cities close by and
 %then making rather big ``jumps'' for the final cities.
 
+%Since Concorde and many advanced TSP solvers can only solve symmetric TSPs, we
+%have to formulate the ATSP as a TSP. This can be done using
+%\func{ATSP\_to\_TSP} which doubles the number of cities (see
+%Section~\ref{sec:manipulations}).  After finding a tour for the TSP, the dummy
+%cities with have to be removed again.  The following code is not executed here,
+%since it takes several minutes and concorde has to be installed separately.
+%Concorde finds the optimal solution with a length of 39845.
+%
+%<<>>=
+%tsp <- ATSP_to_TSP(atsp)
+%tsp
+%@
+%<<eval=FALSE>>=
+%#tour2 <- solve_TSP(tsp2, method = "linkern")
+%tour <- solve_TSP(tsp, method = "concorde")
+%tour <- as.TOUR(tour[tour <= n_of_cities(atsp)])
+%tour_length(atsp, tour2)
+%@
+
+
 Finding the shortest Hamiltonian path which ends in a given city can be achieved
 likewise by setting the row corresponding to this city in the distance
 matrix to zero.
@@ -795,7 +815,7 @@ and ending in Los Angles.}
 
 The path moves from New York on to other cities close in the State of New York
 and it passes through cities in California before ending in Los Angeles.
-The whole path is displayed in Figure~\ref{fig:map3}.
+The whole path is displayed in Figure~\ref{fig:map3}. 
 
 
 \subsection{Rearrangement clustering}
