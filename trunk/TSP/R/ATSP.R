@@ -3,7 +3,7 @@ ATSP <- function(x, labels = NULL) {
     if(inherits(x, "ATSP")) return(x)
 
     x <- as.ATSP(x)
-    if(!is.null(labels)) attr(x, "Labels") <- labels
+    if(!is.null(labels)) dimnames(x) <- list(labels, labels)
     x
 }
 
@@ -15,6 +15,10 @@ as.ATSP.matrix <- function(object){
 
     ## check for NAs
     if(any(is.nan(object))) stop(paste(sQuote("NAs"), "not supported"))
+    
+    ## make sure we have labels
+    if(is.null(dimnames(object))) 
+        dimnames(object) <- list(1:dim(object)[1], 1: dim(object)[1])
 
     class(object) <- c("ATSP", class(object))
     object

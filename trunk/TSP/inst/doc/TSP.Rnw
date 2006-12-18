@@ -733,24 +733,30 @@ City and cities in New Jersey and ends in a city in Manitoba, Canada.
 %of the nearest neighbor heuristic with first connecting the cities close by and
 %then making rather big ``jumps'' for the final cities.
 
-%Since Concorde and many advanced TSP solvers can only solve symmetric TSPs, we
-%have to formulate the ATSP as a TSP. This can be done using
-%\func{ATSP\_to\_TSP} which doubles the number of cities (see
-%Section~\ref{sec:manipulations}).  After finding a tour for the TSP, the dummy
-%cities with have to be removed again.  The following code is not executed here,
-%since it takes several minutes and concorde has to be installed separately.
-%Concorde finds the optimal solution with a length of 39845.
-%
-%<<>>=
-%tsp <- ATSP_to_TSP(atsp)
-%tsp
-%@
-%<<eval=FALSE>>=
-%#tour2 <- solve_TSP(tsp2, method = "linkern")
-%tour <- solve_TSP(tsp, method = "concorde")
-%tour <- as.TOUR(tour[tour <= n_of_cities(atsp)])
-%tour_length(atsp, tour2)
-%@
+Concorde and many advanced TSP solvers can only solve symmetric TSPs. To use
+these solvers, we can formulate the ATSP as a TSP using \func{ATSP\_to\_TSP}
+which introduces for each city a dummy city (see
+Section~\ref{sec:manipulations}).  
+
+<<>>=
+tsp <- ATSP_to_TSP(atsp)
+tsp
+@
+
+After finding a tour for the TSP, the dummy cities are removed again giving the
+tour for the original ATSP.  
+Note that the tour needs to be reversed if the
+dummy cities appear before and not after the original cities in the solution of
+the TSP.  The following code is not executed here, since it takes several
+minutes to execute and concorde has to be installed separately.  Concorde finds
+the optimal solution with a length of $36091$.
+
+
+<<eval=FALSE>>=
+#tour <- solve_TSP(tsp, method = "linkern")
+tour <- solve_TSP(tsp, method = "concorde")
+tour <- as.TOUR(tour[tour <= n_of_cities(atsp)])
+@
 
 
 Finding the shortest Hamiltonian path which ends in a given city can be achieved

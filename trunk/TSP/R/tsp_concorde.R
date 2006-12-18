@@ -1,5 +1,32 @@
 ## interface to the Concorde algorithm (can only handle TSP)
+   
 
+## helper to shift the values all between [0, max]
+.concorde_fix_inf <- function(x){
+    shift <- 0
+
+    ## find infinite values
+    x_inf <- is.infinite(x)
+    x_wo_inf <- x
+    if(any(x_inf)) x_wo_inf[x_inf] <- NA
+
+    min_x <- min(x_wo_inf, na.rm = TRUE)
+    max_x <- max(x_wo_inf, na.rm = TRUE)
+
+    ## remove neg. values (we just add shift)
+    shift <- if(min_x < 0) -min_x else 0
+
+    ## make space for -Inf (we add max_x)
+    if(any(x[x_inf] == -Inf)) shift <- shift + max_x 
+
+    max_x <- max_x + shift
+
+    if(shift > 0) cat("Adding", shift, 
+        "to the distances to avoid neg. values.\n")
+
+    list(shift = shift, max_x = max_x)
+}
+    
 tsp_concorde <- function(x, control = NULL){
 
     ## get parameters
@@ -7,18 +34,18 @@ tsp_concorde <- function(x, control = NULL){
     precision   <- if(!is.null(control$precision))  control$precision   else 6
     exe         <- .find_exe(control$exe, "concorde")
    
-    
     ## check x
     if(!inherits(x, "TSP")) stop("Concorde only solves symmetric TSPs.")
-    
-    ##cat("\nrunning Concorde:\n")
-    
 
-    ## get max (excluding inf) to check for possible integer overflows
-    max_x <- x
-    max_x[is.infinite(x)] <- NA
-    max_x <- max(max_x, na.rm = TRUE)
+
+    ## fix inf and neg. values
+    fix <- .concorde_fix_inf(x)
+
+    shift <- fix$shift
+    max_x <- fix$max_x
+    x <- x + shift
     
+    ## get max (excluding inf) to check for possible integer overflows
     if(n_of_cities(x) < 10){
         ## <10 cities: concorde can only handle max 2^15
         MAX <- 2^15
@@ -51,8 +78,9 @@ tsp_concorde <- function(x, control = NULL){
     tmp_file_in  <- paste(temp_file, ".dat", sep = "")
     tmp_file_out <- paste(temp_file, ".sol", sep = "")
     
-    ## prepare data
-    write_TSPLIB(x, file = tmp_file_in, precision = precision)
+    ## prepare data (neg_inf = 0 so everything is > 0)
+    write_TSPLIB(x, file = tmp_file_in, 
+        precision = precision, neg_inf = 0)
 
     ## change working directory
     dir <- getwd()
@@ -95,11 +123,16 @@ tsp_linkern <- function(x, control = NULL){
     ## check x
     if(!inherits(x, "TSP")) stop("Concorde's LK only solves symmetric TSPs.")
     
-    ## get max (excluding inf) to check for possible integer overflows
-    max_x <- x
-    max_x[is.infinite(x)] <- NA
-    max_x <- max(max_x, na.rm = TRUE)
+    
+    ## fix inf and neg. values
+    fix <- .concorde_fix_inf(x)
 
+    shift <- fix$shift
+    max_x <- fix$max_x
+    x <- x + shift
+    
+
+    ## check for possible overflows
     MAX <- 2^31 - 1
 
     prec <- floor(log10(MAX / max_x / n_of_cities(x)))
@@ -117,8 +150,9 @@ tsp_linkern <- function(x, control = NULL){
     tmp_file_in  <- paste(temp_file, ".dat", sep = "")
     tmp_file_out <- paste(temp_file, ".sol", sep = "")
     
-    ## prepare data
-    write_TSPLIB(x, file = tmp_file_in, precision = precision)
+    ## prepare data (neg_inf = 0 so everything is > 0)
+    write_TSPLIB(x, file = tmp_file_in, 
+        precision = precision, neg_inf = 0)
 
     ## change working directory
     dir <- getwd()

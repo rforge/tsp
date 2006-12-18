@@ -12,7 +12,7 @@ TSP solvers. Sample instances for the TSP in TSPLIB format are available
 on the TSPLIB homepage (see references).
 }
 \usage{
-write_TSPLIB(x, file, precision = 6, inf = NULL)
+write_TSPLIB(x, file, precision = 6, inf = NULL, neg_inf = NULL)
 read_TSPLIB(file, precision = 0)
 }
 %- maybe also 'usage' for other objects documented here.
@@ -25,6 +25,11 @@ read_TSPLIB(file, precision = 0)
   \item{inf}{ replacement value for \code{Inf} (TSPLIB format cannot handle
       \code{Inf}). If \code{inf} is \code{NULL}, the default value of 2 times
       the maximum value in \code{x} (ignoring the infinity entries) is used.}
+  \item{neg_inf}{ replacement value for \code{-Inf}. 
+      If no value is specified, the default value of
+      2 times the smalles neg. number is used. 
+      If \code{x} only contains positive
+      values, -1 is used.}
 }
 \details{
 In the TSPLIB format distances are represented by integer values. Therefore, if

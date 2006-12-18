@@ -1,7 +1,34 @@
+
+## helper
+.fix_inf <- function(x, inf = NULL, neg_inf = NULL) {
+    ## fixes for TSPLIB/Concorde
+    ## infinity is not available so we use a relatively large number
+    posInf_index <- x == Inf
+    if(any(posInf_index)) {
+        posInf <- if(is.null(inf)) max(x[!posInf_index]) * 2 else inf
+
+        cat("Pos. infinity values are replaced by", posInf, "\n")
+        x[posInf_index] <- posInf
+    }
+
+    negInf_index <- x == -Inf
+    if(any(negInf_index)) {
+        negInf <- if(is.null(neg_inf)) {
+            m <- min(x[!negInf_index])
+            if(m < 0) m * 2 else -1
+        }else neg_inf
+
+        cat("Neg. infinity values are replaced by", negInf, "\n")
+        x[negInf_index] <- negInf
+    }
+    x
+}
+
+
 ## write a simple TSPLIB format file from an object of class TSP
 ## (contains a dist object or a symmetric matrix) 
 
-write_TSPLIB.TSP <- function(x, file, precision = 6, inf = NULL) {
+write_TSPLIB.TSP <- function(x, file, precision = 6, inf = NULL, neg_inf = NULL) {
   
     ## Concorde can handle UPPER_ROW and dist (lower triangle matrix) 
     ## is symmetric.
@@ -17,23 +44,9 @@ write_TSPLIB.TSP <- function(x, file, precision = 6, inf = NULL) {
         format, 
         file = zz, sep = "\n")
     
-    ## fixes for TSPLIB/Concorde
-    ## infinity is not available so we use a relatively large number
-    posInf_index <- x == Inf
-    if(any(posInf_index)) {
-        posInf <- if(is.null(inf)) max(x[!posInf_index]) * 2 else inf
-        warning(paste("Pos. infinity values are replaced by",
-                posInf), immediate. = TRUE)
-        x[posInf_index] <- posInf
-    }
     
-    negInf_index <- x == -Inf
-    if(any(negInf_index)) {
-        negInf <- if(is.null(inf)) min(x[!negInf_index]) * 2 else -inf
-        warning(paste("Neg. infinity values are replaced by",
-                negInf), immediate. = TRUE)
-        x[negInf_index] <- negInf
-    }
+    ## fix infinity values
+    if(any(is.infinite(x))) x <- .fix_inf(x, inf, neg_inf)
     
     ## only integers can be used as weights
     if(storage.mode(x) != "integer") x <- as.integer(x * 10^precision)
@@ -47,7 +60,7 @@ write_TSPLIB.TSP <- function(x, file, precision = 6, inf = NULL) {
     close(zz)
 }
 
-write_TSPLIB.ATSP <- function(x, file, precision = 6, inf = NULL) {
+write_TSPLIB.ATSP <- function(x, file, precision = 6, inf = NULL, neg_inf = NULL) {
     format <- "EDGE_WEIGHT_FORMAT: FULL_MATRIX"
     
     zz <- file(file, "w")
@@ -59,23 +72,10 @@ write_TSPLIB.ATSP <- function(x, file, precision = 6, inf = NULL) {
         "EDGE_WEIGHT_TYPE: EXPLICIT",
         format, 
         file = zz, sep = "\n")
-
-    ## infinity is not available so we use a relatively large number
-    posInf_index <- x == Inf
-    if(any(posInf_index)) {
-        posInf <- if(is.null(inf)) max(x[!posInf_index]) * 2 else inf
-        warning(paste("Pos. infinity values are replaced by",
-                posInf), immediate. = TRUE)
-        x[posInf_index] <- negInf
-    }
-
-    negInf_index <- x == -Inf
-    if(any(negInf_index)) {
-        posInf <- if(is.null(inf)) min(x[!negInf_index]) * 2 else -inf
-        warning(paste("Neg. infinity values are replaced by",
-                negInf), immediate. = TRUE)
-        x[negInf_index] <- negInf
-    }
+    
+    
+    ## fix infinity values
+    if(any(is.infinite(x))) x <- .fix_inf(x, inf, neg_inf)
     
     ## only integers can be used as weights
     if(storage.mode(x) != "integer") x <- as.integer(x * 10^precision)
@@ -89,6 +89,6 @@ write_TSPLIB.ATSP <- function(x, file, precision = 6, inf = NULL) {
 }
 
 ## generic
-write_TSPLIB <- function(x, file, precision = 6, inf = NULL) 
+write_TSPLIB <- function(x, file, precision = 6, inf = NULL, neg_inf = NULL) 
     UseMethod("write_TSPLIB")
 
