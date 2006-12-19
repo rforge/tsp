@@ -108,7 +108,7 @@ TSP, we refer the interested reader to the classic book edited by
 It has to be noted that in this paper, following the origin of the TSP, the
 term \emph{distance} is used.  Distance is used here exchangeably with
 dissimilarity or cost and, unless explicitly stated, no restrictions to
-measures which obey the triangle inequality are made.  An important distincion
+measures which obey the triangle inequality are made.  An important distinction
 can be made between the symmetric TSP and the more general asymmetric TSP.  For
 the symmetric case (normally referred to as just \emph{TSP}), for all distances
 in $D$ the equality $d_{ij} = d_{ji}$ holds, i.e., it does not matter if we
@@ -182,7 +182,7 @@ improved iteratively in a branch-and-bound approach.
 \label{sec:manipulations}
 
 Sometimes it is useful to transform the distance matrix $D = (d_{ij})$ of a TSP
-into a diffeeent matrix $D' = (d'_{ij})$ which has the same optimal solution.
+into a different matrix $D' = (d'_{ij})$ which has the same optimal solution.
 Such a transformation requires that for any Hamiltonian cycle $H$ in a graph
 represented by distance matrix $D$ the equality
 
@@ -825,13 +825,16 @@ The whole path is displayed in Figure~\ref{fig:map3}.
 
 
 \subsection{Rearrangement clustering}
-\cite{Climer2006} introduce rearrangement clustering by arranging all objects
-in a linear order using a TSP. The authors suggest to find the cluster
-boundaries of $k$ clusters by adding $k$ \emph{dummy cities} which have
-constant distance $c$ to all other cities and are infinitely far from each
-other. \cite{Climer2006} show that in the optimal solution of the TSP, the
-dummy cities must separate the most distant cities and thus lie exactly on the
-optimal cluster boundaries.
+Solving a TSP to obtain a clustering was suggested several times in the
+literature \citep[see, e.g.][]{Lenstra1974, Alpert1997, Johnson2004}.  The idea
+is that objects in clusters are visited in consecutive order and from one
+cluster to the next, larger ``jumps'' are necessary.  \cite{Climer2006} call
+this type of clustering \emph{rearrangement clustering} and suggest to
+automatically find the cluster boundaries of $k$ clusters by adding $k$
+\emph{dummy cities} which have constant distance $c$ to all other cities and
+are infinitely far from each other. \cite{Climer2006} show that in the optimal
+solution of the TSP, the dummy cities must separate the most distant cities and
+thus represent optimal boundaries for $k$ clusters.
 
 For the example, we use the well known iris data set. Since we know that the
 dataset contains three classes denoted by the attribute called \code{"Species"},
@@ -898,12 +901,10 @@ examples of the species `Setosa' and a second group containing examples for
 several examples of the species `Virginica' from other examples of the same
 species.  Even in the optimal tour found by Concorde, this problem occurs. The
 reason why the rearrangement clustering fails to split the data into three
-groups is the closeness between the groups `Virginica' and `Versicolor'. This
-can be clearly seen in Figure~\ref{fig:clustering2}, where the data points are
-projected on the first two principal components of the data set.  In the
-figure, we added the path segments which resulted from solving the TSP.  All
-points connected by a single path represent a cluster.  Clearly, the two groups
-to the right side of the plot are too close to be separated correctly.
+groups is the closeness between the groups `Virginica' and `Versicolor'. 
+To inspect this problem further, we can project the data points
+on the first two principal components of the data set and added the path 
+segments which resulted from solving the TSP.
 
 <<fig=TRUE, include=FALSE, label=clustering2>>=
 prc <- prcomp(iris[1:4])
@@ -923,6 +924,15 @@ components.  The three species are represented by different markers and
 colors.}
 \label{fig:clustering2}
 \end{figure}
+
+The result in shown in Figure~\ref{fig:clustering2}. The three true groups are
+identified by different markers and all points connected by a single path
+represent a found cluster.  Clearly, the two groups to the right side of the
+plot are too close to be separated correctly by using just the distances
+between individual points.  This problem is similar to the \emph{chaining
+effect} known from single-link clustering.
+
+
 
 
 
