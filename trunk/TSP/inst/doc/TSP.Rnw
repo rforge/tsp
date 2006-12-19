@@ -828,7 +828,7 @@ The whole path is displayed in Figure~\ref{fig:map3}.
 Solving a TSP to obtain a clustering was suggested several times in the
 literature \citep[see, e.g.][]{Lenstra1974, Alpert1997, Johnson2004}.  The idea
 is that objects in clusters are visited in consecutive order and from one
-cluster to the next, larger ``jumps'' are necessary.  \cite{Climer2006} call
+cluster to the next larger ``jumps'' are necessary.  \cite{Climer2006} call
 this type of clustering \emph{rearrangement clustering} and suggest to
 automatically find the cluster boundaries of $k$ clusters by adding $k$
 \emph{dummy cities} which have constant distance $c$ to all other cities and
@@ -903,7 +903,7 @@ species.  Even in the optimal tour found by Concorde, this problem occurs. The
 reason why the rearrangement clustering fails to split the data into three
 groups is the closeness between the groups `Virginica' and `Versicolor'. 
 To inspect this problem further, we can project the data points
-on the first two principal components of the data set and added the path 
+on the first two principal components of the data set and add the path 
 segments which resulted from solving the TSP.
 
 <<fig=TRUE, include=FALSE, label=clustering2>>=
@@ -917,7 +917,7 @@ lines(prc$x[indices,])
 
 \begin{figure}
 \centering
-\includegraphics[width=12cm]{TSP-clustering2}
+\includegraphics[width=10cm]{TSP-clustering2}
 \caption{The 3 path segments representing a rearrangement clustering of the
 iris data set.  The data points are projected on the set's first two principal
 components.  The three species are represented by different markers and
@@ -930,7 +930,8 @@ identified by different markers and all points connected by a single path
 represent a found cluster.  Clearly, the two groups to the right side of the
 plot are too close to be separated correctly by using just the distances
 between individual points.  This problem is similar to the \emph{chaining
-effect} known from single-link clustering.
+effect} known from hierarchical clustering using the single-linkage
+method.
 
 
 
