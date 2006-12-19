@@ -1,4 +1,4 @@
-\documentclass[10pt,a4paper]{article}
+s\documentclass[10pt,a4paper,fleqn]{article}
 
 \usepackage{a4wide}
 %\setlength{\parindent}{0pt}
@@ -46,33 +46,34 @@ set.seed(1234)
   problem statement, solving the TSP is difficult since it
   belongs to the class of NP-complete problems.
 
-  The importance of the TSP arises besides from it's theoretical appeal from
-  the variety of it's applications.  Apart from the obvious application for
-  vehicle routing, many other applications, e.g., computer wiring, cutting
-  wallpaper, job sequencing or several data visualization techniques, require
-  the solution of a TSP.
+  The importance of the TSP arises besides from its theoretical appeal
+  from the variety of its applications.  In addition to vehicle routing,
+  many other applications, e.g., computer wiring, cutting wallpaper, job
+  sequencing or several data visualization techniques, require the
+  solution of a TSP.
 
   In this paper we introduce the R~package \pkg{TSP} which provides a
   basic infrastructure for handling and solving the traveling
-  salesperson problem.  The package features informal S3 classes for
-  specifying a TSP and its (possibly optimal) solution as well as
-  several heuristics to find good solutions. In addition, it
-  provides an interface to \emph{Concorde}, one of the best exact TSP solvers
-  currently available.}
+  salesperson problem.  The package features S3 classes for specifying a
+  TSP and its (possibly optimal) solution as well as several heuristics
+  to find good solutions. In addition, it provides an interface to
+  \emph{Concorde}, one of the best exact TSP solvers currently
+  available.}
 
 \section{Introduction}
-The traveling salesperson problem~\citep[TSP;][]{Lawler1985, Gutin2002} 
-is a well known
-and important combinatorial optimization problem. The goal is to find the
-shortest tour that visits each city in a given list exactly once and then
-returns to the starting city.  
-Formally, the TSP can be stated as: The distances between $n$ cities are stored
-in a distance matrix $D$ with elements $d_{i,j}$ where $i,j = 1\dots n$ and the
-diagonal elements $d_{i,i} = 0$. A tour can be represented by a cyclic
-permutation $\pi$ of $\{1, 2,\dots, n\}$ where $\pi(i)$ represents the city
-that follows city $i$ on the tour. The traveling salesperson problem is then
-the optimization problem to find a permutation $\pi$ that minimizes the
-\emph{length of the tour} denoted by
+
+The traveling salesperson problem~\citep[TSP;][]{Lawler1985, Gutin2002}
+is a well known and important combinatorial optimization problem. The
+goal is to find the shortest tour that visits each city in a given list
+exactly once and then returns to the starting city.  Formally, the TSP
+can be stated as follows.  The distances between $n$ cities are stored
+in a distance matrix $D$ with elements $d_{ij}$ where $i,j = 1\dots n$
+and the diagonal elements $d_{ii}$ are zero.  A \emph{tour} can be
+represented by a cyclic permutation $\pi$ of $\{1, 2,\dots, n\}$ where
+$\pi(i)$ represents the city that follows city $i$ on the tour. The
+traveling salesperson problem is then the optimization problem to find a
+permutation $\pi$ that minimizes the \emph{length of the tour} denoted
+by
 
 \begin{equation}
     \sum_{i=1}^n d_{i\pi(i)}.
@@ -80,8 +81,8 @@ the optimization problem to find a permutation $\pi$ that minimizes the
 % see Lenstra & Kan 1975: Some simple Applications to the TSP
 
 For this minimization task, the tour length of $(n-1)!$ permutation vectors
-have to be compared. This results in a very hard to solve problem which is
-known to be NP-complete~\citep{Johnson1985a}.
+have to be compared. This results in a problem which is very hard to
+solve and in fact known to be NP-complete~\citep{Johnson1985a}.
 However, solving TSPs is an important part of applications in many areas
 including vehicle routing, computer wiring, machine sequencing and scheduling,
 frequency assignment in communication networks and structuring of
@@ -90,8 +91,8 @@ matrices~\citep{Lenstra1975, Punnen2002}.
 In this paper we give a very brief overview of the TSP and introduce the
 R package \pkg{TSP} which provides a infrastructure for handling and
 solving TSPs in R.
-The paper is organized as follows:
-in Section~\ref{sec:TSP} we briefly present important aspects of the TSP
+The paper is organized as follows.
+In Section~\ref{sec:TSP} we briefly present important aspects of the TSP
 including different problem formulations and approaches to solve TSPs.  In
 Section~\ref{sec:infrastructure} we give an overview of the infrastructure
 implemented in \pkg{TSP} and the basic usage.  In Section~\ref{sec:examples},
@@ -123,10 +124,10 @@ two cities may be different depending on which way we go.
 Other than the permutation problem in the introduction, the TSP can also be
 formulated as a graph theoretic problem. Here the TSP is regarded as a complete
 graph $G = (V, E)$, where the cities correspond to the node set  $V =
-\{1,2,\cdots,n\}$ and each edge $e_i \in E$ has an associated weight $w_i$
+\{1,2,\ldots,n\}$ and each edge $e_i \in E$ has an associated weight $w_i$
 representing the distance between the nodes it connects.  If the graph is not
 complete, the missing edges can be replaced by edges with very large distances.
-The goal is to find a \emph{Hamiltonian cycle}, i.e. a cycle which visits
+The goal is to find a \emph{Hamiltonian cycle}, i.e., a cycle which visits
 every node in the graph exactly once, with the least weight in the
 graph~\citep{Hoffman1985}. This formulation naturally leads to procedures
 involving minimum spanning trees for tour construction or edge exchanges 
@@ -159,7 +160,7 @@ subtour elimination constraints grows exponentially with the number of cities.
 %have been developed~\citep[see][]{Punnen2002}.
 
 
-The \emph{linear programming (LP) formulation} of the TS is given by:
+The \emph{linear programming (LP) formulation} of the TSP is given by:
 \[
 \begin{array}{rl}
     \text{Minimize }     & \sum_{i=1}^m{w_ix_i}  = \mathbf{w}^T\mathbf{x}\\[3mm] 
@@ -181,26 +182,25 @@ improved iteratively in a branch-and-bound approach.
 \subsection{Useful manipulations of the distance matrix}
 \label{sec:manipulations}
 
-Sometimes it is useful to transform the distance matrix $D = (d_{ij})$ of a TSP
-into a different matrix $D' = (d'_{ij})$ which has the same optimal solution.
-Such a transformation requires that for any Hamiltonian cycle $H$ in a graph
-represented by distance matrix $D$ the equality
-
+Sometimes it is useful to transform the distance matrix $D = (d_{ij})$
+of a TSP into a different matrix $D' = (d'_{ij})$ which has the same
+optimal solution.  Such a transformation requires that for any
+Hamiltonian cycle $H$ in a graph represented by its distance matrix $D$
+the equality
 \begin{equation*}
 \sum_{i,j \in H}{d_{ij}} = \alpha \sum_{i,j \in H}{d'_{ij}} + \beta,
 \end{equation*}
+holds for suitable $\alpha > 0$ and $\beta \in \mathbb{R}$.  From the
+equality we see that additive and multiplicative constants leave the
+optimal solution invariant. This property is useful to rescale
+distances, e.g., for many solvers, distances in the interval $[0, 1]$
+have to be converted into integers from~1 to a maximal value.
 
-with $\alpha > 0$ and $\beta \in \mathbb{R}$ holds.  From the equality we see
-that additive and multiplicative constants leave the optimal solution
-invariant. This property is useful to rescale distances, e.g., for many
-solvers, distances in the interval $[0, 1]$ have to be converted into integers
-from 1 to a maximal value.
-
-A different manipulation is to reformulate a asymmetric TSP as a symmetric TSP.
+A different manipulation is to reformulate an asymmetric TSP as a symmetric TSP.
 This is possible by doubling the number of cities~\citep{Jonker1983}. For each
 city a dummy city is added. Between each city and its corresponding dummy city
 a very small value (e.g., $-\infty$) is used.  This makes sure that each
-cities always occurs in the solution together with it's dummy city. The original
+city always occurs in the solution together with its dummy city. The original
 distances are used between the cities and the dummy cities, where each city is
 responsible for the distance going to the city and the dummy city is
 responsible for the distance coming from the city. The distances between all
@@ -212,18 +212,18 @@ three cities is:
 
 \begin{equation*}
 \begin{pmatrix}
-    0       &d_{1,2}    &d_{1,3}    \\
-    d_{2,1} &0          &d_{2,3}    \\
-    d_{3,1} &d_{3,2}    &0          \\
+    0       &d_{12}    &d_{13}    \\
+    d_{21} &0          &d_{23}    \\
+    d_{31} &d_{32}    &0          \\
 \end{pmatrix}
 \Longleftrightarrow
 \begin{pmatrix}
-  0         &\infty     &\infty     & -\infty       &d_{2,1}    &d_{3,1}    \\
-  \infty    &0          &\infty     & d_{1,2} &-\infty          &d_{3,1}    \\
-  \infty    &\infty     &0          & d_{1,3} &d_{2,3}    &-\infty          \\
-  -\infty         &d_{1,2}    &d_{1,3}    & 0       &\infty    &\infty      \\
-  d_{2,1}   &-\infty          &d_{2,3}    & \infty &0         &\infty       \\  
-  d_{3,1}   &d_{3,2}    &-\infty          & \infty &\infty   &0             \\
+  0         &\infty     &\infty     & -\infty       &d_{21}    &d_{31}    \\
+  \infty    &0          &\infty     & d_{12} &-\infty          &d_{31}    \\
+  \infty    &\infty     &0          & d_{13} &d_{23}    &-\infty          \\
+  -\infty         &d_{12}    &d_{13}    & 0       &\infty    &\infty      \\
+  d_{21}   &-\infty          &d_{23}    & \infty &0         &\infty       \\  
+  d_{31}   &d_{32}    &-\infty          & \infty &\infty   &0             \\
 \end{pmatrix}
 \end{equation*}
 
@@ -261,11 +261,12 @@ to city $1$ is
 \end{equation}
 
 Using the last two equations, the quantities $d^*(S,l)$ can be computed
-recursively and the minimal tour length $d^{**}$ can be found.  In a second
-step, the optimal permutation $\pi = \{1, i_2, i_3,\dots,i_n\}$ of city indices
-$1$ through $n$ can be computed in reverse order, staring with $i_n$ and
-working successively back to $i_2$. The procedure exploits the fact that a
-permutation $\pi$ can only be optimal, if
+recursively and the minimal tour length $d^{**}$ can be found.  In a
+second step, the optimal permutation $\pi = \{1, i_2, i_3,\dots,i_n\}$
+of city indices $1$ through $n$ can be computed in reverse order,
+starting with $i_n$ and working successively back to $i_2$. The
+procedure exploits the fact that a permutation $\pi$ can only be
+optimal, if
 
 \begin{equation}
     d^{**} = d^*(\{2,3,\dots,n\}, i_n) + d_{i_n1}
@@ -321,12 +322,12 @@ in~\cite{Applegate2000}.
 
 \subsection{Heuristics for the TSP}\label{sec:heuristics}
 
-The NP-completeness of the TSP makes it already for medium sized TSP instances
-more time efficient to rely on heuristics, if a good but not necessarily
-optimal solution suffices.  TSP heuristics typically fall into two groups, tour
-construction heuristics 
-which create tours from scratch and tour improvement heuristics
-which use simple local search heuristics to improve existing tours.
+The NP-completeness of the TSP already makes it more time efficient for
+medium sized TSP instances to rely on heuristics if a good but not
+necessarily optimal solution suffices.  TSP heuristics typically fall
+into two groups, tour construction heuristics which create tours from
+scratch and tour improvement heuristics which use simple local search
+heuristics to improve existing tours.
 
 In the following we will only discuss heuristics available in \pkg{TSP}, for a
 comprehensive overview of the multitude of TSP heuristics including an
@@ -408,7 +409,7 @@ Typically, $2$-Opt~\citep{Croes1958} and $3$-Opt~\citep{Lin1965} heuristics
 are used in practice.
 
 \paragraph{Lin-Kernighan heuristic.}
-This heuristic~\citep{Lin1973} does not use a fixed value for $k$ for it's
+This heuristic~\citep{Lin1973} does not use a fixed value for $k$ for its
 $k$-Opt moves, but tries to find the best choice of $k$ for each move.  The
 heuristic uses the fact that each $k$-Opt move can be represented as a sequence
 of $2$-Opt moves.  It builds up a sequence of $2$-Opt moves, checking after
@@ -464,7 +465,7 @@ therefore, if needed, can be coerced to \class{dist} or to a matrix.  An
 TSPs are more general than symmetric TSPs, hence, symmetric TSPs can also be
 represented as asymmetric TSPs.  To formulate an asymmetric TSP as a symmetric
 TSP with double the number of cities (see Section \ref{sec:manipulations}),
-\func{ATSP\_to\_TSP} is provides. The function creates the necessary dummy
+\func{ATSP\_to\_TSP} is provided. The function creates the necessary dummy
 cities and adapts the distance matrix accordingly. 
 
 A popular format to save TSP descriptions to disk which is supported by
@@ -518,20 +519,23 @@ The available algorithms are shown in Table~\ref{tab:methods}.
 \end{tabular}
 \end{table}
 
-All algorithms except the Concorde TSP solver and the Chained Lin-Kernighan
-heuristic (a Lin-Kernighan variation described in \cite{Applegate2003}) are
-included in the package and distributed under the GNU Public License (GPL). For
-the Concorde TSP solver and the Chained Lin-Kernighan heuristic only an simple
-interface (using \func{write\_TSPLIB}, calling the executable and reads back
-the resulting tour) is included in \pkg{TSP}.  The code itself is part of the
-Concorde distribution, has to be installed separately and is governed by a
-different license which allows only for academic use.  The interfaces where
-includes since Concorde~\citep{Applegate2000,Applegate2006} is currently one of
-the best implementations for solving symmetric TSPs based on the branch-and-cut
-method discussed in section~\ref{sec:exact}.  In May 2004, Concorde was used to
-find the optimal solution for the TSP of visiting all 24,978 cities in Sweden.
-The computation was carried out on a cluster with 96 nodes and took in total
-almost 100 CPU years (assuming a single CPU Xeon 2.8 GHz processor).
+All algorithms except the Concorde TSP solver and the Chained
+Lin-Kernighan heuristic (a Lin-Kernighan variation described in
+\cite{Applegate2003}) are included in the package and distributed under
+the GNU Public License (GPL). For the Concorde TSP solver and the
+Chained Lin-Kernighan heuristic only a simple interface (using
+\func{write\_TSPLIB}, calling the executable and reads back the
+resulting tour) is included in \pkg{TSP}.  The code itself is part of
+the Concorde distribution, has to be installed separately and is
+governed by a different license which allows only for academic use.  The
+interfaces are included since
+Concorde~\citep{Applegate2000,Applegate2006} is currently one of the
+best implementations for solving symmetric TSPs based on the
+branch-and-cut method discussed in section~\ref{sec:exact}.  In May
+2004, Concorde was used to find the optimal solution for the TSP of
+visiting all 24,978 cities in Sweden.  The computation was carried out
+on a cluster with 96 nodes and took in total almost 100 CPU years
+(assuming a single CPU Xeon 2.8 GHz processor).
 
 \section{Examples}\label{sec:examples}
 
@@ -826,7 +830,7 @@ The whole path is displayed in Figure~\ref{fig:map3}.
 
 \subsection{Rearrangement clustering}
 Solving a TSP to obtain a clustering was suggested several times in the
-literature \citep[see, e.g.][]{Lenstra1974, Alpert1997, Johnson2004}.  The idea
+literature \citep[see, e.g.,][]{Lenstra1974, Alpert1997, Johnson2004}.  The idea
 is that objects in clusters are visited in consecutive order and from one
 cluster to the next larger ``jumps'' are necessary.  \cite{Climer2006} call
 this type of clustering \emph{rearrangement clustering} and suggest to
