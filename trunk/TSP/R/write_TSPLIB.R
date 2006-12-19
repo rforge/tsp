@@ -1,11 +1,13 @@
 
 ## helper
-.fix_inf <- function(x, inf = NULL, neg_inf = NULL) {
-    ## fixes for TSPLIB/Concorde
-    ## infinity is not available so we use a relatively large number
+.TSPLIB_fix_inf <- function(x, inf = NULL, neg_inf = NULL) {
+    ## fixes for TSPLIB
+    ## replace Inf by a large pos. number and -Inf by a large neg. number
+    max_wo_inf <- max(abs(x[is.finite(x)])) 
+    
     posInf_index <- x == Inf
     if(any(posInf_index)) {
-        posInf <- if(is.null(inf)) max(x[!posInf_index]) * 2 else inf
+        posInf <- if(is.null(inf)) 2 * max_wo_inf else inf
 
         cat("Pos. infinity values are replaced by", posInf, "\n")
         x[posInf_index] <- posInf
@@ -13,10 +15,7 @@
 
     negInf_index <- x == -Inf
     if(any(negInf_index)) {
-        negInf <- if(is.null(neg_inf)) {
-            m <- min(x[!negInf_index])
-            if(m < 0) m * 2 else -1
-        }else neg_inf
+        negInf <- if(is.null(neg_inf)) -2 * max_wo_inf else neg_inf
 
         cat("Neg. infinity values are replaced by", negInf, "\n")
         x[negInf_index] <- negInf
@@ -46,7 +45,7 @@ write_TSPLIB.TSP <- function(x, file, precision = 6, inf = NULL, neg_inf = NULL)
     
     
     ## fix infinity values
-    if(any(is.infinite(x))) x <- .fix_inf(x, inf, neg_inf)
+    if(any(is.infinite(x))) x <- .TSPLIB_fix_inf(x, inf, neg_inf)
     
     ## only integers can be used as weights
     if(storage.mode(x) != "integer") x <- as.integer(x * 10^precision)
@@ -75,7 +74,7 @@ write_TSPLIB.ATSP <- function(x, file, precision = 6, inf = NULL, neg_inf = NULL
     
     
     ## fix infinity values
-    if(any(is.infinite(x))) x <- .fix_inf(x, inf, neg_inf)
+    if(any(is.infinite(x))) x <- .TSPLIB_fix_inf(x, inf, neg_inf)
     
     ## only integers can be used as weights
     if(storage.mode(x) != "integer") x <- as.integer(x * 10^precision)

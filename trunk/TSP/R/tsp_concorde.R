@@ -1,32 +1,6 @@
-## interface to the Concorde algorithm (can only handle TSP)
+## interface to the Concorde algorithm 
+## (can only handle TSP and no neg. distances!)
    
-
-## helper to shift the values all between [0, max]
-.concorde_fix_inf <- function(x){
-    shift <- 0
-
-    ## find infinite values
-    x_inf <- is.infinite(x)
-    x_wo_inf <- x
-    if(any(x_inf)) x_wo_inf[x_inf] <- NA
-
-    min_x <- min(x_wo_inf, na.rm = TRUE)
-    max_x <- max(x_wo_inf, na.rm = TRUE)
-
-    ## remove neg. values (we just add shift)
-    shift <- if(min_x < 0) -min_x else 0
-
-    ## make space for -Inf (we add max_x)
-    if(any(x[x_inf] == -Inf)) shift <- shift + max_x 
-
-    max_x <- max_x + shift
-
-    if(shift > 0) cat("Adding", shift, 
-        "to the distances to avoid neg. values.\n")
-
-    list(shift = shift, max_x = max_x)
-}
-    
 tsp_concorde <- function(x, control = NULL){
 
     ## get parameters
@@ -38,14 +12,43 @@ tsp_concorde <- function(x, control = NULL){
     if(!inherits(x, "TSP")) stop("Concorde only solves symmetric TSPs.")
 
 
-    ## fix inf and neg. values
-    fix <- .concorde_fix_inf(x)
+    ## fix neg. values
+    shift <- 0
 
-    shift <- fix$shift
-    max_x <- fix$max_x
-    x <- x + shift
-    
+    ## find infinite values
+    x_pos_inf <- x == Inf
+    x_neg_inf <- x == -Inf
+    x[x_pos_inf] <- NA
+    x[x_neg_inf] <- NA
+
+    max_x <- max(x, na.rm = TRUE)
+
+    ## fix infinite values
+    if(any(x_pos_inf) || any(x_neg_inf)) {
+        min_x <- min(x, na.rm = TRUE)
+
+        inf_val <- 2 * max(abs(c(max_x, min_x)))
+
+        ## remove neg. values
+        if(min_x < 0) shift <- -min_x
+
+        ## make space for -Inf
+        if(any(x_neg_inf)) { 
+            cat("Neg. infinity values are replaced by", 0, "and all
+                distances are increased by", inf_val, "\n")
+            x <- x + inf_val
+            x[x_neg_inf] <- 0
+            shift <- inf_val
+        }
+
+        if(any(x_pos_inf)) {
+            cat("Pos. infinity values are replaced by", inf_val + shift, "\n")
+            x[x_pos_inf] <- inf_val + shift
+        }
+    } 
+   
     ## get max (excluding inf) to check for possible integer overflows
+    max_x <- max(x)
     if(n_of_cities(x) < 10){
         ## <10 cities: concorde can only handle max 2^15
         MAX <- 2^15
@@ -80,7 +83,8 @@ tsp_concorde <- function(x, control = NULL){
     
     ## prepare data (neg_inf = 0 so everything is > 0)
     write_TSPLIB(x, file = tmp_file_in, 
-        precision = precision, neg_inf = 0)
+        precision = precision)
+    #, neg_inf = 0)
 
     ## change working directory
     dir <- getwd()
@@ -107,7 +111,7 @@ tsp_concorde <- function(x, control = NULL){
 }
 
 ## interface to the Concorde's Chained Lin-Kernighan algorithm 
-## (can only handle TSP)
+## (can only handle TSP, handles neg. distances)
 
 tsp_linkern <- function(x, control = NULL){
 
@@ -123,16 +127,8 @@ tsp_linkern <- function(x, control = NULL){
     ## check x
     if(!inherits(x, "TSP")) stop("Concorde's LK only solves symmetric TSPs.")
     
-    
-    ## fix inf and neg. values
-    fix <- .concorde_fix_inf(x)
-
-    shift <- fix$shift
-    max_x <- fix$max_x
-    x <- x + shift
-    
-
     ## check for possible overflows
+    max_x <- max(abs(x[is.finite(x)]))
     MAX <- 2^31 - 1
 
     prec <- floor(log10(MAX / max_x / n_of_cities(x)))
@@ -152,7 +148,7 @@ tsp_linkern <- function(x, control = NULL){
     
     ## prepare data (neg_inf = 0 so everything is > 0)
     write_TSPLIB(x, file = tmp_file_in, 
-        precision = precision, neg_inf = 0)
+        precision = precision)
 
     ## change working directory
     dir <- getwd()
