@@ -67,7 +67,7 @@ is a well known and important combinatorial optimization problem. The
 goal is to find the shortest tour that visits each city in a given list
 exactly once and then returns to the starting city.  Formally, the TSP
 can be stated as follows.  The distances between $n$ cities are stored
-in a distance matrix $D$ with elements $d_{ij}$ where $i,j = 1\dots n$
+in a distance matrix $\mathbf{D}$ with elements $d_{ij}$ where $i,j = 1\dots n$
 and the diagonal elements $d_{ii}$ are zero.  A \emph{tour} can be
 represented by a cyclic permutation $\pi$ of $\{1, 2,\dots, n\}$ where
 $\pi(i)$ represents the city that follows city $i$ on the tour. The
@@ -112,7 +112,7 @@ dissimilarity or cost and, unless explicitly stated, no restrictions to
 measures which obey the triangle inequality are made.  An important distinction
 can be made between the symmetric TSP and the more general asymmetric TSP.  For
 the symmetric case (normally referred to as just \emph{TSP}), for all distances
-in $D$ the equality $d_{ij} = d_{ji}$ holds, i.e., it does not matter if we
+in $\mathbf{D}$ the equality $d_{ij} = d_{ji}$ holds, i.e., it does not matter if we
 travel from $i$ to $j$ or the other way round, the distance is the same. In the
 asymmetric case (called \emph{ATSP}), the distances are not equal for all pairs
 of cities. Problems of this kind arise when we do not deal with spatial
@@ -135,27 +135,31 @@ to improve existing tours.
 
 TSPs can also be represented as integer and linear programming
 problems~\citep[see, e.g.,][]{Punnen2002}.  The \emph{integer programming (IP)
-formulation} is based on the assignment problem which is
-described as follows:
+formulation} is based on the assignment problem with additional
+constraints described as follows:
 
 
 \[
 \begin{array}{rl}
-    \text{Minimize }     & \sum_{i=1}^n\sum_{j=1}^n{d_{ij}x_{ij}} \\[3mm]
+    \text{Minimize }     & \sum_{i=1}^n\sum_{j=1}^n{d_{ij}x_{ij}} 
+               %         = \mathrm{trace}(\mathbf{D}^T\mathbf{X})
+                        \\[3mm]
     \text{Subject to }   & \\
                         & \sum_{i=1}^n{x_{ij}=1}, j=1,\cdots,n, \\
                         & \sum_{j=1}^n{x_{ij}=1}, i=1,\cdots,n, \\
                         & x_{ij} = 0 \text{ or } 1 \\
+                        & \mathbf{X} \text{ contains no subtours}\\
 \end{array}
 \]
 
 The solution matrix $\mathbf{X} = (x_{ij})$ of the assignment problem
 represents a tour or a collection of subtour (several unconnected cycles) where
 only edges which corresponding to elements $x_{ij} = 1$ are on the tour or a
-subtour. Additional restrictions, called \emph{subtour elimination
-constraints,} are necessary to avoid subtours. Unfortunately, in addition to
-that the integer programming problem in itself is NP-hard, also the number of
-subtour elimination constraints grows exponentially with the number of cities. 
+subtour. The additional restriction that solution contains
+no subtours are called \emph{subtour elimination
+constraints}). Unfortunately, the number of
+subtour elimination constraints grows exponentially with the number of cities
+which leads to an extremely hard problem.
 %Several constraints
 %have been developed~\citep[see][]{Punnen2002}.
 
@@ -182,10 +186,10 @@ improved iteratively in a branch-and-bound approach.
 \subsection{Useful manipulations of the distance matrix}
 \label{sec:manipulations}
 
-Sometimes it is useful to transform the distance matrix $D = (d_{ij})$
-of a TSP into a different matrix $D' = (d'_{ij})$ which has the same
+Sometimes it is useful to transform the distance matrix $\mathbf{D} = (d_{ij})$
+of a TSP into a different matrix $\mathbf{D'} = (d'_{ij})$ which has the same
 optimal solution.  Such a transformation requires that for any
-Hamiltonian cycle $H$ in a graph represented by its distance matrix $D$
+Hamiltonian cycle $H$ in a graph represented by its distance matrix $\mathbf{D}$
 the equality
 \begin{equation*}
 \sum_{i,j \in H}{d_{ij}} = \alpha \sum_{i,j \in H}{d'_{ij}} + \beta,
@@ -248,7 +252,7 @@ For $S = \{l\}$, $d^*(S,l)$ is defined as $d_{1l}$. The shortest path for
 larger sets with $|S| > 1$ is
 
 \begin{equation}
-    d^*(S,l) = \mathrm{min}_{m \in S-l}\Bigl( d^*(S-l,m) + d_{ml}\Bigl).
+    d^*(S,l) = \mathrm{min}_{m \in S\setminus\{l\}}\Bigl( d^*(S\setminus\{l\},m) + d_{ml}\Bigl).
     %\text{ for } |S| > 1.
 \end{equation}
 
@@ -459,14 +463,15 @@ methods are defined for the classes:
         argument \code{order}.
 \end{itemize}
 
-Internally, an object of class \class{TSP} is a \class{dist} object and,
+Internally, an object of class \class{TSP} is a \class{dist} object 
+with an additional class attribute and,
 therefore, if needed, can be coerced to \class{dist} or to a matrix.  An
 \class{ATSP} object is represented as a square matrix.  Obviously, asymmetric
 TSPs are more general than symmetric TSPs, hence, symmetric TSPs can also be
 represented as asymmetric TSPs.  To formulate an asymmetric TSP as a symmetric
 TSP with double the number of cities (see Section \ref{sec:manipulations}),
-\func{ATSP\_to\_TSP} is provided. The function creates the necessary dummy
-cities and adapts the distance matrix accordingly. 
+\func{reformulate\_ATSP\_as\_TSP} is provided. The function creates the
+necessary dummy cities and adapts the distance matrix accordingly. 
 
 A popular format to save TSP descriptions to disk which is supported by
 most TSP solvers is the format used by \emph{TSPLIB}, a library of
@@ -635,7 +640,7 @@ tour
 Since the dummy city has distance zero to all other cities, the path length is
 equal to the tour length reported above. The path starts with the first city in
 the list after the `dummy' city  and ends with the city right before it. 
-We use \func{cut\_path} to create a path and show the 
+We use \func{cut\_tour} to create a path and show the 
 first and last 6 cities on it.
 
 <<>>=
@@ -738,12 +743,12 @@ City and cities in New Jersey and ends in a city in Manitoba, Canada.
 %then making rather big ``jumps'' for the final cities.
 
 Concorde and many advanced TSP solvers can only solve symmetric TSPs. To use
-these solvers, we can formulate the ATSP as a TSP using \func{ATSP\_to\_TSP}
+these solvers, we can formulate the ATSP as a TSP using \func{reformulate\_ATSP\_as\_TSP}
 which introduces for each city a dummy city (see
 Section~\ref{sec:manipulations}).  
 
 <<>>=
-tsp <- ATSP_to_TSP(atsp)
+tsp <- reformulate_ATSP_as_TSP(atsp)
 tsp
 @
 
@@ -752,7 +757,7 @@ tour for the original ATSP.
 Note that the tour needs to be reversed if the
 dummy cities appear before and not after the original cities in the solution of
 the TSP.  The following code is not executed here, since it takes several
-minutes to execute and concorde has to be installed separately.  Concorde finds
+minutes to execute and Concorde has to be installed separately.  Concorde finds
 the optimal solution with a length of $36091$.
 
 
