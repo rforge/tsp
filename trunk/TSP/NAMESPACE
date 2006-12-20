@@ -8,7 +8,7 @@ export(
     TSP, 
     ATSP, 
     TOUR, 
-    ATSP_to_TSP,
+    reformulate_ATSP_as_TSP,
     n_of_cities, 
     insert_dummy,
     cut_tour,

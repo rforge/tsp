@@ -1,4 +1,4 @@
-s\documentclass[10pt,a4paper,fleqn]{article}
+\documentclass[10pt,a4paper,fleqn]{article}
 
 \usepackage{a4wide}
 %\setlength{\parindent}{0pt}

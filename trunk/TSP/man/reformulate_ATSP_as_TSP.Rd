@@ -1,5 +1,5 @@
-\name{ATSP_to_TSP}
-\alias{ATSP_to_TSP}
+\name{reformulate_ATSP_as_TSP}
+\alias{reformulate_ATSP_as_TSP}
 \title{Reformulate a ATSP as a symmetric TSP}
 \description{
 A ATSP can be formulated as a symmetric TSP by doubling the number of
@@ -7,7 +7,7 @@ cities (Jonker and Volgenant 1983). The solution of the TSP
 also represents the solution of the original ATSP.
 }
 \usage{
-ATSP_to_TSP(x, infeasible = Inf, cheap = -Inf)
+reformulate_ATSP_as_TSP(x, infeasible = Inf, cheap = -Inf)
 }
 \arguments{
   \item{x}{an ATSP.}
@@ -54,7 +54,7 @@ atsp <- as.ATSP(USCA50)
 atsp[, austin] <- 0
 
 ## reformulate as a TSP
-tsp <- ATSP_to_TSP(atsp)
+tsp <- reformulate_ATSP_as_TSP(atsp)
 labels(tsp)
 
 ## create tour (now you could use Concorde or LK)
