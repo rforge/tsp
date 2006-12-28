@@ -26,7 +26,8 @@ solve_TSP <- function(x, method = NULL, control = NULL)
         "repetitive_nn",
         "2-opt",
         "concorde",
-        "linkern"
+        "linkern",
+        "grasp"
     )
 
     if(is.null(method)) methodNr <- 1
@@ -53,8 +54,11 @@ solve_TSP <- function(x, method = NULL, control = NULL)
         order <- tsp_concorde(x, control = control)
     }else if(methodNr == 9) {
         order <- tsp_linkern(x, control = control)
+    }else if(methodNr == 10) {
+        order <- tsp_grasp(as.matrix(x), control = control)
     }
 
+    
     if(!is.integer(order)) order <- as.integer(order)
     class(order) <- c("TOUR", class(order))
     attr(order, "method") <- methods[methodNr]

@@ -55,7 +55,8 @@ Currently the following methods are available:
     establish an outline of the whole tour early.
 
     Additional control options: \describe{\item{\code{start}}{index of the
-    first city (default: random city).}} 
+	first city (default: random city).}
+    }
 }
 
 \item{\code{"nn", "repetitive_nn"}}{ 
@@ -69,8 +70,10 @@ Currently the following methods are available:
     Repetitive nearest neighbor constructs a nearest neighbor tour for each
     city as the starting point and returns the shortest tour found.
 
-    Additional control options: \describe{\item{\code{start}}{index of the
-    first city (default: random city).}}
+    Additional control options: \describe{
+      \item{\code{start}}{ index of the
+	first city (default: random city). }
+}
 }
 
 \item{\code{"2-opt"}}{Two edge exchange improvement procedure (Croes 1958).
@@ -79,6 +82,7 @@ Currently the following methods are available:
     by the distance matrix till no improvements are possible. Exchanging two
     edges is equal to reversing part of the tour. The resulting tour is called
     \emph{2-optimal.}
+    
     Additional control options: 
     \describe{ 
     \item{\code{tour}}{ an existing tour which should be improved.
@@ -126,10 +130,34 @@ Currently the following methods are available:
     has to be obtained and installed separately (see
     \code{\link{Concorde}}).
     
-    Additional control options: see Concorde above.
+    Additional control options: see Concorde above. 
+  }
+  
+\item{\code{"grasp"}}{ 
+    Greedy Randomized Adaptive Search Procedure (Leonidas S. Pitsoulis
+    and Mauricio G. C. Resende).
+
+    GRASP is a metaheuristic for combinatorial optimization. It is
+    implemented as a multistart procedure, in which in each iteration a
+    random route is constructed (construction phase). To find an
+    optimum the route is improved by a local search algorithm
+    (implemented as k-opt neighborhood search). This is
+    repeatedly done until a stopping criterium is reached (ie. number of
+    iterations).
+
+    Additional control options:
+    \describe{
+      \item{\code{start}}{index of the first city (default: random
+	city).}
+      \item{\code{iterations}}{an integer containing the number of
+	iterations after the algorithm stops (default: 100 iterations).}
+      \item{\code{max_i}}{an integer representing the max. steps to find
+	a better solution in local search (default: 100 steps).}
+      \item{\code{k}}{an integer needed to change k edges of the tour in
+	local search (default: 3 cities).}
     }
-    
-    
+  }
+  
 }
 }
 \value{
