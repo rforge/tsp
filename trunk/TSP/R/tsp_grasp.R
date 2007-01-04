@@ -48,7 +48,7 @@ tsp_grasp <- function (x, control = NULL)
     }
     i <- i + 1
   }
-  order  
+  as.numeric(order)  
 }
 
 ## construct initial solution
