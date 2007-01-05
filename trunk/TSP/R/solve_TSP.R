@@ -55,7 +55,7 @@ solve_TSP <- function(x, method = NULL, control = NULL)
     }else if(methodNr == 9) {
         order <- tsp_linkern(x, control = control)
     }else if(methodNr == 10) {
-        order <- tsp_grasp(as.matrix(x), control = control)
+        order <- tsp_grasp(x, control = control)
     }
 
     

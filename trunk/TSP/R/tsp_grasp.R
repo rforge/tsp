@@ -1,15 +1,11 @@
 ## Greedy Randomized Adaptive Search Procedure
-## (Leonidas S. Pitsoulis and Mauricio G. C. Resende)
+## (Leonidas S. Pitsoulis and Mauricio G. C. Resende 2001)
 
 tsp_grasp <- function (x, control = NULL) 
 {
+  x <- as.matrix(x)
   n <- ncol(x)
 
-  ## place first city
-  start <- control$start
-  if(is.null(start)) start <- sample(1:n, 1)
-  if(start < 0 || start > n) 
-  stop(paste("illegal value for", sQuote("start")))
   ## grasp parameters
   iterations <- control$iterations
   if(is.null(iterations)) iterations <- 100
@@ -35,7 +31,7 @@ tsp_grasp <- function (x, control = NULL)
     ## alpha <- runif(1,0.05,0.25) ## also good solutions
   
     ## generate a greedy randomized solution
-    grasp.route <- .construct_greedy(x, start, n, alpha)
+    grasp.route <- .construct_greedy(x, n, alpha)
 
     ## TODO: hash table
 
@@ -52,9 +48,10 @@ tsp_grasp <- function (x, control = NULL)
 }
 
 ## construct initial solution
-.construct_greedy <- function (x, start, n, alpha = runif(1, 0, 1)) 
+.construct_greedy <- function (x, n, alpha = runif(1, 0, 1)) 
 {
-  order <- c(start)
+  ## start with a random city
+  order <- c(sample(1:n))
   city.indices <- c(1:n)[-start]
   while (length(city.indices) != 0) {
     current.dists <- x[, order[1]][-order]
