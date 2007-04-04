@@ -26,8 +26,7 @@ solve_TSP <- function(x, method = NULL, control = NULL)
         "repetitive_nn",
         "2-opt",
         "concorde",
-        "linkern",
-        "grasp"
+        "linkern"
     )
 
     if(is.null(method)) methodNr <- 1
@@ -54,8 +53,6 @@ solve_TSP <- function(x, method = NULL, control = NULL)
         order <- tsp_concorde(x, control = control)
     }else if(methodNr == 9) {
         order <- tsp_linkern(x, control = control)
-    }else if(methodNr == 10) {
-        order <- tsp_grasp(x, control = control)
     }
 
     

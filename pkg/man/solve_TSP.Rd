@@ -81,12 +81,16 @@ Currently the following methods are available:
     This procedure systematically exchanges two edges in the graph represented
     by the distance matrix till no improvements are possible. Exchanging two
     edges is equal to reversing part of the tour. The resulting tour is called
-    \emph{2-optimal.}
+    \emph{2-optimal.} 
+
+    By default, improvement starts with a random tour.
     
     Additional control options: 
     \describe{ 
     \item{\code{tour}}{ an existing tour which should be improved.
     If no tour is given, a random tour is used. }
+    \item{\code{rep}}{ number of times to try 2-opt with a different initial
+        random tour (default: 1). }
     }
     }
     
@@ -133,30 +137,30 @@ Currently the following methods are available:
     Additional control options: see Concorde above. 
   }
   
-\item{\code{"grasp"}}{ 
-    Greedy Randomized Adaptive Search Procedure (L.S. Pitsoulis
-    and M.G.C. Resende 2001).
-
-    GRASP is a metaheuristic for combinatorial optimization. It is
-    implemented as a multistart procedure, in which in each iteration a
-    random route is constructed (construction phase). To find an
-    optimum the route is improved by a local search algorithm
-    (implemented as k-opt neighborhood search). This is
-    repeatedly done until a stopping criterium is reached (i.e., a number of
-    iterations).
-
-    Additional control options:
-    \describe{
-      \item{\code{start}}{index of the first city (default: random
-	city).}
-      \item{\code{iterations}}{an integer containing the number of
-	iterations after the algorithm stops (default: 100 iterations).}
-      \item{\code{max_i}}{an integer representing the max. steps to find
-	a better solution in local search (default: 100 steps).}
-      \item{\code{k}}{an integer needed to change k edges of the tour in
-	local search (default: 3 cities).}
-    }
-  }
+%\item{\code{"grasp"}}{ 
+%    Greedy Randomized Adaptive Search Procedure (L.S. Pitsoulis
+%    and M.G.C. Resende 2001).
+%
+%    GRASP is a metaheuristic for combinatorial optimization. It is
+%    implemented as a multistart procedure, in which in each iteration a
+%    random route is constructed (construction phase). To find an
+%    optimum the route is improved by a local search algorithm
+%    (implemented as k-opt neighborhood search). This is
+%    repeatedly done until a stopping criterium is reached (i.e., a number of
+%    iterations).
+%
+%    Additional control options:
+%    \describe{
+%      \item{\code{start}}{index of the first city (default: random
+%	city).}
+%      \item{\code{iterations}}{an integer containing the number of
+%	iterations after the algorithm stops (default: 100 iterations).}
+%      \item{\code{max_i}}{an integer representing the max. steps to find
+%	a better solution in local search (default: 100 steps).}
+%      \item{\code{k}}{an integer needed to change k edges of the tour in
+%	local search (default: 3 cities).}
+%    }
+%  }
   
 }
 }
@@ -204,7 +208,7 @@ tsp <- USCA50
 
 ## methods
 methods <- c("nearest_insertion", "cheapest_insertion", "farthest_insertion", 
-    "arbitrary_insertion", "nn", "repetitive_nn", "2-opt", "GRASP")
+    "arbitrary_insertion", "nn", "repetitive_nn", "2-opt")
 
 
 ## calculate tours
