@@ -1,71 +1,84 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta name="generator" content=
-    "HTML Tidy for Linux/x86 (vers 1 September 2005), see www.w3.org" />
-    <title>
-      TSP - The traveling salesperson Problem package for R
-    </title>
-  </head>
-  <body>
-    <h1>
-      The TSP package for R
-    </h1>
-    <h2>
-      Introduction
-    </h2>The traveling salesperson problem (TSP) is a well known
-    and important combinatorial optimization problem. The goal is
-    to find the shortest tour that visits each city in a given list
-    exactly once and then returns to the starting city.
-    <p>
-      The TSP package offers a simple infrastructure to handle and
-      solve TSPs.
-    </p>
-    <h2>
-      Features
-    </h2>
-    <ul>
-      <li>Data structures for TSPs and ATSP (asymmetric TSPs) as
-      well as resulting tours.
-      </li>
-      <li>Many TSP solvers (nearest neighbors, insertion, 2-opt,
-      Lin-Kernighan, Concorde)
-      </li>
-      <li>Easy integration with other R packages.
-      </li>
-    </ul>
-    <h2>
-      Example
-    </h2>
-    <table border="0">
-      <tr valign="top">
-        <td>
+    <head>
+        <meta name="generator" content=
+        "HTML Tidy for Linux/x86 (vers 1 September 2005), see www.w3.org" />
+        <title>
+            TSP - The traveling salesperson Problem package for R
+        </title>
+        <link rel=stylesheet type="text/css" href="css/hahsler.css">
+
+
+    </head>
+    <body>
+        <h1>
+            The TSP package for R
+        </h1>
+        <h2>
+            Introduction
+        </h2>The traveling salesperson problem (TSP) is a well known
+        and important combinatorial optimization problem. The goal is
+        to find the shortest tour that visits each city in a given list
+        exactly once and then returns to the starting city.
+        <p>
+        The TSP package offers a simple infrastructure to handle and
+        solve TSPs.
+        </p>
+        <h2>
+            Features
+        </h2>
+        <ul>
+            <li>Data structures for TSPs and ATSP (asymmetric TSPs) as
+            well as resulting tours.
+            </li>
+            <li>Many TSP solvers (nearest neighbors, insertion, 2-opt,
+            Lin-Kernighan, Concorde)
+            </li>
+            <li>Easy integration with other R packages.
+            </li>
+        </ul>
+        <h2>
+            Example
+        </h2>
+        <p>
+        A simple example using the data set of 312 cities in north america (USA and Canada) which comes with the package. The result is visualized with the R-package map (not in the code below).
+        </p>
+        <table border="0" width="80%" align="center">
+            <tr valign="top">
+                <td>
           <pre>
+&gt; ## load library and read data
 &gt; library("TSP")
 &gt; data("USCA312")
+
+&gt; ## create a TSP object from the data 
 &gt; tsp &lt;- TSP(USCA312)
 &gt; tsp
 object of class 'TSP'
 312 cities (distance   'euclidean')
+
+&gt; ## find a 2-optimal solution 
 &gt; tour &lt;- solve_TSP(tsp, method = "2-opt")
 &gt; tour
 object of class 'TOUR'
 result of method '2-opt' for 312 cities
 tour length: 41381
-    
 </pre>
-        </td>
-        <td>
-          <img src="TSP-004.png" />
-        </td>
-      </tr>
-    </table>
-    <h2>
-      Download
-    </h2>Please go to <a href=
-    "http://r-forge.r-project.org/projects/tsp/">http://r-forge.r-project.org/projects/tsp/</a>
-    to download the package.
-  </body>
+                </td>
+                <td>
+                    <img src="TSP-004.png" />
+                </td>
+            </tr>
+        </table>
+        <h2>
+            Download and further information
+        </h2>
+        <ul>
+            <li> <a href="http://cran.r-project.org/doc/vignettes/TSP/TSP.pdf">Introductory paper</a>  </li>
+            <li> <a href="http://cran.r-project.org/src/contrib/Descriptions/TSP.html">Released version on CRAN</a>  </li>
+            <li> <a href="http://r-forge.r-project.org/projects/tsp/">Development version on R-Forge</a>  </li>
+        </ul>
+    </body>
 </html>
