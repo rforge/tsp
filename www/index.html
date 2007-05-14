@@ -48,7 +48,8 @@
         <table border="0" width="80%" align="center">
             <tr valign="top">
                 <td>
-          <pre>
+                    <b>
+<pre>
 &gt; ## load library and read data
 &gt; library("TSP")
 &gt; data("USCA312")
@@ -56,16 +57,19 @@
 &gt; ## create a TSP object from the data 
 &gt; tsp &lt;- TSP(USCA312)
 &gt; tsp
+
 object of class 'TSP'
 312 cities (distance   'euclidean')
 
 &gt; ## find a 2-optimal solution 
 &gt; tour &lt;- solve_TSP(tsp, method = "2-opt")
 &gt; tour
+
 object of class 'TOUR'
 result of method '2-opt' for 312 cities
 tour length: 41381
 </pre>
+                    </b>
                 </td>
                 <td>
                     <img src="TSP-004.png" />
