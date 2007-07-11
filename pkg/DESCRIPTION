@@ -12,4 +12,4 @@ Description: Basic infrastructure and some algorithms for the traveling
 URL: http://r-forge.r-project.org/projects/tsp/
 SystemRequirements: Concorde (http://www.tsp.gatech.edu/concorde/)
 Suggests: maps, sp, maptools
-License: GPL
+License: GPLv2
