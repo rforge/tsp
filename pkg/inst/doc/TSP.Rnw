@@ -106,6 +106,9 @@ Section~\ref{sec:examples}, several examples are used to illustrate the
 package's capabilities.  Section~\ref{sec:conclusion} concludes the
 paper.
 
+A previous version of this manuscript was published in the \emph{Journal
+  of Statistical Software} \citep{TSP:Hahsler+Hornik2007}.
+
 \section{Theory}\label{sec:TSP}
 
 In this section, we briefly summarize some aspects of the TSP which are
