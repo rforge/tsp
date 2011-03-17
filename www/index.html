@@ -3,8 +3,6 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <meta name="generator" content=
-        "HTML Tidy for Linux/x86 (vers 1 September 2005), see www.w3.org" />
         <meta name="keywords" content="Traveling salesman problem, TSP solver" />
         <title>
             TSP - The traveling salesperson Problem package for R
@@ -45,11 +43,33 @@
             Example
         </h2>
         <p>
-        A simple example using the data set of 312 cities in north america (USA and Canada) which comes with the package. The result is visualized with the R-package map (not in the code below).
+        A simple example using the data set of 312 cities in North America (USA and Canada) which comes with the package. The result is visualized with the R-package map (code is available in the introductory paper below).
         </p>
         <table border="0" width="80%" align="center">
             <tr valign="top">
                 <td>
+<div style="overflow:auto;"><div class="geshifilter"><pre class="r geshifilter-R" style="font-family:monospace;"><span style="">&gt;</span> <span style="color: #666666; font-style: italic;">## load library and read data</span>
+<span style="">&gt;</span> <a href="http://inside-r.org/r-doc/base/library"><span style="color: #003399; font-weight: bold;">library</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">&quot;TSP&quot;</span><span style="color: #009900;">&#41;</span>
+<span style="">&gt;</span> <a href="http://inside-r.org/r-doc/utils/data"><span style="color: #003399; font-weight: bold;">data</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">&quot;USCA312&quot;</span><span style="color: #009900;">&#41;</span>
+&nbsp;
+<span style="">&gt;</span> <span style="color: #666666; font-style: italic;">## create a TSP object from the data </span>
+<span style="">&gt;</span> <span style="color: #003399; font-weight: bold;">tsp</span> <span style="">&lt;-</span> <a href="http://inside-r.org/packages/cran/TSP"><span style="">TSP</span></a><span style="color: #009900;">&#40;</span>USCA312<span style="color: #009900;">&#41;</span>
+<span style="">&gt;</span> <span style="color: #003399; font-weight: bold;">tsp</span>
+&nbsp;
+object of <a href="http://inside-r.org/r-doc/base/class"><span style="color: #003399; font-weight: bold;">class</span></a> <span style="color: #0000ff;">'TSP'</span>
+<span style="color: #cc66cc;">312</span> cities <span style="color: #009900;">&#40;</span>distance   <span style="color: #0000ff;">'euclidean'</span><span style="color: #009900;">&#41;</span>
+&nbsp;
+<span style="">&gt;</span> <span style="color: #666666; font-style: italic;">## find a 2-optimal solution </span>
+<span style="">&gt;</span> tour <span style="">&lt;-</span> solve_TSP<span style="color: #009900;">&#40;</span><span style="color: #003399; font-weight: bold;">tsp</span><span style="color: #339933;">,</span> method = <span style="color: #0000ff;">&quot;2-opt&quot;</span><span style="color: #009900;">&#41;</span>
+<span style="">&gt;</span> tour
+&nbsp;
+object of <a href="http://inside-r.org/r-doc/base/class"><span style="color: #003399; font-weight: bold;">class</span></a> <span style="color: #0000ff;">'TOUR'</span>
+result of method <span style="color: #0000ff;">'2-opt'</span> <span style="color: #000000; font-weight: bold;">for</span> <span style="color: #cc66cc;">312</span> cities
+tour <a href="http://inside-r.org/r-doc/base/length"><span style="color: #003399; font-weight: bold;">length</span></a><span style="">:</span> <span style="color: #cc66cc;">41381</span></pre></div></div>
+			<!--
+			<p><a href="http://www.inside-r.org/pretty-r" title="Created by Pretty R at inside-R.org">Created by Pretty R at inside-R.org</a></p>
+			-->
+			<!--
                     <b>
 <pre>
 &gt; ## load library and read data
@@ -71,6 +91,9 @@ object of class 'TOUR'
 result of method '2-opt' for 312 cities
 tour length: 41381
 </pre>
+			-->
+
+
                     </b>
                 </td>
                 <td>
@@ -79,7 +102,7 @@ tour length: 41381
             </tr>
         </table>
         <h2>
-            Download and further information
+            Downloads and further information
         </h2>
         <ul>
             <li> <a href="http://r-forge.r-project.org/projects/tsp/">Development version on R-Forge (Bug tracker, etc.)</a>  </li>
