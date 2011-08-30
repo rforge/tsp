@@ -21,6 +21,8 @@
 ## create a TSP form an ATSP by doubling the cities
 
 reformulate_ATSP_as_TSP <- function(x, infeasible = Inf, cheap = -Inf) {
+    if(!is(x, "ATSP")) stop("x is not an ATSP object!")
+    
     m <- as.matrix(x)
     
     ## scale matrix and add cheap links

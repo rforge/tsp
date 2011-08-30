@@ -22,9 +22,10 @@
 ATSP <- function(x, labels = NULL) {
     if(inherits(x, "ATSP")) return(x)
 
-    x <- as.ATSP(x)
-    if(!is.null(labels)) dimnames(x) <- list(labels, labels)
-    x
+    atsp <- as.ATSP(x)
+    
+    if(!is.null(labels)) dimnames(atps) <- list(labels, labels)
+    atsp
 }
 
 as.ATSP <- function(object) UseMethod("as.ATSP")
@@ -39,6 +40,8 @@ as.ATSP.matrix <- function(object){
     ## make sure we have labels
     if(is.null(dimnames(object))) 
         dimnames(object) <- list(1:dim(object)[1], 1: dim(object)[1])
+    if(is.null(colnames(object)))  colnames(object) <- rownames(object)
+    if(is.null(rownames(object)))  rownames(object) <- colnames(object)
 
     class(object) <- c("ATSP", class(object))
     object
