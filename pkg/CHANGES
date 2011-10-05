@@ -1,4 +1,6 @@
 
+TSP 1.0-5
+* Changed constructor for TOUR to allow for method and tour_length.
 
 TSP 1.0-4
 * Fixed bug with missing row/column labels in as.ATSP() (reported by Ian Deters )
