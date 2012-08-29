@@ -1,10 +1,10 @@
 Package: TSP
 Type: Package
 Title: Traveling Salesperson Problem (TSP)
-Version: 1.0-6
-Date: 2011-11-29
+Version: 1.0-8
+Date: 2011-xx-xx
 Author: Michael Hahsler and Kurt Hornik
-Maintainer: Michael Hahsler <michael@hahsler.net>
+Maintainer: Michael Hahsler <mhahsler@lyle.smu.edu>
 Description: Basic infrastructure and some algorithms for the traveling
     salesperson problem (also traveling salesman problem; TSP). 
     The package provides some simple algorithms and
