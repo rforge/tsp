@@ -1,6 +1,8 @@
 %\documentclass[10pt,a4paper,fleqn]{article}
 \documentclass[nojss]{jss}
 
+\usepackage[english]{babel}
+
 %% my packages
 %\usepackage{a4wide}
 %\usepackage[round,longnamesfirst]{natbib}
@@ -8,7 +10,6 @@
 %
 \usepackage{amsmath}
 \usepackage{amsfonts}
-\usepackage[utf8]{inputenc}
 %
 %\newcommand{\strong}[1]{{\normalfont\fontseries{b}\selectfont #1}}
 \newcommand{\class}[1]{\mbox{\textsf{#1}}}
