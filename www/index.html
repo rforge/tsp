@@ -15,13 +15,14 @@
         <h1>
             The TSP package for R
         </h1>
-        <h2>
-            Introduction
-        </h2>The traveling salesperson problem (TSP) is a well known
+
+<p>
+	The traveling salesperson problem (TSP) is a well known
         and important combinatorial optimization problem. The goal is
         to find the shortest tour that visits each city in a given list
         exactly once and then returns to the starting city.
-        <p>
+   </p>
+   <p>
         The TSP package offers a simple infrastructure to handle and
         solve TSPs.
         </p>
@@ -48,20 +49,20 @@
         <table border="0" width="80%" align="center">
             <tr valign="top">
                 <td>
-<div style="overflow:auto;"><div class="geshifilter"><pre class="r geshifilter-R" style="font-family:monospace;"><span style="">&gt;</span> <span style="color: #666666; font-style: italic;">## load library and read data</span>
-<span style="">&gt;</span> <a href="http://inside-r.org/r-doc/base/library"><span style="color: #003399; font-weight: bold;">library</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">&quot;TSP&quot;</span><span style="color: #009900;">&#41;</span>
-<span style="">&gt;</span> <a href="http://inside-r.org/r-doc/utils/data"><span style="color: #003399; font-weight: bold;">data</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">&quot;USCA312&quot;</span><span style="color: #009900;">&#41;</span>
+<div style="overflow:auto"><div class="geshifilter"><pre class="r geshifilter-R" style="font-family:monospace;"><span style="">R&gt;</span> <span style="color: #666666; font-style: italic;">## load library and read data</span>
+<span style="">R&gt;</span> <a href="http://inside-r.org/r-doc/base/library"><span style="color: #003399; font-weight: bold;">library</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">&quot;TSP&quot;</span><span style="color: #009900;">&#41;</span>
+<span style="">R&gt;</span> <a href="http://inside-r.org/r-doc/utils/data"><span style="color: #003399; font-weight: bold;">data</span></a><span style="color: #009900;">&#40;</span><span style="color: #0000ff;">&quot;USCA312&quot;</span><span style="color: #009900;">&#41;</span>
 &nbsp;
-<span style="">&gt;</span> <span style="color: #666666; font-style: italic;">## create a TSP object from the data </span>
-<span style="">&gt;</span> <span style="color: #003399; font-weight: bold;">tsp</span> <span style="">&lt;-</span> <a href="http://inside-r.org/packages/cran/TSP"><span style="">TSP</span></a><span style="color: #009900;">&#40;</span>USCA312<span style="color: #009900;">&#41;</span>
-<span style="">&gt;</span> <span style="color: #003399; font-weight: bold;">tsp</span>
+<span style="">R&gt;</span> <span style="color: #666666; font-style: italic;">## create a TSP object from the data </span>
+<span style="">R&gt;</span> <span style="color: #003399; font-weight: bold;">tsp</span> <span style="">&lt;-</span> <a href="http://inside-r.org/packages/cran/TSP"><span style="">TSP</span></a><span style="color: #009900;">&#40;</span>USCA312<span style="color: #009900;">&#41;</span>
+<span style="">R&gt;</span> <span style="color: #003399; font-weight: bold;">tsp</span>
 &nbsp;
 object of <a href="http://inside-r.org/r-doc/base/class"><span style="color: #003399; font-weight: bold;">class</span></a> <span style="color: #0000ff;">'TSP'</span>
 <span style="color: #cc66cc;">312</span> cities <span style="color: #009900;">&#40;</span>distance   <span style="color: #0000ff;">'euclidean'</span><span style="color: #009900;">&#41;</span>
 &nbsp;
-<span style="">&gt;</span> <span style="color: #666666; font-style: italic;">## find a 2-optimal solution </span>
-<span style="">&gt;</span> tour <span style="">&lt;-</span> solve_TSP<span style="color: #009900;">&#40;</span><span style="color: #003399; font-weight: bold;">tsp</span><span style="color: #339933;">,</span> method = <span style="color: #0000ff;">&quot;2-opt&quot;</span><span style="color: #009900;">&#41;</span>
-<span style="">&gt;</span> tour
+<span style="">R&gt;</span> <span style="color: #666666; font-style: italic;">## find a 2-optimal solution </span>
+<span style="">R&gt;</span> tour <span style="">&lt;-</span> solve_TSP<span style="color: #009900;">&#40;</span><span style="color: #003399; font-weight: bold;">tsp</span><span style="color: #339933;">,</span> method = <span style="color: #0000ff;">&quot;2-opt&quot;</span><span style="color: #009900;">&#41;</span>
+<span style="">R&gt;</span> tour
 &nbsp;
 object of <a href="http://inside-r.org/r-doc/base/class"><span style="color: #003399; font-weight: bold;">class</span></a> <span style="color: #0000ff;">'TOUR'</span>
 result of method <span style="color: #0000ff;">'2-opt'</span> <span style="color: #000000; font-weight: bold;">for</span> <span style="color: #cc66cc;">312</span> cities
@@ -72,20 +73,20 @@ tour <a href="http://inside-r.org/r-doc/base/length"><span style="color: #003399
 			<!--
                     <b>
 <pre>
-&gt; ## load library and read data
-&gt; library("TSP")
-&gt; data("USCA312")
+R&gt; ## load library and read data
+R&gt; library("TSP")
+R&gt; data("USCA312")
 
-&gt; ## create a TSP object from the data 
-&gt; tsp &lt;- TSP(USCA312)
-&gt; tsp
+R&gt; ## create a TSP object from the data 
+R&gt; tsp &lt;- TSP(USCA312)
+R&gt; tsp
 
 object of class 'TSP'
 312 cities (distance   'euclidean')
 
-&gt; ## find a 2-optimal solution 
-&gt; tour &lt;- solve_TSP(tsp, method = "2-opt")
-&gt; tour
+R&gt; ## find a 2-optimal solution 
+R&gt; tour &lt;- solve_TSP(tsp, method = "2-opt")
+R&gt; tour
 
 object of class 'TOUR'
 result of method '2-opt' for 312 cities
@@ -96,17 +97,25 @@ tour length: 41381
 
                     </b>
                 </td>
-                <td>
+                <td valign="middle">
                     <img src="TSP-004.png" />
                 </td>
             </tr>
         </table>
         <h2>
-            Downloads and further information
+            Download &amp; Installation
         </h2>
         <ul>
-            <li> <a href="http://r-forge.r-project.org/projects/tsp/">Development version on R-Forge (Bug tracker, etc.)</a>  </li>
             <li> <a href="http://cran.r-project.org/package=TSP">Stable release on CRAN</a>  </li>
+            <li> <a href="http://r-forge.r-project.org/projects/tsp/">Development version on R-Forge (Bug tracker, etc.)</a>  </li>
+	    </ul>
+	    
+	    <p>Or install directly in R via: R&gt; <span style="color: #003399; font-weight: bold;">install.packages</span>(<span style="color: #0000ff;">&quot;TSP&quot;</span>)</p>	    
+	    
+    <h2>
+            Further Information
+        </h2>
+	    <ul>
 	    <li>Michael Hahsler and Kurt Hornik, <a href="http://www.jstatsoft.org/v23/i02/paper">TSP - Infrastructure for the Traveling Salesperson
 	    Problem,</a> Journal of Statistical Software 22(2), 2007</li>
 	    <li> <a href="http://cran.r-project.org/web/packages/TSP/vignettes/TSP.pdf">Introductory paper with complete examples</a>  </li>
@@ -115,9 +124,15 @@ tour length: 41381
             Concorde TSP solver home page</a></li>
         </ul>
 
-	<p>
-	<a href="http://michael.hahsler.net">Michael Hahsler.</a>
-	</p>
-    
+	<hr>
+	&copy; <a href="http://michael.hahsler.net">Michael Hahsler</a><br />
+	Last update: <script type="text/javascript">
+	    //<![CDATA[
+	    <!--
+	    document.write(document.lastModified.toString());
+	    //-->
+	    //]]>
+	</script>
+	
     </body>
 </html>
