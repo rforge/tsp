@@ -35,7 +35,7 @@
 \Shorttitle{Infrastructure for the TSP} %% a short title (if necessary)
 
 %% an abstract and keywords
-\Abstract{ The traveling salesperson (or, salesman) problem (TSP) is a
+\Abstract{ The traveling salesperson problem (also known as traveling salesman problem or TSP) is a
 well known and important combinatorial optimization problem.  The goal
 is to find the shortest tour that visits each city in a given list
 exactly once and then returns to the starting city.  Despite this
