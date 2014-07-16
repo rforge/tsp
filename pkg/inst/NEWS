@@ -1,6 +1,7 @@
-Changes in version 1.0-9 (xx/xx/2014)
+Changes in version 1.0-9 (7/16/2014)
     * Check for NAs in distances.
     * +INF and -INF are now handled in solve_TSP.
+    * fixed single quotes in vignette.
 
 Changes in version 1.0-8 (9/6/2013)
     * service release.
