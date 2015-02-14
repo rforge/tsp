@@ -10,7 +10,7 @@
  * R_matrix ... matrix with distances
  * R_t .. tour
  *
- * neg inf is nt handled correctly!
+ * neg inf is not handled correctly!
  *
  */
 
