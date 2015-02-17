@@ -19,83 +19,108 @@
 
 
 ## TSP
-solve_TSP.TSP <- function(x, method = NULL, control = NULL) {
-  .solve_TSP(x, method, control)
+solve_TSP.TSP <- function(x, method = NULL, control = NULL, ...) {
+  .solve_TSP(x, method, control, ...)
 }
 
 ## ATSP
-solve_TSP.ATSP <- function(x, method = NULL, control = NULL) {
-  .solve_TSP(x, method, control)
+solve_TSP.ATSP <- function(x, method = NULL, control = NULL, ...) {
+  .solve_TSP(x, method, control, ...)
+}
+
+## ETSP
+solve_TSP.ETSP <- function(x, method = NULL, control = NULL, ...) {
+  .solve_TSP(as.TSP(x), method, control, ...)
 }
 
 ## generic
-solve_TSP <- function(x, method = NULL, control = NULL)
+solve_TSP <- function(x, method = NULL, control = NULL, ...)
   UseMethod("solve_TSP")
 
 
 ## workhorse
-.solve_TSP <- function(x, method = NULL, control = NULL) {
+.solve_TSP <- function(x, method = NULL, control = NULL, ...) {
   
+  ## add ... to control
+  control <- c(control, list(...))
+
   ## methods
   methods <- c(
-    "nearest_insertion",    ## standard
+    "nearest_insertion",
     "farthest_insertion",     
     "cheapest_insertion",     
     "arbitrary_insertion",     
     "nn",
     "repetitive_nn",
-    "2-opt",
+    "2-opt", ### deprecated
+    "two_opt",
     "concorde",
     "linkern"
   )
   
-  if(is.null(method)) methodNr <- 1
-  else methodNr <- pmatch(tolower(method), tolower(methods))
-  if(is.na(methodNr)) stop (paste("Unknown method:",sQuote(method)))
+  ## default is arbitrary_insertion + two_opt
+  if(is.null(method)) {
+    method <- "arbitrary_insertion"
+    if(is.null(control$two_opt)) control <- c(control, list(two_opt = TRUE))
+  }
+  else method <- match.arg(tolower(method), methods)
   
-  ### concorde fixes INF differently
-  if(methodNr == 8) {
-    order <- tsp_concorde(x, control = control)
-  }else{
+  ## do rep?
+  if(!is.null(control$rep)) {
+      n <- control$rep
+      control$rep <- NULL
     
-    ### fix INF first
-    if(any(is.finite(x))) {
-      x_pos_inf <- x == Inf
-      x_neg_inf <- x == -Inf
-      
-      max_x <- max(x[!x_pos_inf], na.rm = TRUE) 
-      min_x <- min(x[!x_neg_inf], na.rm = TRUE)
-      range_x <- max_x-min_x
-      
-      if(any(x_pos_inf)) {
-        x[x_pos_inf] <- max_x + range_x
+      if(method == "concorde" || method == "linkern") {
+        warning("No repetitions for concorde or linkern used!")
+        n <- 1
       }
-      if(any(x_neg_inf)) {
-        x[x_neg_inf] <- min_x - range_x
-      }
-    }
     
-    ## work horses
-    if(methodNr == 1) {
-      order <- tsp_insertion(x, type = "nearest", control = control)
-    }else if(methodNr == 2) {
-      order <- tsp_insertion(x, type = "farthest", control = control)
-    }else if(methodNr == 3) {
-      order <- tsp_insertion(x, type = "cheapest", control = control)
-    }else if(methodNr == 4) {
-      order <- tsp_insertion(x, type = "arbitrary", control = control)
-    }else if(methodNr == 5) {
-      order <- tsp_nn(x, control = control)
-    }else if(methodNr == 6) {
-      order <- tsp_repetitive_nn(x, control = control)
-    }else if(methodNr == 7) {
-      order <- tsp_two_opt(x, control = control)
-      #    }else if(methodNr == 8) {
-      #        order <- tsp_concorde(x, control = control)
-    }else if(methodNr == 9) {
-      order <- tsp_linkern(x, control = control)
-    }
+      if(method == "repetitive_nn") n <- 1
+    
+      l <- replicate(n, .solve_TSP(x, method, control), 
+        simplify = FALSE)
+      l <- l[[which.min(sapply(l, attr, "tour_length"))]]
+      attr(l, "method") <- paste(attr(l, "method"), "_rep_", n, sep="")
+      return(l)
   }
   
-  TOUR(order, method=methods[methodNr], tsp=x)
+
+  ### concorde fixes INF differently
+  if(method == "concorde") {
+    order <- tsp_concorde(x, control = control)
+  }else if(method == "linkern") {
+    order <- tsp_linkern(x, control = control)
+  }else{
+    
+    ## punish Inf with max + 2*range 
+    i <- which(is.infinite(x))
+    if(length(i) > 0) { 
+      range_x <- range(x, na.rm = TRUE, finite = TRUE)
+      x[i[x[i] == Inf]] <- range_x[2] + sum(range_x)
+      x[i[x[i] == -Inf]] <- range_x[1] - sum(range_x)
+    }
+    
+    ## algorithms need to deal with NA
+    
+    ## work horses
+    order <- switch(method,
+      nearest_insertion = tsp_insertion(x, type = "nearest", control = control),
+      farthest_insertion = tsp_insertion(x, type = "farthest", control = control),
+      cheapest_insertion = tsp_insertion(x, type = "cheapest", control = control),
+      arbitrary_insertion = tsp_insertion(x, type = "arbitrary", control = control),
+      nn = tsp_nn(x, control = control),
+      repetitive_nn = tsp_repetitive_nn(x, control = control),
+      two_opt = tsp_two_opt(x, control = control),
+      '2-opt' = tsp_two_opt(x, control = control)
+    )
+    
+  }
+  
+  ### do two_opt
+  if(!is.null(control$two_opt) && control$two_opt) { 
+    order <- tsp_two_opt(x, control = list(tour = order))
+    method <- paste(method , "+two_opt", sep = "")
+  }
+  
+  TOUR(order, method=method, tsp=x)
 }

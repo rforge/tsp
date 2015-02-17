@@ -16,7 +16,8 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-
+## generic
+tour_length <- function(x, order) UseMethod("tour_length")
 
 tour_length.TSP <- function(x, order) {
    
@@ -34,5 +35,22 @@ tour_length.ATSP <- function(x, order) {
     .Call("tour_length_matrix", x, order, PACKAGE="TSP")
 }
 
-## generic
-tour_length <- function(x, order) UseMethod("tour_length")
+
+tour_length.ETSP <- function(x, order) {
+  n <- n_of_cities(x)
+  if(n != nrow(x)) stop("x and order do not have the same number of cities!")
+  
+  if(missing(order)) order <- 1:n
+  
+  tl <- 0
+  for(i in 1:(n-1)) {
+    tl <- tl + dist(x[order[i:(i+1)],])
+  }
+  
+  tl <- tl + dist(rbind(x[order[n]], x[order[1]]))
+  
+  as.numeric(tl)
+}
+
+### faster for small n but takes O(n^2) memory
+#tour_length.ETSP <- function(x, order) tour_length(as.TSP(x), order)

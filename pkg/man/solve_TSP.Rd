@@ -7,16 +7,22 @@
   Common interface to all TSP solvers in this package.
 }
 \usage{
-solve_TSP(x, method, control)
+solve_TSP(x, method = NULL, control = NULL, ...)
 }
 \arguments{
   \item{x}{ the TSP given as an object of class \code{TSP} or \code{ATSP}.}
-  \item{method}{ method to solve the TSP (default: nearest insertion 
-      algorithm; see details). }
+  \item{method}{ method to solve the TSP (default: arbitrary insertion 
+    algorithm with two_opt refinement. }
   \item{control}{ a list of arguments passed on to the TSP solver
-      selected by \code{method}.}
+    selected by \code{method}.}
+  \item{...}{ additional arguments are added to control \code{control}.}
 }
 \details{
+All heuristics can be used with the control arguments \code{repetitions} 
+  (uses the best from that many repetitions with random starts)
+  and \code{two_opt} (a logical indicating if twp_opt refinement should be 
+  performt).
+  
 Currently the following methods are available: 
 \describe{
 \item{\code{"nearest_insertion"}, 
@@ -52,10 +58,13 @@ Currently the following methods are available:
     farthest insertion is to link cities far away into the tour fist to
     establish an outline of the whole tour early.
 
-    Additional control options: \describe{\item{\code{start}}{index of the
-	first city (default: random city).}
+    Additional control options: 
+    \describe{
+        \item{\code{start}}{index of the
+	      first city (default: random city).}
     }
 }
+
 
 \item{\code{"nn", "repetitive_nn"}}{ 
     Nearest neighbor and repetitive nearest neighbor algorithms for
@@ -68,30 +77,33 @@ Currently the following methods are available:
     Repetitive nearest neighbor constructs a nearest neighbor tour for each
     city as the starting point and returns the shortest tour found.
 
-    Additional control options: \describe{
-      \item{\code{start}}{ index of the
-	first city (default: random city). }
+    Additional control options: 
+\describe{
+      \item{\code{start}}{ index of the first city (default: random city). }
 }
 }
 
-\item{\code{"2-opt"}}{Two edge exchange improvement procedure (Croes 1958).
+\item{\code{"two_opt"}}{Two edge exchange improvement procedure (Croes 1958).
     
-    This procedure systematically exchanges two edges in the graph represented
+    This is a tour refinement procedure which systematically exchanges two 
+    edges in the graph represented
     by the distance matrix till no improvements are possible. Exchanging two
     edges is equal to reversing part of the tour. The resulting tour is called
     \emph{2-optimal.} 
 
-    By default, improvement starts with a random tour.
+    This method can be applied to tours created by other methods or used as
+    its own method. In this case improvement starts with a random tour.
     
     Additional control options: 
     \describe{ 
     \item{\code{tour}}{ an existing tour which should be improved.
     If no tour is given, a random tour is used. }
-    \item{\code{rep}}{ number of times to try 2-opt with a different initial
+    \item{\code{two_opt_repetitions}}{ number of times to try 
+        two_opt with a different initial
         random tour (default: 1). }
     }
     }
-    
+
 \item{\code{"concorde"}}{Concorde algorithm (Applegate et al. 2001).
 
     Concorde is an advanced exact TSP solver for \emph{only symmetric} TSPs
@@ -190,22 +202,27 @@ G.A. Croes (1958): A method for solving traveling-salesman problems.
 S. Lin and B. Kernighan (1973): An effective heuristic algorithm for the
 traveling-salesman problem. \emph{Operations Research, 21(2): 498--516.}
 
-L.S. Pitsoulis and M.G.C. Resende (2001): Greedy randomized adaptive search
-procedures.  In P.M. Pardalos and M.G.C. Resende, editors, Handbook of Applied
-Optimization, pp. 168--181.
+%L.S. Pitsoulis and M.G.C. Resende (2001): Greedy randomized adaptive search
+%procedures.  In P.M. Pardalos and M.G.C. Resende, editors, Handbook of Applied
+%Optimization, pp. 168--181.
 
 D.J. Rosenkrantz, R. E. Stearns, and Philip M. Lewis II (1977): An analysis of
 several heuristics for the traveling salesman problem.  \emph{SIAM Journal on
 Computing, 6(3):563--581.}
 }
 \examples{
+## solve a simple Euclidean TSP (using the default method)
+etsp <- ETSP(data.frame(x = runif(20), y = runif(20)))
+tour <- solve_TSP(etsp)
+tour
+plot(etsp, tour)
+  
+  
+## compare methods
 data("USCA50")
 USCA50
-
-## methods
 methods <- c("nearest_insertion", "cheapest_insertion", "farthest_insertion", 
-    "arbitrary_insertion", "nn", "repetitive_nn", "2-opt")
-
+  "arbitrary_insertion", "nn", "repetitive_nn", "two_opt")
 
 ## calculate tours
 tours <- lapply(methods, FUN = function(m) solve_TSP(USCA50, method = m))
@@ -217,12 +234,20 @@ tours$concorde  <- solve_TSP(USCA50, method = "concorde")
 tours$linkern  <- solve_TSP(USCA50, method = "linkern")
 }
 
+
+## add some tours using repetition and two_opt refinements   
+tours$'nn+two_opt' <- solve_TSP(USCA50, method="nn", two_opt=TRUE)  
+tours$'nn+rep_10' <- solve_TSP(USCA50, method="nn", rep=10)  
+tours$'nn+two_opt+rep_10' <- solve_TSP(USCA50, method="nn", two_opt=TRUE, rep=10)  
+tours$'arbitrary_insertion+two_opt' <- solve_TSP(USCA50)  
+  
 ## show first tour
 tours[[1]]
 
 ## compare tour lengths
 opt <- 14497 # optained by concorde
-tour_lengths <- c(sapply(tours, FUN = attr, "tour_length"), optimal = opt) 
+tour_lengths <- c(sort(sapply(tours, FUN = attr, "tour_length"), 
+  decreasing = TRUE), optimal = opt) 
 dotchart(tour_lengths/opt*100-100, xlab = "percent excess over optimum")
 }
 \keyword{optimize}% at least one, from doc/KEYWORDS

@@ -22,14 +22,14 @@
 
 tsp_nn <- function(x, control = NULL) {
     ## parameter x comes checked from solve_TSP/solve_ATSP
-
+  
     n <- n_of_cities(x)
 
     ## we use a matrix for now (coveres TSP and ATSP)
     x <- as.matrix(x)
 
     start <- control$start
-    if(is.null(start)) start <- sample(1:n, 1)
+    if(is.null(start)) start <- sample(n, 1)
     if(start < 0 || start > n) stop(paste("illegal value for", 
             sQuote("start")))
 

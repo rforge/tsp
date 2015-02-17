@@ -665,7 +665,7 @@ set.seed(1234)
 
 <<fig=TRUE, include=FALSE, label=dotchart_USCA50, width=7, height=4>>=
 methods <- c("nearest_insertion", "farthest_insertion", "cheapest_insertion",
-    "arbitrary_insertion", "nn", "repetitive_nn", "2-opt")
+    "arbitrary_insertion", "nn", "repetitive_nn", "two_opt")
 
 tours <- sapply(methods, FUN = function(m) solve_TSP(USCA50, method = m),
                 simplify = FALSE)         
