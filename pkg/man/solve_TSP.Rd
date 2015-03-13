@@ -213,7 +213,7 @@ Computing, 6(3):563--581.}
 \examples{
 ## solve a simple Euclidean TSP (using the default method)
 etsp <- ETSP(data.frame(x = runif(20), y = runif(20)))
-tour <- solve_TSP(etsp)
+tour <- solve_TSP(etsp, method="arbit")
 tour
 plot(etsp, tour)
   

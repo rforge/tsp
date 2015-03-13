@@ -17,6 +17,6 @@ Classification/ACM: G.1.6, G.2.1, G.4
 URL: http://lyle.smu.edu/IDA/seriation
 Depends: R (>= 2.14.0)
 Imports: graphics
-Suggests: maps, sp, maptools
+Suggests: maps, sp, maptools, testthat
 License: GPL-3
 Copyright: All code is Copyright (C) Michael Hahsler and Kurt Hornik.

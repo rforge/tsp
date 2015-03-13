@@ -27,12 +27,10 @@ tsp_insertion <- function(x, type = "nearest", control = NULL){
   ## lenght(x) == 1
   choose1 <- function(x) if(length(x) > 1) sample(x, 1) else x
   
-  min_nonNA <- function(x) { x[is.na(x)] <- Inf; min(x) }
-  
   ## this is slower than which.min and which.max but works also
   ## correctly for only values Inf in x and breaks ties randomly 
-  choose1_min <- function(x) { x[is.na(x)] <- Inf; choose1(which(x == min(x))) }
-  choose1_max <- function(x) { x[is.na(x)] <- -Inf; choose1(which(x == max(x))) }
+  choose1_min <- function(x) choose1(which(x == min(x))) 
+  choose1_max <- function(x) choose1(which(x == max(x)))
   
   types <- c("nearest", "farthest", "cheapest", "arbitrary")
   type_num <- pmatch(type, types)
@@ -73,7 +71,7 @@ tsp_insertion <- function(x, type = "nearest", control = NULL){
       }
       
       ds <- sapply(1:length(ks), FUN = 
-          function(i)  min_nonNA(m[i, , drop = FALSE]))
+          function(i)  min(m[i, , drop = FALSE]))
       
       ## nearest/farthest insertion
       winner_index <- if(type_num == 1) choose1_min(ds) 
@@ -85,7 +83,7 @@ tsp_insertion <- function(x, type = "nearest", control = NULL){
     ## cheapest
     else if(type_num == 3) {
       winner_index <- choose1_min(sapply(ks, FUN =
-          function(k) min_nonNA(.Call("insertion_cost", x, order, k, 
+          function(k) min(.Call("insertion_cost", x, order, k, 
             PACKAGE="TSP")) ))
       k <- ks[winner_index]
       
@@ -113,3 +111,34 @@ tsp_insertion <- function(x, type = "nearest", control = NULL){
   
   order
 }
+
+### faster arbitrary insertion (random sampling takes care of breaking ties)
+tsp_insertion_arbitrary <- function(x, control = NULL){
+  ## x comes checked form solve_TSP/solve_ATSP
+  n <- n_of_cities(x)
+  
+  ## we use a matrix for now (covers TSP and ATSP)
+  x <- as.matrix(x)
+  x[is.na(x)] <- Inf
+  
+  ## random order
+  rorder <- sample(n)
+  x <- x[rorder, rorder]
+  
+  ## FIXME: start city
+  
+  ## place first two cities
+  order <- integer(n)
+  order[1:2] <- 1:2
+  
+  ## place other cities
+  for(i in 3:n) {
+    pos <- which.min(.Call("insertion_cost", x, order[1:(i-1L)], i, 
+      PACKAGE="TSP")) + 1L
+    order[((pos):i)+1L] <- order[(pos):i]
+    order[pos] <- i
+  }
+  
+  rorder[order]
+}
+

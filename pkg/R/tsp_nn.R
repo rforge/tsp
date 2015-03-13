@@ -33,27 +33,25 @@ tsp_nn <- function(x, control = NULL) {
     if(start < 0 || start > n) stop(paste("illegal value for", 
             sQuote("start")))
 
-    ## place first city
     placed <- logical(n)
-    placed[start] <- TRUE
-    current <- start
     order <- integer(n)
-    order[1] <- start
 
-    while(any(placed == FALSE)) {
-        ## find nearest city
-        rest <- which(!placed)
+    ## place first city
+    current <- start
+    order[1L] <- current
+    placed[current] <- TRUE
+
+    while(length(rest <- which(!placed)) > 0L) {
         ## nearest <- rest[which.min(x[current,rest])]
         ## which.min has problems with Inf
         ## so we can break ties randomly now too
         x_sub <- x[current, rest]
-        nearest <- rest[which(x_sub == min(x_sub))]
-        if(length(nearest) > 1) nearest <- sample(nearest, 1)
+        current <- rest[which(x_sub == min(x_sub, na.rm = TRUE))]
+        if(length(current) > 1L) current <- sample(current, 1)
 
         ## place city
-        order[n + 1 - length(rest)] <- nearest
-        placed[nearest] <- TRUE
-        current <- nearest
+        order[n + 1L - length(rest)] <- current
+        placed[current] <- TRUE
     }
 
     order
