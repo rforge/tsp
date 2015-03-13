@@ -38,17 +38,28 @@ solve_TSP <- function(x, method = NULL, control = NULL, ...)
   UseMethod("solve_TSP")
 
 
+## Deal with Inf: punish (-)Inf with max (min) +(-) 2*range 
+.replaceInf <- function(x, pInf = NULL, nInf = NULL) {
+  if(any(is.infinite(x))) { 
+    range_x <- range(x, na.rm = TRUE, finite = TRUE)
+    if(is.null(pInf)) pInf <- range_x[2] + 2* diff(range_x)
+    if(is.null(nInf)) nInf <- range_x[1] - 2* diff(range_x)
+    x[x == Inf] <- pInf
+    x[x == -Inf] <- nInf
+  }
+  x
+}
+
 ## workhorse
 .solve_TSP <- function(x, method = NULL, control = NULL, ...) {
-  
-  ## check for NAs
-  if(any(is.na(x))) stop("NAs not allowed!")
-  
+    
   ## add ... to control
   control <- c(control, list(...))
   
   ## methods
   methods <- c(
+    "identity",
+    "random",
     "nearest_insertion",
     "farthest_insertion",     
     "cheapest_insertion",     
@@ -68,39 +79,37 @@ solve_TSP <- function(x, method = NULL, control = NULL, ...)
   } else method <- match.arg(tolower(method), methods)
   
   
-  ## punish (-)Inf with max (min) +(-) 2*range 
-  x_orig <- x
-  if(any(is.infinite(x))) { 
-    range_x <- range(x, na.rm = TRUE, finite = TRUE)
-    pInf <- range_x[2] + 2*(range_x[2] - range_x[1])
-    nInf <- range_x[1] - 2*(range_x[2] - range_x[1])
-    x[x == Inf] <- pInf
-    x[x == -Inf] <- nInf
-  }
+  ## check for NAs
+  if(any(is.na(x))) stop("NAs not allowed!")
+  
+  ## Inf
+  x_ <- .replaceInf(x)
   
   ## work horses
   .solve_TSP_worker <- function() {
     order <- switch(method,
-      concorde = tsp_concorde(x, control = control),
-      linkern = tsp_linkern(x, control = control),
-      nearest_insertion = tsp_insertion(x, type = "nearest", control = control),
-      farthest_insertion = tsp_insertion(x, type = "farthest", control = control),
-      cheapest_insertion = tsp_insertion(x, type = "cheapest", control = control),
-      #      arbitrary_insertion = tsp_insertion(x, type = "arbitrary", control = control),
-      arbitrary_insertion = tsp_insertion_arbitrary(x, control = control),
-      nn = tsp_nn(x, control = control),
-      repetitive_nn = tsp_repetitive_nn(x, control = control),
-      two_opt = tsp_two_opt(x, control = control),
-      '2-opt' = tsp_two_opt(x, control = control)
+      identity = seq(n_of_cities(x_)),
+      random = sample(n_of_cities(x_)),
+      nearest_insertion = tsp_insertion(x_, type = "nearest", control = control),
+      farthest_insertion = tsp_insertion(x_, type = "farthest", control = control),
+      cheapest_insertion = tsp_insertion(x_, type = "cheapest", control = control),
+      #      arbitrary_insertion = tsp_insertion(x_, type = "arbitrary", control = control),
+      arbitrary_insertion = tsp_insertion_arbitrary(x_, control = control),
+      nn = tsp_nn(x_, control = control),
+      repetitive_nn = tsp_repetitive_nn(x_, control = control),
+      two_opt = tsp_two_opt(x_, control = control),
+      '2-opt' = tsp_two_opt(x_, control = control),
+      concorde = tsp_concorde(x_, control = control),
+      linkern = tsp_linkern(x_, control = control)
     )
     
     ### do refinement two_opt
     if(!is.null(control$two_opt) && control$two_opt) { 
-      order <- tsp_two_opt(x, control = list(tour = order))
+      order <- tsp_two_opt(x_, control = list(tour = order))
       method <- paste(method , "+two_opt", sep = "")
     }
     
-    TOUR(order, method=method, tsp=x_orig)
+    TOUR(order, method=method, tsp=x)
   }
   
   ## do rep?

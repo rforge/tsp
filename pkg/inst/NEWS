@@ -1,8 +1,11 @@
 Changes in version 1.0-11 (x/x/2015)
     * ETSP (Euclidean TSP) added.
-    * method "2-opt" is now called "two_opt"
-    * solve_TSP gained repetition and two_opt
-    * default method is now arbitrary_insertion with two_opt refinement
+    * method "2-opt" is now called "two_opt".
+    * solve_TSP gained methods "identity" and "random".
+    * solve_TSP gained options "repetition" and "two_opt".
+    * default method is now arbitrary_insertion with two_opt refinement.
+    * generic and arguments for tour_lengh have changed (fist argument is now a 
+        tour).
 
 Changes in version 1.0-10 (2/3/2015)
     * added check for argument cut in cut_tour

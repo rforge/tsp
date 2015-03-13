@@ -10,7 +10,8 @@
 solve_TSP(x, method = NULL, control = NULL, ...)
 }
 \arguments{
-  \item{x}{ the TSP given as an object of class \code{TSP} or \code{ATSP}.}
+  \item{x}{ the TSP given as an object of class \code{TSP}, \code{ATSP}
+    or \code{ETSP}.}
   \item{method}{ method to solve the TSP (default: arbitrary insertion 
     algorithm with two_opt refinement. }
   \item{control}{ a list of arguments passed on to the TSP solver
@@ -18,13 +19,26 @@ solve_TSP(x, method = NULL, control = NULL, ...)
   \item{...}{ additional arguments are added to control \code{control}.}
 }
 \details{
+Treatment of \code{NA}s and infinite values in \code{x}: 
+\code{TSP} and \code{ATSP} contain distances and \code{NA}s are not allowed. 
+\code{Inf} is allowed and can be used to model the missing edges in 
+incomplete graphs 
+(i.e., the distance between the two objects is infinite). 
+Internally, \code{Inf} is replaced by a large value given by 
+\eqn{max(x) + 2 range(x)}.
+Note that the solution might still place the two objects next to each other 
+(e.g., if \code{x} contains several unconnected subgraphs) 
+which results in a path length of \code{Inf}.   
+  
 All heuristics can be used with the control arguments \code{repetitions} 
-  (uses the best from that many repetitions with random starts)
-  and \code{two_opt} (a logical indicating if twp_opt refinement should be 
-  performt).
+(uses the best from that many repetitions with random starts)
+and \code{two_opt} (a logical indicating if two_opt refinement should be 
+performed).
   
 Currently the following methods are available: 
 \describe{
+\item{\code{"identity"}, \code{"random"}}{return a tour repesenting the order 
+    in the data (identity order) or a random order.}
 \item{\code{"nearest_insertion"}, 
     \code{"farthest_insertion"},
     \code{"cheapest_insertion"}, 
@@ -127,9 +141,7 @@ Currently the following methods are available:
     \eqn{10^{precision}} before being passed on to Concorde. Note that
     therefore the results produced by Concorde (especially lower and upper
     bounds) need to be divided by \eqn{10^{precision}} (i.e., the decimal point
-    has to be shifted \code{precision} placed to the left). Note also, that
-    Concorde cannot handle \code{Inf} which is therefore replaced by 2 times
-    the maximum value in \code{x} (ignoring the infinity entries). The
+    has to be shifted \code{precision} placed to the left). The
     interface to Concorde uses \code{write_TSPLIB} (see there for more
     information).}
     }
@@ -215,14 +227,16 @@ Computing, 6(3):563--581.}
 etsp <- ETSP(data.frame(x = runif(20), y = runif(20)))
 tour <- solve_TSP(etsp, method="arbit")
 tour
+tour_length(tour)
 plot(etsp, tour)
   
   
 ## compare methods
 data("USCA50")
 USCA50
-methods <- c("nearest_insertion", "cheapest_insertion", "farthest_insertion", 
-  "arbitrary_insertion", "nn", "repetitive_nn", "two_opt")
+methods <- c("identity", "random", "nearest_insertion", 
+  "cheapest_insertion", "farthest_insertion", "arbitrary_insertion", 
+  "nn", "repetitive_nn", "two_opt")
 
 ## calculate tours
 tours <- lapply(methods, FUN = function(m) solve_TSP(USCA50, method = m))
@@ -245,8 +259,8 @@ tours$'arbitrary_insertion+two_opt' <- solve_TSP(USCA50)
 tours[[1]]
 
 ## compare tour lengths
-opt <- 14497 # optained by concorde
-tour_lengths <- c(sort(sapply(tours, FUN = attr, "tour_length"), 
+opt <- 14497 # obtained by Concorde
+tour_lengths <- c(sort(sapply(tours, tour_length), 
   decreasing = TRUE), optimal = opt) 
 dotchart(tour_lengths/opt*100-100, xlab = "percent excess over optimum")
 }

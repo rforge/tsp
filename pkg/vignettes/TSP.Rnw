@@ -673,7 +673,7 @@ tours <- sapply(methods, FUN = function(m) solve_TSP(USCA50, method = m),
 
 tours[[1]]
 
-dotchart(c(sapply(tours, FUN = attr, "tour_length"), optimal = 14497), 
+dotchart(sort(c(sapply(tours, tour_length), optimal = 14497)), 
 xlab = "tour length", xlim = c(0, 20000))
 @
 

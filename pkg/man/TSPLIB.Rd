@@ -16,19 +16,18 @@ write_TSPLIB(x, file, precision = 6, inf = NULL, neg_inf = NULL)
 read_TSPLIB(file, precision = 0)
 }
 \arguments{
-  \item{x}{ an object of class \code{TSP} or \code{ATSP}.}
+  \item{x}{ an object of class \code{TSP}, \code{ATSP} or \code{ETSP}. 
+    \code{NA}s are not allowed.}
   \item{file}{ file name or a \code{connection}.  }
   \item{precision}{ controls the number of decimal places used to represent
       distances (see details).  If \code{x} already is \code{integer}, this
       argument is ignored and \code{x} is used as is.}
   \item{inf}{ replacement value for \code{Inf} (TSPLIB format cannot handle
-      \code{Inf}). If \code{inf} is \code{NULL}, the default value of 2 times
-      the maximum value in \code{x} (ignoring the infinity entries) is used.}
+      \code{Inf}). If \code{inf} is \code{NULL}, a large value of 
+      \eqn{max(x) + 2 range(x)} (ignoring infinite entries) is used. }
   \item{neg_inf}{ replacement value for \code{-Inf}. 
-      If no value is specified, the default value of
-      2 times the smallest neg. number is used. 
-      If \code{x} only contains positive
-      values, -1 is used.}
+      If no value is specified, a small value of
+      \eqn{min(x) - 2 range(x)} (ignoring infinite entries) is used. }
 }
 \details{
 In the TSPLIB format distances are represented by integer values. Therefore, if

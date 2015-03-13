@@ -43,6 +43,7 @@ S3method(labels, ETSP)
 S3method(image, ETSP)
 S3method(plot, ETSP)
 
+S3method(tour_length, TOUR)
 S3method(tour_length, TSP)
 S3method(tour_length, ATSP)
 S3method(tour_length, ETSP)

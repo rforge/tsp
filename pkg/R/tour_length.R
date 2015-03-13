@@ -17,26 +17,36 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 ## generic
-tour_length <- function(x, order) UseMethod("tour_length")
+tour_length <- function(x, ...) UseMethod("tour_length")
 
-tour_length.TSP <- function(x, order) {
-   
-    n <- n_of_cities(x)
-    if(missing(order)) order <- 1:n
-
-    .Call("tour_length_dist", x, order, PACKAGE="TSP")
-}
-
-tour_length.ATSP <- function(x, order) {
+tour_length.TOUR <- function(x, tsp = NULL, ...) {
+  if(is.null(tsp)) { 
+    len <- attr(x, "tour_length")
+    if(is.null(len)) len <- NA
+    return(len)
+  }
     
-    n <- n_of_cities(x)
-    if(missing(order)) order <- 1:n
+  tour_length(x = tsp, order = x)
+}
 
-    .Call("tour_length_matrix", x, order, PACKAGE="TSP")
+tour_length.TSP <- function(x, order, ...) {
+  
+  n <- n_of_cities(x)
+  if(missing(order)) order <- 1:n
+  
+  .Call("tour_length_dist", x, order, PACKAGE="TSP")
+}
+
+tour_length.ATSP <- function(x, order, ...) {
+  
+  n <- n_of_cities(x)
+  if(missing(order)) order <- 1:n
+  
+  .Call("tour_length_matrix", x, order, PACKAGE="TSP")
 }
 
 
-tour_length.ETSP <- function(x, order) {
+tour_length.ETSP <- function(x, order, ...) {
   n <- n_of_cities(x)
   if(n != nrow(x)) stop("x and order do not have the same number of cities!")
   

@@ -117,6 +117,9 @@ tsp_linkern <- function(x, control = NULL){
   ## check x
   if(!inherits(x, "TSP")) stop("Concorde's LK only solves symmetric TSPs.")
   
+  ## have to set -r for small instances <8
+  if(n_of_cities(x) <=8) clo <- paste(clo, "-k", n_of_cities(x))
+  
   ## check for possible overflows
   max_x <- max(abs(x[is.finite(x)]))
   MAX <- 2^31 - 1

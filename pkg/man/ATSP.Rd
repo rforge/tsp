@@ -69,9 +69,9 @@ labels(atsp)
 
 ## calculate a tour
 tour <- solve_TSP(atsp, method = "nn")
-
-tour_length(atsp)
-tour_length(atsp, tour)
+tour
+  
+tour_length(tour)
 
 image(atsp, tour)
 }
