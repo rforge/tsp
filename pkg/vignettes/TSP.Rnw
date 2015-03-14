@@ -596,7 +596,7 @@ The available algorithms are shown in Table~\ref{tab:methods}.
     Cheapest insertion & \code{"cheapest\_insertion"} & TSP/ATSP  \\
     Arbitrary insertion & \code{"arbitrary\_insertion"} & TSP/ATSP  \\
     Concorde TSP solver & \code{"concorde"} & TSP  \\
-    2-Opt improvement heuristic &  \code{"2-opt"}  & TSP/ATSP \\
+    2-Opt improvement heuristic &  \code{"two\_opt"}  & TSP/ATSP \\
     Chained Lin-Kernighan &  \code{"linkern"}  & TSP \\
 \hline
 \end{tabular}
@@ -801,7 +801,7 @@ ny <- which(labels(USCA312) == "New York, NY")
 atsp[, ny] <- 0
 initial_tour <- solve_TSP(atsp, method="nn")
 initial_tour
-tour <- solve_TSP(atsp, method ="2-opt", control = list(tour = initial_tour))
+tour <- solve_TSP(atsp, method ="two_opt", control = list(tour = initial_tour))
 tour
 path <- cut_tour(tour, ny, exclude_cut = FALSE)
 

@@ -16,7 +16,9 @@
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-
+## generic
+solve_TSP <- function(x, method = NULL, control = NULL, ...)
+  UseMethod("solve_TSP")
 
 ## TSP
 solve_TSP.TSP <- function(x, method = NULL, control = NULL, ...) {
@@ -30,12 +32,14 @@ solve_TSP.ATSP <- function(x, method = NULL, control = NULL, ...) {
 
 ## ETSP
 solve_TSP.ETSP <- function(x, method = NULL, control = NULL, ...) {
-  .solve_TSP(as.TSP(x), method, control, ...)
+  
+  ## all but concorde and linkern can only do TSP
+  m <- pmatch(tolower(method), c("concorde", "linkern"))
+  if(length(m) == 0L || is.na(m)) x <- as.TSP(x) 
+    
+  .solve_TSP(x, method, control, ...)
 }
 
-## generic
-solve_TSP <- function(x, method = NULL, control = NULL, ...)
-  UseMethod("solve_TSP")
 
 
 ## Deal with Inf: punish (-)Inf with max (min) +(-) 2*range 
@@ -112,15 +116,22 @@ solve_TSP <- function(x, method = NULL, control = NULL, ...)
     TOUR(order, method=method, tsp=x)
   }
   
-  ## do rep?
+  ## do rep? 
   if(!is.null(control$rep)) n <- control$rep
-  else n <- 1    
-  if(method == "concorde" || method == "linkern") n <- 1
-  if(method == "repetitive_nn") n <- 1
-
-  if(n==1) return(.solve_TSP_worker())
+  else n <- 1L   
   
-  l <- replicate(n, .solve_TSP_worker(), simplify = FALSE)
+  if(method == "concorde" || method == "linkern") {
+    n <- 1L
+    control$two_opt <- NULL ## no two_opt for these! 
+  }
+  if(method == "repetitive_nn") n <- 1L
+
+  if(n==1L) return(.solve_TSP_worker())
+  
+  #l <- replicate(n, .solve_TSP_worker(), simplify = FALSE)
+  l <- foreach(i = 1:n) %dopar% .solve_TSP_worker()
+  
+  
   l <- l[[which.min(sapply(l, attr, "tour_length"))]]
   attr(l, "method") <- paste(attr(l, "method"), "_rep_", n, sep="")
   return(l)

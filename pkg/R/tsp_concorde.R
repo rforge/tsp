@@ -29,38 +29,41 @@ tsp_concorde <- function(x, control = NULL){
   exe         <- .find_exe(control$exe, "concorde")
   
   ## check x
-  if(!inherits(x, "TSP")) stop("Concorde only solves symmetric TSPs.")
-  
-  
-  ## fix neg. values
-  min_x <- min(x)
-  if(min_x<0) x <- x - min_x
-  
-  ## get max (excluding) to check for possible integer overflows
-  max_x <- max(x)
-  if(n_of_cities(x) < 10){
-    ## <10 cities: concorde can only handle max 2^15
-    MAX <- 2^15
-    if(max_x > MAX) stop("Concorde can only handle distances < 2^15 for less than 10 cities")
+  if(inherits(x, "TSP")){
     
-    prec <- floor(log10(MAX / max_x))
-    if(prec < precision) {
-      precision <- prec
-      warning(paste("Concorde can only handle distances < 2^15 for",
-        "less than 10 cities. Reducing precision to", 
-        precision), immediate. = TRUE)
-    }
-  }else{
-    ## regular constraint on integer is 2^31 - 1    
-    MAX <- 2^31 - 1
+    ## fix neg. values
+    min_x <- min(x)
+    if(min_x<0) x <- x - min_x
     
-    prec <- floor(log10(MAX / max_x / n_of_cities(x)))
-    if(prec < precision) {
-      precision <- prec
-      warning(paste("Concorde can only handle distances < 2^31.",
-        "Reducing precision for Concorde to", precision), immediate. = TRUE)
+    ## get max (excluding) to check for possible integer overflows
+    max_x <- max(x)
+    if(n_of_cities(x) < 10){
+      ## <10 cities: concorde can only handle max 2^15
+      MAX <- 2^15
+      if(max_x > MAX) stop("Concorde can only handle distances < 2^15 for less than 10 cities")
+      
+      prec <- floor(log10(MAX / max_x))
+      if(prec < precision) {
+        precision <- prec
+        warning(paste("Concorde can only handle distances < 2^15 for",
+          "less than 10 cities. Reducing precision to", 
+          precision), immediate. = TRUE)
+      }
+    }else{
+      ## regular constraint on integer is 2^31 - 1    
+      MAX <- 2^31 - 1
+      
+      prec <- floor(log10(MAX / max_x / n_of_cities(x)))
+      if(prec < precision) {
+        precision <- prec
+        warning(paste("Concorde can only handle distances < 2^31.",
+          "Reducing precision for Concorde to", precision), immediate. = TRUE)
+      }
     }
-  }
+  }else if(inherits(x, "ETSP")) {
+    ## nothing to do!
+  }else stop("Concorde only handles TSP and ETSP.")
+  
   
   ## get temp files and change working directory
   wd <- tempdir()
@@ -109,27 +112,30 @@ tsp_linkern <- function(x, control = NULL){
   clo         <- if(!is.null(control$clo))        control$clo         else ""
   precision   <- if(!is.null(control$precision))  control$precision   else 6
   exe         <- .find_exe(control$exe, "linkern")
-  verbatim    <- if(!is.null(control$verbatim))   control$verbatim    
-  else FALSE 
+  verbatim    <- if(!is.null(control$verbatim))   control$verbatim    else FALSE 
   
   verbatim    <- if(!verbatim) "-Q" else "" 
   
-  ## check x
-  if(!inherits(x, "TSP")) stop("Concorde's LK only solves symmetric TSPs.")
+  
   
   ## have to set -r for small instances <8
   if(n_of_cities(x) <=8) clo <- paste(clo, "-k", n_of_cities(x))
   
-  ## check for possible overflows
-  max_x <- max(abs(x[is.finite(x)]))
-  MAX <- 2^31 - 1
-  
-  prec <- floor(log10(MAX / max_x / n_of_cities(x)))
-  if(prec < precision) {
-    precision <- prec
-    warning(paste("Linken can only handle distances < 2^31.",
-      "Reducing precision to", precision), immediate. = TRUE)
-  }
+  ## check x
+  if(inherits(x, "TSP")) {
+    ## check for possible overflows
+    max_x <- max(abs(x[is.finite(x)]))
+    MAX <- 2^31 - 1
+    
+    prec <- floor(log10(MAX / max_x / n_of_cities(x)))
+    if(prec < precision) {
+      precision <- prec
+      warning(paste("Linken can only handle distances < 2^31.",
+        "Reducing precision to", precision), immediate. = TRUE)
+    }
+  }else if(inherits(x, "ETSP")) {
+    ## nothing to do
+  } else stop("Linkern only works for TSP and ETSP.")
   
   ## get temp files
   wd <- tempdir()
@@ -166,6 +172,7 @@ tsp_linkern <- function(x, control = NULL){
   
   order
 }
+
 
 ## get help page
 concorde_help <- function(exe = NULL) {

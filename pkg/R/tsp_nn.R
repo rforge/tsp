@@ -60,9 +60,15 @@ tsp_nn <- function(x, control = NULL) {
 ## repetitive NN
 
 tsp_repetitive_nn <- function(x, control){
-
   n <- n_of_cities(x)
-  tours <- lapply(1:n, function(i) tsp_nn(x, control = list(start = i)))
+  
+  #tours <- lapply(1:n, function(i) tsp_nn(x, control = list(start = i)))
+  ## no backend would warn!
+  i <- 0L ## for R CMD check (no global binding for i)
+  suppressWarnings(
+    tours <- foreach(i = 1:n) %dopar% tsp_nn(x, control = list(start = i))
+  )
+  
   lengths <- sapply(tours, FUN = function(i) tour_length(x, i))
   
   tours[[which.min(lengths)]]

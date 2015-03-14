@@ -33,11 +33,18 @@ which results in a path length of \code{Inf}.
 All heuristics can be used with the control arguments \code{repetitions} 
 (uses the best from that many repetitions with random starts)
 and \code{two_opt} (a logical indicating if two_opt refinement should be 
-performed).
-  
+performed). If several repetitions are done (this includes method \code{"repetitive_nn"}) then \pkg{foreach} is used so they
+can be performed in parallel on multiple cores/machines. 
+To enable parallel execution an appropriate parallel backend needs to be registered (e.g., load \pkg{doParallel} and register it with
+\code{registerDoParallel()}).
+
+\code{ETSP} are currently solved by first calculating a dissimilarity matrix (a 
+\code{TSP}). Only concorde and linkern can solve the TSP directly on the 
+\code{ETSP}. 
+
 Currently the following methods are available: 
 \describe{
-\item{\code{"identity"}, \code{"random"}}{return a tour repesenting the order 
+\item{\code{"identity"}, \code{"random"}}{return a tour representing the order 
     in the data (identity order) or a random order.}
 \item{\code{"nearest_insertion"}, 
     \code{"farthest_insertion"},
@@ -225,7 +232,7 @@ Computing, 6(3):563--581.}
 \examples{
 ## solve a simple Euclidean TSP (using the default method)
 etsp <- ETSP(data.frame(x = runif(20), y = runif(20)))
-tour <- solve_TSP(etsp, method="arbit")
+tour <- solve_TSP(etsp)
 tour
 tour_length(tour)
 plot(etsp, tour)
@@ -248,7 +255,12 @@ tours$concorde  <- solve_TSP(USCA50, method = "concorde")
 tours$linkern  <- solve_TSP(USCA50, method = "linkern")
 }
 
-
+## register a parallel backend to perform repetitions in parallel 
+\dontrun{
+library(doParallel)
+registerDoParallel()
+}
+  
 ## add some tours using repetition and two_opt refinements   
 tours$'nn+two_opt' <- solve_TSP(USCA50, method="nn", two_opt=TRUE)  
 tours$'nn+rep_10' <- solve_TSP(USCA50, method="nn", rep=10)  
@@ -260,8 +272,8 @@ tours[[1]]
 
 ## compare tour lengths
 opt <- 14497 # obtained by Concorde
-tour_lengths <- c(sort(sapply(tours, tour_length), 
-  decreasing = TRUE), optimal = opt) 
+tour_lengths <- c(sort(sapply(tours, tour_length), decreasing = TRUE), 
+  optimal = opt) 
 dotchart(tour_lengths/opt*100-100, xlab = "percent excess over optimum")
 }
 \keyword{optimize}% at least one, from doc/KEYWORDS

@@ -24,7 +24,7 @@ TOUR <- function(x, method=NA, tsp=NULL){
   x <- as.TOUR(x)
   attr(x, "method") <- as.character(method)
   if(!is.null(tsp)){
-    attr(x, "tour_length") <- tour_length(tsp, x)
+    attr(x, "tour_length") <- tour_length(x, tsp)
     names(x) <- labels(tsp)[x]
   }
   
