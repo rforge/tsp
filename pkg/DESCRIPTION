@@ -1,8 +1,8 @@
 Package: TSP
 Type: Package
 Title: Traveling Salesperson Problem (TSP)
-Version: 1.1-0
-Date: 2015-03-14
+Version: 1.1-1
+Date: 2015-xx-xx
 Authors@R: c(
 	person("Michael", "Hahsler", role = c("aut", "cre", "cph"),
 	    email = "mhahsler@lyle.smu.edu"),
@@ -16,6 +16,7 @@ Description: Basic infrastructure and some algorithms for the traveling
     from http://www.math.uwaterloo.ca/tsp/concorde.html.
 Classification/ACM: G.1.6, G.2.1, G.4
 URL: http://lyle.smu.edu/IDA/seriation
+BugReports: http://r-forge.r-project.org/projects/tsp/
 Depends: R (>= 2.14.0)
 Imports: graphics, foreach
 Suggests: maps, sp, maptools, testthat
