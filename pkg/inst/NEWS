@@ -1,5 +1,6 @@
 Changes in version 1.1-4 (x/x/2015)
-
+    * fixed bug in arbitrary insertion for TSPs with two or less cities
+      (bug report by Shrinidhee Shevade).
 
 Changes in version 1.1-3 (9/2/2015)
     * two-opt now works correctly with asymetric TSPs 

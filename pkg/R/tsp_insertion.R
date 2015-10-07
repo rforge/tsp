@@ -119,13 +119,18 @@ tsp_insertion_arbitrary <- function(x, control = NULL){
   
   ## we use a matrix for now (covers TSP and ATSP)
   x <- as.matrix(x)
+  
+  ## deal with special cases
+  if(nrow(x) == 1) return(1L)
+  if(nrow(x) == 2) return(sample(1:2))
+  
   x[is.na(x)] <- Inf
   
   ## random order
   rorder <- sample(n)
   x <- x[rorder, rorder]
   
-  ## FIXME: start city
+  ## FIXME: specify start city
   
   ## place first two cities
   order <- integer(n)
