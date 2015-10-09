@@ -23,6 +23,8 @@
 
 tsp_concorde <- function(x, control = NULL){
   
+  if(!is.null(control$exe)) warning("exe is deprecated. Use concorde_path() instead!")
+  
   ## get parameters
   clo         <- if(!is.null(control$clo))        control$clo         else ""
   precision   <- if(!is.null(control$precision))  control$precision   else 6
@@ -87,7 +89,7 @@ tsp_concorde <- function(x, control = NULL){
   ## do the call and read back result
   ## we do not check return values of concorde since they are not
   ## very consistent
-  system(paste(exe, "-x", "-o", tmp_file_out , clo, tmp_file_in))
+  system(paste(exe, "-x", clo, "-o", tmp_file_out, tmp_file_in))
   
   if(!file.access(tmp_file_out) == 0) 
     stop("Problems with reading Concorde's output.\nIs concorde properly installed?\nFor details see ? Concorde")
@@ -107,6 +109,8 @@ tsp_concorde <- function(x, control = NULL){
 ## (can only handle TSP, handles neg. distances)
 
 tsp_linkern <- function(x, control = NULL){
+  
+  if(!is.null(control$exe)) warning("exe is deprecated. Use concorde_path() instead!")
   
   ## get parameters
   clo         <- if(!is.null(control$clo))        control$clo         else ""
@@ -175,12 +179,12 @@ tsp_linkern <- function(x, control = NULL){
 
 
 ## get help page
-concorde_help <- function(exe = NULL) {
-  system(paste(.find_exe(exe, "concorde"), ""))
+concorde_help <- function() {
+  system(paste(.find_exe(NULL, "concorde"), ""))
 }
 
-linkern_help <- function(exe = NULL) {
-  system(paste(.find_exe(exe, "linkern"), ""))
+linkern_help <- function() {
+  system(paste(.find_exe(NULL, "linkern"), ""))
 }
 
 ## path

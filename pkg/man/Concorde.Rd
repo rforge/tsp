@@ -22,26 +22,23 @@
 concorde_path(path)
 
 ## obtain a list of command line options for the solvers
-concorde_help(exe = NULL)
-linkern_help(exe = NULL)
+concorde_help()
+linkern_help()
 }
 \arguments{
-  \item{exe}{ an optional character string containing the whole path to the
-      executable (including the executable's name). 
-      
-      Other options are (1) to use \code{concorde_path()} to set the path to
-      the directory  containing the executables for concorde and linkern, or
-      (2) to put the executables somewhere in the search path.
-      }
-  \item{path}{path to the directory where the executables are stored.}
+  \item{path}{ a character string with the path to the directory where 
+        the executables are installed. }
 }
 \details{
 The code of the Concorde TSP package is not included in this package and has to
 be obtained separately from the Concorde web site (see references).  Either
 download the precompiled executables and place them in a suitable directory
-(either in the search path, or you have to use \code{concorde_path()}) and
-make them executable, or you can get the source code and compile it on your
-own.
+and make them executable, or you can get the source code and compile it on your
+own. \pkg{TSP} needs to know where the executables are. There are two options:
+(1) use \code{concorde_path()} to set the path to the directory  containing the 
+executables for concorde and linkern, or (2) make sure that the executables are 
+in the search path stored in the \code{PATH} environment variable 
+(see \code{link{Sys.setenv}}).
 
 To get a list of all available command line options which can be used via the
 \code{clo} option for \code{solve_TSP} use \code{concorde_help()} and
@@ -68,6 +65,15 @@ Springer.
 David Applegate and William Cook and Andre Rohe (2003):
 Chained Lin-Kernighan for Large Traveling Salesman Problems,
 \emph{INFORMS Journal on Computing}, \bold{15}, 82--92.
+}
+\examples{
+\dontrun{
+concorde_help()
+  
+data("USCA312")
 
+## run concorde only with fast cuts (-V)
+solve_TSP(USCA312, method = "concorde", control = list(clo = "-V"))
+}
 }
 \keyword{documentation}% at least one, from doc/KEYWORDS

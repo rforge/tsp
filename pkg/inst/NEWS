@@ -1,6 +1,9 @@
 Changes in version 1.1-4 (x/x/2015)
     * fixed bug in arbitrary insertion for TSPs with two or less cities
       (bug report by Shrinidhee Shevade).
+    * concorde and linkern help: exe argument was removed. The exe control 
+      argument for both methods in solve_TSP is now deprecated. 
+      Use concorde_path(path) instead.
 
 Changes in version 1.1-3 (9/2/2015)
     * two-opt now works correctly with asymetric TSPs 
